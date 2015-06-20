@@ -1,0 +1,5 @@
+grid_eps = 1., 1., 2.0
+#grid_eps = 0.02, 0.02, 0.2
+refinement_factor = 2.0
+num_samples = 5
+delta_t = 0.01

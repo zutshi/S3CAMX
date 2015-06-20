@@ -1,0 +1,14 @@
+========================
+Code Annotations Used:
+========================
+ASSUMES:        API/interface assumptions 
+TODO:           todo
+FIX ME:         fix something in future releases
+WARN:           warning
+MANIPULATES:    direct manipulation of another class's objects
+THINK:          A design decision, which is made without much thinking
+
+========================
+Other notes
+========================
+Dictionaries can be referred to as maps depending upon their functions

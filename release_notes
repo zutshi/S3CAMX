@@ -1,0 +1,87 @@
+Changes 0.5 -> 0.6
+
+- secam.py was refactored. System structures were stored in classes: System, Property and Options
+- Input parsing was separated into a new file. All benchmarks/input systems now need to be defined
+  only in a .tst file instead of 3 files: .tst, .abs and .sim
+- AttributeError: _fields_ is final
+  was solved using dynamic classes in the controlifc.py Not sure if this is the best way. No clue
+  on efficiency either.
+- External interface for simulator was built. Currently only a 'one shot simulator' is available
+  which simulates the system from 0.0 to a given T.
+- numdims.py was created by extracting it out. Just makes things cleaner. Perhaps can be added in a
+  specific_utils.py file?
+- FIXED:
+    Importing matlab.engine causes issues in psim if the simulator is called from Matlab...
+    This needs to be fixed by somehow finding out that Matlab is the driver and doing a conditional
+    import in psim.
+- FIXED:
+    run_staliro should be able to run in a batch mode
+- Added PathCrawler parsing support. With it, split controller state into integer and floating point
+- Moved options from .tst file to command line
+- Added regression script
+- Consolidated C interface for SO
+- added tqdm module to simulatesystem.py...along with progress, predicts remaining time now!!
+- Added heat benchmarks: only simulations have been verified! waiting for Prof. A.F. reply
+- Added 10u benchmarks
+- Consolidated simulation functions
+- partially fixed plotting by supplying the plt module to the plant...
+
+
+
+TODO:
+- A more generic repeatedly callable simulator should be provided instead of one shot simulator
+- pi is not implemented yet!
+- Names in the .tst file need to be more uniform. The controller and palnt do not follow similar
+  conventions
+- Plant simulator and Controller simulator follow different conventions.
+  psim accepts dim=2 arrays, while csim wants a vector. These should be made uniform. This should
+  be fixed in csim.
+- Plotting needs to be consolidated. Specially plotting inside of a plant function?
+- StateArray in state.py is a mess. The arg names are different from attribute names. Pleas fix!
+- Refine using init is mantained but not refine using traces!! Update!
+- Controlifc does a lot of list and numpy conversions. Fix it!
+- Consolidate CAConcolic.py and CAConcrete.py; both seem to be doing something very similar as of
+  now.
+- logging needs to be fixed. Its too inefficient right now.
+- Try Numba?
+- trajs.py is not being used right now...
+- progBar.py is unused.
+- plant abstraction recieves data in a weird string/not string dict. Needs to be streamlined.
+- abstraction.py: get_reachable_states is a mess!
+- concolicexec.py and associated files used to run KLEE dynamically are not being mantained.
+- plothelper.py is unused?
+- Streamline .tst format. Multiple properties should be grouped in a dict/list or something.
+- init_cons_list is not propery handled in many places including the external interface
+- Make sure we understand S-Taliro's idea of generating uniform random input signals
+- merge cifc with C interface diferind in csim
+- Dynamically generate the C itnerface 
+- make SMT solving faster:
+  - separate output cons: pathcrawler seaprates out output assignment. Use this to compute outputs
+    rather than merging with constraints (as being done currently).
+  - Create a slover isntance instead of representing constraints in controller_abstract_States as
+    strings. Push and pop constraints as necessary
+  - Construct a Tree of constraints from pathcrawler's tree and use incremental constraint solving.
+- integrate a faster library for plotting and K-shortest paths
+- fix plotting in individual plant files....possibly by supplying a plotting function to sim()
+- autoload or remove mindist tunings!!!!
+- Broken KLEE support. Conversion factor has been removed. Integrate in plant model.
+- Separate Plant and Safety Property Monitor
+- Add plotting in psim. This can be done by the plant sim() always returning dense traces, but psim
+  using delta_t to make them sparse. In this way, entire plotting burden can be shifted to it.
+
+
+Research TODO:
+- Add leak benchmarks
+- Add the ability to quickly generate garphs from simulation with given pluggable criterion: graph from data
+- Graph from data:
+  - use 0 wt edges
+  - use non 0 wt speculative edges between nearby states
+  - try high dim embedding
+  - try liveness properties
+- Fit piecewise models
+    - how can they be then utilized?
+    - try synthesis
+- Robustness: read ACC paper
+- Add MA*, A* search
+- Add Converage metrics and etc
+- Add breaking of relation between controller and plant sampling...Should make multiple sampling faster

@@ -1,0 +1,9 @@
+**********
+Example ex.1-a: Black Box Testing [compare with ex.1-b]
+**********
+
+
+This example is designed to highlight the benefits of using symbolic execution
+
+This is example ex1-a. The controller and the plant are combined as a hybrid system, and only black
+box testinf is used.

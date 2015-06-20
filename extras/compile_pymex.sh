@@ -1,0 +1,2 @@
+/home/zutshi/MATLAB/bin/mex CFLAGS="-fPIC -I/usr/include/python2.7 -I/usr/include/x86_64-linux-gnu/python2.7  -fno-strict-aliasing -D_FORTIFY_SOURCE=2 -g -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security  -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes" "-L/usr/lib/python2.7/config-x86_64-linux-gnu -lpython2.7 -L/usr/lib -lpthread -ldl  -lutil -lm  -lpython2.7 -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions" -DPYMEX_DEBUG_FLAG=0 -DPYMEX_BUILD="master/0.1b-11-g5f2aba9" pymex.c sharedfuncs.c *module.c 
+
