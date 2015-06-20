@@ -1,0 +1,9 @@
+**********
+Example ex.1-b: Gray Box Testing [compare with ex.1-a]
+**********
+
+
+This example is designed to highlight the benefits of using symbolic execution
+
+This is example ex1-b. The controller and the plant are separated as a C program and a hybrid
+system.

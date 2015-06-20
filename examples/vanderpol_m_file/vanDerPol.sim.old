@@ -1,0 +1,11 @@
+description: native
+
+system_type: continuous
+
+INPUTS:
+i1:Real
+i2:Bool
+
+DYNAMICS:
+x1_dot = x2;
+x2_dot = 5 * (1 - X1^2) * X2 - X1;

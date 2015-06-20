@@ -1,0 +1,156 @@
+#######################################
+- python 2.7x
+#######################################
+
+#######################################
+- matlabengineforpython
+#######################################
+
+The python distribution must be compiled with 
+./configure --enable-shared 
+and if using pyenv, https://github.com/yyuu/pyenv, then must set
+export CONFIGURE_OPTS='--enable-shared --enable-unicode=ucs4'
+before issuing
+pyenv install 2.7.3
+
+#######################################
+********************* no longer req. ******************
+-matpy: replaced by matlabengineforpython
+#######################################
+  - uncomment dlopen()
+  - use modified compilation command
+  - use LD_PRELOAD to run with matlab, ensuring the correct versions of LAPACK, GFORTRAN, etc get loaded
+
+#######################################
+********************* no longer req. ******************
+- pymatlab: replaced by matlabengineforpython
+https://pypi.python.org/pypi/pymatlab [needs csh and numpy]
+#######################################
+  - ./src/matlab.py needs to be edited
+    - modify wrap_steing and remove duplicate %%
+
+#######################################
+- networkx
+#######################################
+
+#######################################
+- graph-tool
+Takes very very long to compile: 4+ hrs
+Requires recent version of boost
+All in all, time consuming
+#######################################
+
+
+#######################################
+- progress bar:
+#######################################
+  - sudo pip install blessings
+  - sudo pip install progressbar
+
+#######################################
+- cprofilev:
+#######################################
+
+#######################################
+- snakeviz: profiler
+#######################################
+
+#######################################
+- guppy: memory profiler
+#######################################
+
+#######################################
+- KLEE: http://klee.github.io/getting-started/
+#######################################
+
+Getting Started
+Building and Running KLEE
+
+The current procedure for building KLEE with LLVM 2.9 (stable) is outlined below.
+If you want to build KLEE with LLVM 3.4 (experimental), click here.
+
+    Install dependencies: KLEE requires all the dependencies of LLVM, which are discussed here[http://llvm.org/docs/GettingStarted.html#requirements]. In particular, you should have the following packages (the list is likely not complete): g++, curl, dejagnu, subversion, bison, flex, bc, libcap-dev(el):
+
+    $ sudo apt-get install g++ curl dejagnu subversion bison flex bc libcap-dev # Ubuntu 
+    $ sudo yum install g++ curl dejagnu subversion bison flex bc libcap-devel # Fedora
+
+    On some architectures, you might also need to set the following environment variables (best to put them in a config file like .bashrc):
+
+    $ export C_INCLUDE_PATH=/usr/include/x86_64-linux-gnu  
+    $ export CPLUS_INCLUDE_PATH=/usr/include/x86_64-linux-gnu
+
+    Build LLVM 2.9: KLEE is built on top of LLVM; the first steps are to get a working LLVM installation. See Getting Started with the LLVM System for more information.
+
+    NOTE: The only LLVM version currently supported by KLEE is LLVM 2.9. KLEE is currently tested on Linux x86-64, and might break on x86-32. KLEE will not compile with LLVM versions prior to 2.9, and there is only experimental support for LLVM 3.4.
+        Install llvm-gcc:
+            Download and install the LLVM 2.9 release of llvm-gcc from here[http://llvm.org/releases/download.html#2.9]. On an x86-64 Linux platform you are going to need the archive LLVM-GCC 4.2 Front End Binaries for Linux x86-64.[http://llvm.org/releases/2.9/llvm-gcc4.2-2.9-x86_64-linux.tar.bz2]
+            Add llvm-gcc to your PATH. It is important to do this first so that llvm-gcc is found in subsequent configure steps. llvm-gcc will be used later to compile programs that KLEE can execute. Forgetting to add llvm-gcc to your PATH at this point is by far the most common source of build errors reported by new users.
+
+        Download and build LLVM 2.9:[http://llvm.org/releases/2.9/llvm-2.9.tgz]
+
+        $ tar zxvf llvm-2.9.tgz  
+        $ cd llvm-2.9  
+        $ ./configure --enable-optimized --enable-assertions  
+        $ make
+
+        The --enable-optimized configure argument is not necessary, but KLEE runs very slowly in Debug mode. You may run into compilation issues if you use new kernels/glibc versions. Please see this mailing list post[http://www.mail-archive.com/klee-dev@imperial.ac.uk/msg01302.html] for details on how to fix this issue.
+
+    Build STP: The default version of KLEE uses the STP constraint solver. We recommend downloading the version at this link[http://www.doc.ic.ac.uk/~cristic/klee/stp.html], which we have tested and used successfully, but you can download a more recent revision from the STP website if you prefer. Please let us know if you have successfully and extensively used KLEE with a more recent version of STP.
+
+    $ tar xzfv stp-r940.tgz  
+    $ cd stp-r940  
+    $ ./scripts/configure --with-prefix=`pwd`/install --with-cryptominisat2  
+    $ make OPTIMIZE=-O2 CFLAGS_M32= install
+
+    As documented on the STP website, it is essential to run the following command before using STP (and thus KLEE):
+
+    $ ulimit -s unlimited
+
+    You can make this persistent by updating the /etc/security/limits.conf file.
+
+    If you encounter build errors with the r940 version, you have to modify the STP code according to this commit[https://github.com/stp/stp/commit/ece1a55fb367bd905078baca38476e35b4df06c3] (the files to modify in r940 are CVC.y, smtlib.y and smtlib2.y in src/parser/).
+
+    (Optional) Build uclibc and the POSIX environment model: By default, KLEE works on closed programs (programs that don’t use any external code such as C library functions). However, if you want to use KLEE to run real programs you will want to enable the KLEE POSIX runtime, which is built on top of the uClibc C library.
+        Download KLEE’s uClibc. KLEE uses a version of uClibc which has been modified slightly for our purposes.
+            A version that works on 64-bit Linux can be found here[http://www.doc.ic.ac.uk/~cristic/klee/klee-uclibc-x64.html]
+            A version that works on 32-bit Linux can be found here[http://www.doc.ic.ac.uk/~cristic/klee/klee-uclibc-i386.html]
+
+        Build uClibc with llvm-gcc:
+
+        $ tar zxvf klee-uclibc-0.02.tgz  
+        $ ./configure --with-llvm=path-to-llvm
+        $ make
+
+        NOTE: If you are on a different target (i.e., not i386 or x64), you will need to run make config and select the correct target. The defaults for the other uClibc configuration variables should be fine.
+
+    Download KLEE:
+
+    $ git clone https://github.com/klee/klee.git
+
+    Configure KLEE: From the KLEE source directory, run:
+
+    $ ./configure --with-llvm=full-path-to-llvm --with-stp=full-path-to-stp/install --with-uclibc=full-path-to-klee-uclibc --enable-posix-runtime
+
+    NOTE: If you skipped step 4, simply remove the --with-uclibc and --enable-posix-runtime options.
+
+    Build KLEE:
+
+    $ make ENABLE_OPTIMIZED=1
+
+    Run the regression suite to verify your build:
+
+    $ make check  
+    $ make unittests  
+
+    NOTE: For testing real applications (e.g. Coreutils), you may need to increase your system’s open file limit (ulimit -n). Something between 10000 and 999999 should work. In most cases, the hard limit will have to be increased first, so it is best to directly edit the /etc/security/limits.conf file.
+
+    You’re ready to go! Check the Tutorials page to try KLEE.
+
+    Resources
+    Mailing List
+    Doxygen
+    GitHub
+    Buildbot
+
+© Copyright 2009-2014, The KLEE Team.
+

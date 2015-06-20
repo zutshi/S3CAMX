@@ -1,0 +1,164 @@
+###############################################################
+## The below was pasted from
+## https://groups.google.com/forum/#!topic/s2e-dev/BlQYU0Tyb68
+##
+## It describes the procedure to obtain symbolic expressions
+## for variables in S2E/Klee
+###############################################################
+
+
+Print symbolic expressions for variables from plugin code.
+6 posts by 4 authors  
+
+
+
+Jonathan        
+4/19/13
+
+
+Hallo everybody,
+
+I would like to build a plugin similar to 'TestCaseGenerator', but instead of printing a test case at the termination of a path it should print the path constraint and the general symbolic expressions for all symbolic variables. My problem is, that I don't know how to get the symbolic values for the variables.
+
+In the guest code it would be possible to call 's2e_print_expression(...)' but it is not possible to do this in a plugin (or is it?).
+Getting the path-constraints with 's2e()->getExecutor()->getConstraintLog(...)' works fine. However, 's2e()->getExecutor()->getSymbolicSolution(...)' returns the concrete values.
+I also tried to utilize 'symbolics' in 'ExecutionState' (example: state->symbolics[i].first->getBaseExpr()) but this just returns constants.
+
+There might be another possibility to use 'ref<Expr> S2EExecutionState::readCpuRegister(...)' however I haven't figured out the parameters, yet.
+
+I think I am missing something really simple here. Can someone please help me out? :)
+
+Best regards,
+Jonathan
+ 
+
+
+Vitaly Chipounov        
+4/19/13
+
+Other recipients: jonath...@gmx.de
+
+Hi,
+
+
+On 19.04.2013 20:17, Jonathan wrote:
+I would like to build a plugin similar to 'TestCaseGenerator', but instead of printing a test case at the termination of a path it should print the path constraint and the general symbolic expressions for all symbolic variables. My problem is, that I don't know how to get the symbolic values for the variables.
+
+
+Constraints are stored in klee::ExecutionState::constraints. It's just a vector of expressions. You can iterate through that vector and print each constraint.
+
+I am not sure what you mean by getting symbolic values for the variables. A variable is symbolic by definition and there is not much to print in it (except maybe its name). Such variables are wrapped in Read expressions. In concolic mode, each symbolic variable has a concrete value assigned to it, it is stored in ExecutionState::concolics. You can use the methods of the klee::Assignment class to get these values.
+
+
+In the guest code it would be possible to call 's2e_print_expression(...)' but it is not possible to do this in a plugin (or is it?).
+
+You can print a klee::ref<klee::Expr> to a stream (e.g, s2e()->getDebugStream() << expr). That's how s2e_print_expression is implemented. Just look at BaseInstructions.cpp
+
+
+Getting the path-constraints with 's2e()->getExecutor()->getConstraintLog(...)' works fine. However, 's2e()->getExecutor()->getSymbolicSolution(...)' returns the concrete values.
+I also tried to utilize 'symbolics' in 'ExecutionState' (example: state->symbolics[i].first->getBaseExpr()) but this just returns constants.
+
+first->getBaseExpr() just returns a dummy value, you probably want to look at the second part of the pair, which is the actual Array for the variable.
+
+
+
+There might be another possibility to use 'ref<Expr> S2EExecutionState::readCpuRegister(...)' however I haven't figured out the parameters, yet.
+
+
+This is for reading CPU registers, it's not related to constraints.
+
+Vitaly
+ 
+
+
+Jonathan        
+4/20/13
+
+
+Hallo Vitaly,
+
+thanks a lot for your answer. Unfortunately it seems that I didn't express myself correctly.
+Please consider the following program (with its output):
+
+int main(void)
+{
+ char b[4];
+ char x = 4;
+ s2e_enable_forking();
+ s2e_make_symbolic(b, 3, "b"); 
+ 
+ if((b[0] > 0x10)&&(b[1] < 0x13)) {
+   x = b[2];
+ }
+ s2e_print_expression("x",x);
+ s2e_disable_forking();
+ return 0;
+}
+
+--------------------------------------------
+SymbExpression x - (Concat w32 (Extract w8 24 N0:(SExt w32 N1:(Read w8 0x2 v0_b_0)))
+            (Concat w24 (Extract w8 16 N0)
+                        (Concat w16 (Extract w8 8 N0) N1)))
+
+The output 'SymbExpression x - ...' is what I would like to have (and what I called 'Symbolic Expression' above) with the difference that I would like to get this for any binary program without changing the source code.
+This means I am loading a binary program with 'ld_preload = ...' (like shown in the documentation) but instead of only generating a test case at the end of a path, I would also like to generate the expression mentioned above. That's the reason why I am planing to implement this in a plugin similar to TestCaseGenerator. I looked at the plugin TestCaseGenerator.cpp and it is clear how to do everything except how to actually get the expression.
+
+I hope I expressed myself better this time:)
+
+Have a nice weekend and thanks for your time and input.
+
+Best regards,
+Jonathan
+ 
+
+
+Pengfei         
+6/14/13
+
+
+Hi Jonathan,
+
+I am meeting the same question. I also want to get the Symbolic Expression output for any binary program, but I have no idea. Fortunately, I see your post. So I want to know whether you have know how to do? Can you give me some help or suggestions.
+
+Thank you very much!
+
+Best Regards,
+Pengfei
+- show quoted text -
+ 
+
+
+Calcor  
+6/16/13
+
+
+Hi Jonathan
+
+This is how we get a expression string:
+ 
+std::string logString;
+s2e()->getExecutor()->getConstraintLog(*state, logString, true); 
+
+This will log all constraint expression of the state in to the logString. Have a try.
+
+ 
+
+在 2013年4月20日星期六UTC+8下午11时12分07秒，Jonathan写道：
+- show quoted text -
+ 
+
+
+Jonathan        
+8/13/13
+
+
+Hallo Pengfei,
+
+sorry for answering so late but I haven't looked at this thread in a long time. I found a simple solution in the meantime. If you want to get the PathConstraints you can just use the statement posted by Calcor. However, if you actually want to get the symbolic expression that describes a value you can use  the following command:
+klee::ref<klee::Expr> e = state->readMemory(address, klee::Expr::Int32);
+If you print e (e.g. s2e()->getMessagesStream()<<e,) you get an expression in the kQuery language that describes how the variable is calculated. Note that this commands takes a memory location as argument. If you actually want to print the symbolic content of a program variable you have to retrieve the address of this variable first.
+
+Bests,
+Jonathan
+- show quoted text -
+
