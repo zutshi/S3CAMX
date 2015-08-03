@@ -1,0 +1,1592 @@
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 55)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',55,0)">line 55</a>)
+Python Error: unknown sim type : native
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 13)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',13,0)">line 13</a>)
+run_example(filename, path,num_runs);} 
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+
+Run number 1
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matpy/load_system/sim_wrapper', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m', 48)" style="font-weight:bold">matpy/load_system/sim_wrapper</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m',48,0)">line 48</a>)
+Python Error: index 6 is out of bounds for axis 0 with size 6
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run/sim_wrapper_for_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 76)" style="font-weight:bold">run_staliro>run/sim_wrapper_for_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',76,0)">line 76</a>)
+        [T_, X_, ~] = one_shot_sim(X', [0.0, T], U);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 102)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',102,0)">line 102</a>)
+            [T XT YT LT CLG GRD] = inputModel(XPoint, staliro_SimulationTime, steptime,InpSignal);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+    [cost, ind, cur_par, rob] = Compute_Robustness_Sub(staliro_InputModel, staliro_InputModelType , inpArray);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 107)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',107,0)">line 107</a>)
+[curVal, ~, tm_param, rob] = Compute_Robustness(curSample);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+        [getRun, getHistory] = feval(staliro_opt.optimization_solver,InpRange,staliro_opt);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 152)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',152,0)">line 152</a>)
+        [results, history] =
+        staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 56)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',56,0)">line 56</a>)
+run(one_shot_sim, prop, num_runs, summary_fileID);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 13)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',13,0)">line 13</a>)
+run_example(filename, path,num_runs);} 
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+
+Run number 1
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matpy/load_system/sim_wrapper', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m', 48)" style="font-weight:bold">matpy/load_system/sim_wrapper</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m',48,0)">line 48</a>)
+Python Error: index 6 is out of bounds for axis 0 with size 6
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run/sim_wrapper_for_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 76)" style="font-weight:bold">run_staliro>run/sim_wrapper_for_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',76,0)">line 76</a>)
+        [T_, X_, ~] = one_shot_sim(X', [0.0, T], U);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 102)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',102,0)">line 102</a>)
+            [T XT YT LT CLG GRD] = inputModel(XPoint, staliro_SimulationTime, steptime,InpSignal);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+    [cost, ind, cur_par, rob] = Compute_Robustness_Sub(staliro_InputModel, staliro_InputModelType , inpArray);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 107)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',107,0)">line 107</a>)
+[curVal, ~, tm_param, rob] = Compute_Robustness(curSample);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+        [getRun, getHistory] = feval(staliro_opt.optimization_solver,InpRange,staliro_opt);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 152)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',152,0)">line 152</a>)
+        [results, history] =
+        staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 56)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',56,0)">line 56</a>)
+run(one_shot_sim, prop, num_runs, summary_fileID);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 13)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',13,0)">line 13</a>)
+run_example(filename, path,num_runs);} 
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+
+Run number 1
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matpy/load_system/sim_wrapper', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m', 48)" style="font-weight:bold">matpy/load_system/sim_wrapper</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m',48,0)">line 48</a>)
+Python Error: index 6 is out of bounds for axis 0 with size 6
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run/sim_wrapper_for_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 76)" style="font-weight:bold">run_staliro>run/sim_wrapper_for_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',76,0)">line 76</a>)
+        [T_, X_, ~] = one_shot_sim(X', [0.0, T], U);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 102)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',102,0)">line 102</a>)
+            [T XT YT LT CLG GRD] = inputModel(XPoint, staliro_SimulationTime, steptime,InpSignal);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+    [cost, ind, cur_par, rob] = Compute_Robustness_Sub(staliro_InputModel, staliro_InputModelType , inpArray);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 107)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',107,0)">line 107</a>)
+[curVal, ~, tm_param, rob] = Compute_Robustness(curSample);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+        [getRun, getHistory] = feval(staliro_opt.optimization_solver,InpRange,staliro_opt);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 152)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',152,0)">line 152</a>)
+        [results, history] =
+        staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 56)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',56,0)">line 56</a>)
+run(one_shot_sim, prop, num_runs, summary_fileID);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 13)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',13,0)">line 13</a>)
+run_example(filename, path,num_runs);} 
+matlab.internal.language.introspective.errorDocCallback('matpy/load_system/sim_wrapper', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m', 48)
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+
+Run number 1
+x_ser =
+    1.0000    3.0000    0.6430    0.1791         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+     6     1     0     0     0     0     0     0
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matpy/load_system/sim_wrapper', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m', 52)" style="font-weight:bold">matpy/load_system/sim_wrapper</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m',52,0)">line 52</a>)
+Python Error: index 6 is out of bounds for axis 0 with size 6
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run/sim_wrapper_for_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 76)" style="font-weight:bold">run_staliro>run/sim_wrapper_for_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',76,0)">line 76</a>)
+        [T_, X_, ~] = one_shot_sim(X', [0.0, T], U);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 102)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',102,0)">line 102</a>)
+            [T XT YT LT CLG GRD] = inputModel(XPoint, staliro_SimulationTime, steptime,InpSignal);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+    [cost, ind, cur_par, rob] = Compute_Robustness_Sub(staliro_InputModel, staliro_InputModelType , inpArray);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 107)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',107,0)">line 107</a>)
+[curVal, ~, tm_param, rob] = Compute_Robustness(curSample);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+        [getRun, getHistory] = feval(staliro_opt.optimization_solver,InpRange,staliro_opt);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 152)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',152,0)">line 152</a>)
+        [results, history] =
+        staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 56)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',56,0)">line 56</a>)
+run(one_shot_sim, prop, num_runs, summary_fileID);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 13)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',13,0)">line 13</a>)
+run_example(filename, path,num_runs);} 
+run_staliro
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 17)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',17,0)">line 17</a>)
+Not enough input arguments.} 
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+
+Run number 1
+x_ser =
+    1.0000    3.0000    0.4812    0.9624         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+     6     1     0     0     0     0     0     0
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matpy/load_system/sim_wrapper', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m', 52)" style="font-weight:bold">matpy/load_system/sim_wrapper</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m',52,0)">line 52</a>)
+Python Error: index 6 is out of bounds for axis 0 with size 6
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run/sim_wrapper_for_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 80)" style="font-weight:bold">run_staliro>run/sim_wrapper_for_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',80,0)">line 80</a>)
+        [T_, X_, ~] = one_shot_sim(X', [0.0, T], U);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 102)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',102,0)">line 102</a>)
+            [T XT YT LT CLG GRD] = inputModel(XPoint, staliro_SimulationTime, steptime,InpSignal);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+    [cost, ind, cur_par, rob] = Compute_Robustness_Sub(staliro_InputModel, staliro_InputModelType , inpArray);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 107)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',107,0)">line 107</a>)
+[curVal, ~, tm_param, rob] = Compute_Robustness(curSample);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+        [getRun, getHistory] = feval(staliro_opt.optimization_solver,InpRange,staliro_opt);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 156)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',156,0)">line 156</a>)
+        [results, history] =
+        staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 60)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',60,0)">line 60</a>)
+run(one_shot_sim, prop, num_runs, summary_fileID);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 17)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',17,0)">line 17</a>)
+run_example(filename, path,num_runs);} 
+matlab.internal.language.introspective.errorDocCallback('run_staliro>run/sim_wrapper_for_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 80)
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+ans =
+    10
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+
+Run number 1
+x_ser =
+    1.0000    3.0000    0.5457    0.1145         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+     6     1     0     0     0     0     0     0
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matpy/load_system/sim_wrapper', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m', 52)" style="font-weight:bold">matpy/load_system/sim_wrapper</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m',52,0)">line 52</a>)
+Python Error: index 6 is out of bounds for axis 0 with size 6
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run/sim_wrapper_for_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 80)" style="font-weight:bold">run_staliro>run/sim_wrapper_for_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',80,0)">line 80</a>)
+        [T_, X_, ~] = one_shot_sim(X', [0.0, T], U);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 102)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',102,0)">line 102</a>)
+            [T XT YT LT CLG GRD] = inputModel(XPoint, staliro_SimulationTime, steptime,InpSignal);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+    [cost, ind, cur_par, rob] = Compute_Robustness_Sub(staliro_InputModel, staliro_InputModelType , inpArray);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 107)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',107,0)">line 107</a>)
+[curVal, ~, tm_param, rob] = Compute_Robustness(curSample);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+        [getRun, getHistory] = feval(staliro_opt.optimization_solver,InpRange,staliro_opt);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 157)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',157,0)">line 157</a>)
+        [results, history] =
+        staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 60)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',60,0)">line 60</a>)
+run(one_shot_sim, prop, num_runs, summary_fileID);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 17)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',17,0)">line 17</a>)
+run_example(filename, path,num_runs);} 
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+ans =
+    10
+cp_array =
+    10
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+
+Run number 1
+x_ser =
+    1.0000    3.0000    0.7845    0.7011         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+     6     1     0     0     0     0     0     0
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matpy/load_system/sim_wrapper', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m', 52)" style="font-weight:bold">matpy/load_system/sim_wrapper</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m',52,0)">line 52</a>)
+Python Error: index 6 is out of bounds for axis 0 with size 6
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run/sim_wrapper_for_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 80)" style="font-weight:bold">run_staliro>run/sim_wrapper_for_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',80,0)">line 80</a>)
+        [T_, X_, ~] = one_shot_sim(X', [0.0, T], U);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 102)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',102,0)">line 102</a>)
+            [T XT YT LT CLG GRD] = inputModel(XPoint, staliro_SimulationTime, steptime,InpSignal);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+    [cost, ind, cur_par, rob] = Compute_Robustness_Sub(staliro_InputModel, staliro_InputModelType , inpArray);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 107)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',107,0)">line 107</a>)
+[curVal, ~, tm_param, rob] = Compute_Robustness(curSample);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+        [getRun, getHistory] = feval(staliro_opt.optimization_solver,InpRange,staliro_opt);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 157)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',157,0)">line 157</a>)
+        [results, history] =
+        staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 60)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',60,0)">line 60</a>)
+run(one_shot_sim, prop, num_runs, summary_fileID);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 17)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',17,0)">line 17</a>)
+run_example(filename, path,num_runs);} 
+disable_warnings
+{Undefined function or variable 'disable_warnings'.} 
+disable_warnings
+{Undefined function or variable 'disable_warnings'.} 
+warnStruct = warning('query', 'last');
+msgid_integerCat = warnStruct.identifier;
+warning('off', msgid_integerCat);
+
+
+
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+cp_array =
+    10
+
+Run number 1
+ans =
+     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.7755    0.4913         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+     6     1     0     0     0     0     0     0
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matpy/load_system/sim_wrapper', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m', 52)" style="font-weight:bold">matpy/load_system/sim_wrapper</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m',52,0)">line 52</a>)
+Python Error: index 6 is out of bounds for axis 0 with size 6
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run/sim_wrapper_for_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 80)" style="font-weight:bold">run_staliro>run/sim_wrapper_for_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',80,0)">line 80</a>)
+        [T_, X_, ~] = one_shot_sim(X', [0.0, T], U);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 102)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',102,0)">line 102</a>)
+            [T XT YT LT CLG GRD] = inputModel(XPoint, staliro_SimulationTime, steptime,InpSignal);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+    [cost, ind, cur_par, rob] = Compute_Robustness_Sub(staliro_InputModel, staliro_InputModelType , inpArray);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 107)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',107,0)">line 107</a>)
+[curVal, ~, tm_param, rob] = Compute_Robustness(curSample);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+        [getRun, getHistory] = feval(staliro_opt.optimization_solver,InpRange,staliro_opt);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 157)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',157,0)">line 157</a>)
+        [results, history] =
+        staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 60)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',60,0)">line 60</a>)
+run(one_shot_sim, prop, num_runs, summary_fileID);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 17)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',17,0)">line 17</a>)
+run_example(filename, path,num_runs);} 
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+cp_array =
+    10
+
+Run number 1
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.6041    0.4475         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+     6     1     0     0     0     0     0     0
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matpy/load_system/sim_wrapper', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m', 52)" style="font-weight:bold">matpy/load_system/sim_wrapper</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m',52,0)">line 52</a>)
+Python Error: index 6 is out of bounds for axis 0 with size 6
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run/sim_wrapper_for_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 80)" style="font-weight:bold">run_staliro>run/sim_wrapper_for_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',80,0)">line 80</a>)
+        [T_, X_, ~] = one_shot_sim(X', [0.0, T], U);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 102)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',102,0)">line 102</a>)
+            [T XT YT LT CLG GRD] = inputModel(XPoint, staliro_SimulationTime, steptime,InpSignal);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+    [cost, ind, cur_par, rob] = Compute_Robustness_Sub(staliro_InputModel, staliro_InputModelType , inpArray);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 107)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',107,0)">line 107</a>)
+[curVal, ~, tm_param, rob] = Compute_Robustness(curSample);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+        [getRun, getHistory] = feval(staliro_opt.optimization_solver,InpRange,staliro_opt);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 157)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',157,0)">line 157</a>)
+        [results, history] =
+        staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 60)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',60,0)">line 60</a>)
+run(one_shot_sim, prop, num_runs, summary_fileID);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 17)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',17,0)">line 17</a>)
+run_example(filename, path,num_runs);} 
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+cp_array =
+    10
+
+Run number 1
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.1215    0.7630         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.1032    0.7648         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.73523
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.0947    0.7636         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.0680    0.7459         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.0300    0.6569         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.0983    0.8608         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.63916
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.0961    0.9022         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.59776
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.0732    0.8493         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.3538    0.5752         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.2691    0.9503         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.54971
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.3876    0.9657         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.53426
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.4723    0.9496         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.4499    0.9816         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.51843
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.7972    0.9727         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.45149
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.8663    0.9165         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.8354    0.9284         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.9405    0.9676         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.19531
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.9383    0.9701         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.8478    0.9825         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.9779    0.9600         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.087286
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.9856    0.9608         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.0629
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.9895    0.9578         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.054144
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.7872    0.9010         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.9936    0.9591         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.040083
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.8777    0.9720         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+U =
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+x_ser =
+    1.0000    3.0000    0.8237    0.5856         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+{Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ComputeInputSignals', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/ComputeInputSignals.m', 55)" style="font-weight:bold">ComputeInputSignals</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/ComputeInputSignals.m',55,0)">line 55</a>)
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 86)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',86,0)">line 86</a>)
+            InpSignal = ComputeInputSignals(steptime, UPoint,staliro_opt.interpolationtype, temp_ControlPoints,
+            staliro_InputBounds, staliro_SimulationTime);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+    [cost, ind, cur_par, rob] = Compute_Robustness_Sub(staliro_InputModel, staliro_InputModelType , inpArray);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 194)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',194,0)">line 194</a>)
+        [curVal1, ~, tm_param,rob] = Compute_Robustness(curSample1);
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+        [getRun, getHistory] = feval(staliro_opt.optimization_solver,InpRange,staliro_opt);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 157)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',157,0)">line 157</a>)
+        [results, history] =
+        staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 60)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',60,0)">line 60</a>)
+run(one_shot_sim, prop, num_runs, summary_fileID);
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 17)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',17,0)">line 17</a>)
+run_example(filename, path,num_runs);} 
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+ni =
+     1
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+cp_array =
+    10
+
+Run number 1
+x_ser =
+    1.0000    3.0000    0.9714    0.6632         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+     6     1     0     0     0     0     0     0
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matpy/load_system/sim_wrapper', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m', 52)" style="font-weight:bold">matpy/load_system/sim_wrapper</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m',52,0)">line 52</a>)
+Python Error: index 6 is out of bounds for axis 0 with size 6
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run/sim_wrapper_for_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 79)" style="font-weight:bold">run_staliro>run/sim_wrapper_for_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',79,0)">line 79</a>)
+        [T_, X_, ~] = one_shot_sim(X', [0.0, T], U);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 102)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',102,0)">line 102</a>)
+            [T XT YT LT CLG GRD] = inputModel(XPoint, staliro_SimulationTime, steptime,InpSignal);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+    [cost, ind, cur_par, rob] = Compute_Robustness_Sub(staliro_InputModel, staliro_InputModelType , inpArray);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 107)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',107,0)">line 107</a>)
+[curVal, ~, tm_param, rob] = Compute_Robustness(curSample);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+        [getRun, getHistory] = feval(staliro_opt.optimization_solver,InpRange,staliro_opt);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 156)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',156,0)">line 156</a>)
+        [results, history] =
+        staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 60)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',60,0)">line 60</a>)
+run(one_shot_sim, prop, num_runs, summary_fileID);
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 17)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',17,0)">line 17</a>)
+run_example(filename, path,num_runs);} 
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+
+Run number 1
+x_ser =
+    1.0000    3.0000    0.2391    0.8772         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.2854    0.9505         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.54955
+x_ser =
+    1.0000    3.0000    0.3067    0.9695         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.53048
+x_ser =
+    1.0000    3.0000    0.2667    0.9333         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.2939    0.9425         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.4109    0.3684         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.3009    0.9766         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.52338
+x_ser =
+    1.0000    3.0000    0.3067    0.9867         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.51334
+x_ser =
+    1.0000    3.0000    0.2952    0.9947         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.50534
+x_ser =
+    1.0000    3.0000    0.2955    0.9952         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+Best ==> 0.50482
+x_ser =
+    1.0000    3.0000    0.3350    0.9870         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.2626    0.9700         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.7530    0.5276         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.1918    0.8601         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.2868    0.9824         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.2750    0.9852         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.2373    0.9479         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.0911    0.2856         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.1711    0.8458         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.1021    0.7551         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.0860    0.8860         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.1042    0.9413         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.1070    0.9462         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.1070    0.9479         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.1033    0.9473         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.0966    0.9558         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+x_ser =
+    1.0000    3.0000    0.0931    0.9869         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+[Warning: An error occurred while running the atExit function for the MEX-file
+/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/dp_taliro/mx_dp_taliro.mexa64.
+However, the MEX-file was cleared from memory.] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('dp_taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/dp_taliro/dp_taliro.m', 220)" style="font-weight:bold">dp_taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/dp_taliro/dp_taliro.m',220,0)">line 220</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 206)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',206,0)">line 206</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 194)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',194,0)">line 194</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 156)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',156,0)">line 156</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 60)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',60,0)">line 60</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 17)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',17,0)">line 17</a>)] 
+x_ser =
+    1.0000    3.0000    0.0686    0.9547         0
+t0 =
+     0
+tf =
+    0.1000
+w_ser =
+    10     1     0     0     0     0     0     0     0     0     0     0
+{Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('python.internal.Callable/parenref', '/home/zutshi/MATLAB/R2015a/toolbox/matlab/external/interfaces/python/+python/+internal/Callable.m', 48)" style="font-weight:bold">python.internal.Callable/parenref</a> (<a href="matlab: opentoline('/home/zutshi/MATLAB/R2015a/toolbox/matlab/external/interfaces/python/+python/+internal/Callable.m',48,0)">line 48</a>)
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('python.internal.MixinSubsref>oneop_subsref', '/home/zutshi/MATLAB/R2015a/toolbox/matlab/external/interfaces/python/+python/+internal/MixinSubsref.m', 110)" style="font-weight:bold">python.internal.MixinSubsref>oneop_subsref</a> (<a href="matlab: opentoline('/home/zutshi/MATLAB/R2015a/toolbox/matlab/external/interfaces/python/+python/+internal/MixinSubsref.m',110,0)">line 110</a>)
+        [varargout{1:nargout}] = parenref(obj, args{:});
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('python.internal.MixinSubsref/subsref', '/home/zutshi/MATLAB/R2015a/toolbox/matlab/external/interfaces/python/+python/+internal/MixinSubsref.m', 57)" style="font-weight:bold">python.internal.MixinSubsref/subsref</a> (<a href="matlab: opentoline('/home/zutshi/MATLAB/R2015a/toolbox/matlab/external/interfaces/python/+python/+internal/MixinSubsref.m',57,0)">line 57</a>)
+                        [varargout{1:nargout}] = oneop_subsref(obj, S);
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matpy/load_system/sim_wrapper', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m', 52)" style="font-weight:bold">matpy/load_system/sim_wrapper</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/matpy.m',52,0)">line 52</a>)
+            trace = one_shot_sim_py(x_ser, t0, tf, w_ser);
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run/sim_wrapper_for_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 80)" style="font-weight:bold">run_staliro>run/sim_wrapper_for_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',80,0)">line 80</a>)
+        [T_, X_, ~] = one_shot_sim(X', [0.0, T], U);
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness_Sub', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m', 102)" style="font-weight:bold">Compute_Robustness_Sub</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness_Sub.m',102,0)">line 102</a>)
+            [T XT YT LT CLG GRD] = inputModel(XPoint, staliro_SimulationTime, steptime,InpSignal);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Compute_Robustness', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m', 48)" style="font-weight:bold">Compute_Robustness</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Compute_Robustness.m',48,0)">line 48</a>)
+    [cost, ind, cur_par, rob] = Compute_Robustness_Sub(staliro_InputModel, staliro_InputModelType , inpArray);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('SA_Taliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m', 194)" style="font-weight:bold">SA_Taliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/SA_Taliro.m',194,0)">line 194</a>)
+        [curVal1, ~, tm_param,rob] = Compute_Robustness(curSample1);
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m', 341)" style="font-weight:bold">staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/staliro.m',341,0)">line 341</a>)
+        [getRun, getHistory] = feval(staliro_opt.optimization_solver,InpRange,staliro_opt);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 156)" style="font-weight:bold">run_staliro>run</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',156,0)">line 156</a>)
+        [results, history] =
+        staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro>run_example', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 60)" style="font-weight:bold">run_staliro>run_example</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',60,0)">line 60</a>)
+run(one_shot_sim, prop, num_runs, summary_fileID);
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('run_staliro', '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m', 17)" style="font-weight:bold">run_staliro</a> (<a href="matlab: opentoline('/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/run_staliro.m',17,0)">line 17</a>)
+run_example(filename, path,num_runs);} 
+clear all
+run_staliro(10)
+regression_dir_path =
+./regression_results/
+array('d', [3.0, 2.0, -0.0, 1.0, -0.0, 1.0, 0.0, 0.0]) array('d', [3.0, 2.0, -4.0, 4.0, 1.5, 10.0, -20.0, 20.0]) array('d', [1.0, 2.0, 0.0, 0.0])
+Running S-TaLiRo with chosen solver ...
+run_id_str =
+run_1
+
+Run number 1
+Best ==> 0.5305
+Best ==> 0.47362
+Best ==> 0.4436
+Best ==> 0.22462
+Best ==> 0.18288
+Best ==> 0.17075
+Best ==> 0.17048
+Best ==> 0.11823
+Best ==> 0.10867
+Best ==> 0.094299
+Best ==> 0.079132
+Best ==> 0.072783
+Best ==> 0.069806
+Best ==> 0.066404
+Best ==> 0.06427
+Best ==> 0.056358
+Best ==> 0.055933
+Best ==> 0.05573
+Best ==> 0.053722
+50 Acceptance Ratio=0.62 beta=-22.5,0.825
+Best ==> 0.032041
+Best ==> 0.021893
+Best ==> 0.014866
+Best ==> 0.0033225
+Best ==> 0.0016555
+Best ==> -0.00035275
+FALSIFIED!
+  Running time of run 1: 4.3753 sec
+FALSIFIED!
+run_id_str =
+run_2
+
+Run number 1
+Best ==> 0.61823
+Best ==> 0.51372
+Best ==> 0.49549
+Best ==> 0.48606
+Best ==> 0.42963
+Best ==> 0.41802
+Best ==> 0.40231
+Best ==> 0.38254
+Best ==> 0.22304
+Best ==> 0.16963
+Best ==> 0.12768
+Best ==> 0.12488
+Best ==> 0.10973
+Best ==> 0.1079
+Best ==> 0.026467
+Best ==> 0.02247
+50 Acceptance Ratio=0.6 beta=-22.5,0.825
+Best ==> 0.0042495
+Best ==> 0.0041859
+Best ==> -0.00091417
+FALSIFIED!
+  Running time of run 1: 2.798 sec
+FALSIFIED!
+run_id_str =
+run_3
+
+Run number 1
+Best ==> 0.46079
+50 Acceptance Ratio=0.56 beta=-22.5,0.825
+Best ==> 0.35421
+Best ==> 0.10377
+Best ==> 0.058865
+Best ==> 0.053962
+Best ==> 0.050542
+Best ==> 0.040862
+Best ==> 0.027382
+100 Acceptance Ratio=0.68 beta=-33.75,0.9075
+Best ==> 0.025377
+Best ==> 0.024903
+Best ==> 0.024373
+Best ==> 0.022315
+Best ==> 0.022043
+Best ==> 0.021847
+Best ==> 0.011094
+Best ==> 0.011016
+Best ==> 0.0087021
+Best ==> 0.0076711
+Best ==> 0.0075208
+Best ==> 0.00081538
+Best ==> -0.00091417
+FALSIFIED!
+  Running time of run 1: 6.8588 sec
+FALSIFIED!
+run_id_str =
+run_4
+
+Run number 1
+Best ==> 1.2202
+Best ==> 1.1065
+Best ==> 1.019
+Best ==> 0.93629
+Best ==> 0.87164
+Best ==> 0.70634
+Best ==> 0.55146
+Best ==> 0.48559
+Best ==> 0.47889
+Best ==> 0.47804
+Best ==> 0.4582
+Best ==> 0.44748
+Best ==> 0.4395
+Best ==> 0.43842
+Best ==> 0.42885
+Best ==> 0.42731
+Best ==> 0.42723
+Best ==> 0.42499
+Best ==> 0.42475
+Best ==> 0.4241
+Best ==> 0.42388
+Best ==> 0.42355
+50 Acceptance Ratio=0.68 beta=-22.5,0.825
+Best ==> 0.4154
+Best ==> 0.37836
+Best ==> 0.37566
+Best ==> 0.37488
+Best ==> 0.062951
+Best ==> 0.03022
+Best ==> 0.019308
+Best ==> 0.019117
+Best ==> 0.018158
+Best ==> -0.00091417
+FALSIFIED!
+  Running time of run 1: 4.791 sec
+FALSIFIED!
+run_id_str =
+run_5
+
+Run number 1
+Best ==> 0.98905
+Best ==> 0.98471
+Best ==> 0.98189
+Best ==> 0.97624
+Best ==> 0.6824
+Best ==> 0.58665
+Best ==> 0.57401
+Best ==> 0.56319
+Best ==> 0.54407
+Best ==> 0.50977
+Best ==> 0.42456
+Best ==> 0.33817
+Best ==> 0.33596
+Best ==> 0.29505
+Best ==> 0.20896
+Best ==> 0.18644
+Best ==> 0.15857
+Best ==> 0.15838
+Best ==> 0.15483
+Best ==> 0.14379
+Best ==> 0.14286
+50 Acceptance Ratio=0.58 beta=-22.5,0.825
+Best ==> 0.13892
+Best ==> 0.13813
+Best ==> 0.10646
+Best ==> 0.09699
+Best ==> 0.095502
+Best ==> 0.083195
+Best ==> 0.081808
+Best ==> 0.013016
+Best ==> 0.0064908
+Best ==> 0.0058201
+Best ==> 0.0050835
+Best ==> 0.0047777
+Best ==> 0.0043272
+Best ==> 0.0040107
+Best ==> 0.0037025
+100 Acceptance Ratio=0.68 beta=-33.75,0.9075
+Best ==> 0.0029463
+Best ==> -0.00091417
+FALSIFIED!
+  Running time of run 1: 5.9826 sec
+FALSIFIED!
+run_id_str =
+run_6
+
+Run number 1
+Best ==> 0.62883
+Best ==> 0.59085
+Best ==> 0.52301
+Best ==> 0.5003
+Best ==> 0.49809
+Best ==> 0.49287
+Best ==> 0.48879
+Best ==> 0.48769
+Best ==> 0.48566
+Best ==> 0.48492
+Best ==> 0.48418
+Best ==> 0.48391
+Best ==> 0.48323
+Best ==> 0.36922
+Best ==> 0.30858
+Best ==> 0.30166
+Best ==> 0.16942
+Best ==> 0.15302
+Best ==> 0.1333
+Best ==> 0.094959
+Best ==> 0.087196
+Best ==> 0.08622
+50 Acceptance Ratio=0.64 beta=-22.5,0.825
+Best ==> 0.055172
+Best ==> 0.040189
+Best ==> 0.022807
+Best ==> 0.016236
+Best ==> 0.014289
+Best ==> 0.0039459
+Best ==> -0.00091417
+FALSIFIED!
+  Running time of run 1: 3.4408 sec
+FALSIFIED!
+run_id_str =
+run_7
+
+Run number 1
+Best ==> 0.83903
+Best ==> 0.67032
+Best ==> 0.63933
+Best ==> 0.60957
+Best ==> 0.57142
+Best ==> 0.52889
+Best ==> 0.5226
+Best ==> 0.51375
+Best ==> 0.49708
+Best ==> 0.48511
+Best ==> 0.46833
+Best ==> 0.4541
+Best ==> 0.45091
+Best ==> 0.4483
+Best ==> 0.44426
+50 Acceptance Ratio=0.64 beta=-22.5,0.825
+Best ==> 0.44215
+Best ==> 0.44122
+Best ==> 0.4405
+Best ==> 0.44037
+Best ==> 0.44024
+Best ==> 0.44023
+Best ==> 0.44022
+Best ==> 0.44014
+Best ==> 0.44014
+Best ==> 0.44014
+Best ==> 0.33219
+Best ==> 0.32951
+Best ==> 0.22122
+Best ==> 0.21651
+Best ==> 0.18959
+Best ==> 0.18826
+Best ==> 0.15212
+Best ==> 0.14755
+Best ==> 0.13468
+100 Acceptance Ratio=0.74 beta=-33.75,0.9075
+Best ==> 0.094918
+Best ==> 0.029376
+Best ==> 0.016141
+Best ==> -0.00091417
+FALSIFIED!
+  Running time of run 1: 5.7034 sec
+FALSIFIED!
+run_id_str =
+run_8
+
+Run number 1
+Best ==> 0.84258
+Best ==> 0.81153
+Best ==> 0.59291
+Best ==> 0.52747
+Best ==> 0.5274
+Best ==> 0.52151
+Best ==> 0.51221
+Best ==> 0.50922
+Best ==> 0.50502
+Best ==> 0.50334
+Best ==> 0.50302
+Best ==> 0.5012
+Best ==> 0.50118
+50 Acceptance Ratio=0.72 beta=-22.5,0.825
+Best ==> 0.50092
+Best ==> 0.5009
+Best ==> 0.45573
+Best ==> 0.27494
+Best ==> 0.27175
+Best ==> 0.13835
+Best ==> 0.082452
+Best ==> 0.055423
+Best ==> 0.050984
+Best ==> 0.05051
+Best ==> 0.047412
+Best ==> 0.045148
+Best ==> 0.045086
+Best ==> 0.044913
+Best ==> 0.044849
+Best ==> 0.044774
+Best ==> 0.0096575
+Best ==> -0.00091417
+FALSIFIED!
+  Running time of run 1: 4.8803 sec
+FALSIFIED!
+run_id_str =
+run_9
+
+Run number 1
+Best ==> 0.67001
+Best ==> 0.64143
+Best ==> 0.55159
+Best ==> 0.54266
+Best ==> 0.51708
+Best ==> 0.50571
+Best ==> 0.2406
+Best ==> 0.22842
+Best ==> 0.22365
+Best ==> 0.20714
+Best ==> 0.13335
+Best ==> 0.13065
+Best ==> 0.1274
+Best ==> 0.11055
+Best ==> 0.046642
+Best ==> 0.041292
+Best ==> 0.026582
+Best ==> 0.025702
+Best ==> 0.016279
+Best ==> 0.0058291
+50 Acceptance Ratio=0.66 beta=-22.5,0.825
+Best ==> -0.00091417
+FALSIFIED!
+  Running time of run 1: 2.9929 sec
+FALSIFIED!
+run_id_str =
+run_10
+
+Run number 1
+Best ==> 1.2959
+Best ==> 1.0783
+Best ==> 0.90515
+Best ==> 0.82646
+Best ==> 0.78984
+Best ==> 0.6698
+Best ==> 0.59257
+Best ==> 0.54862
+Best ==> 0.50153
+Best ==> 0.50087
+Best ==> 0.48445
+Best ==> 0.46233
+Best ==> 0.4372
+Best ==> 0.42458
+Best ==> 0.41361
+Best ==> 0.35837
+Best ==> 0.32663
+Best ==> 0.12063
+Best ==> 0.066816
+Best ==> 0.051219
+Best ==> 0.030235
+Best ==> 0.027371
+Best ==> 0.014824
+Best ==> 0.011144
+50 Acceptance Ratio=0.74 beta=-22.5,0.825
+Best ==> -0.00091417
+FALSIFIED!
+  Running time of run 1: 2.7886 sec
+FALSIFIED!

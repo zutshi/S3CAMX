@@ -1,0 +1,14 @@
+number of S-Taliro runs: 2	run_time: 192.966631	result: Falsified
+number of S-Taliro runs: 3	run_time: 383.481322	result: Falsified
+number of S-Taliro runs: 7	run_time: 761.166340	result: Falsified
+number of S-Taliro runs: 3	run_time: 267.723613	result: Falsified
+number of S-Taliro runs: 1	run_time: 66.006767	result: Falsified
+number of S-Taliro runs: 4	run_time: 322.705189	result: Falsified
+number of S-Taliro runs: 4	run_time: 330.377123	result: Falsified
+number of S-Taliro runs: 6	run_time: 519.958539	result: Falsified
+number of S-Taliro runs: 9	run_time: 789.219910	result: Falsified
+number of S-Taliro runs: 7	run_time: 621.923586	result: Falsified
+            =====================             
+total_time: 4255.529020
+average_time_per_run: 425.552902
+****************** END ***********************
