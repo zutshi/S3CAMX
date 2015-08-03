@@ -52,7 +52,7 @@ error_set = [[1.0, 10.0], [1.2, 11.0]]
 #   took only one iter
 #   needs 2 samples! takes around 92s with and 51s w/o plotting and logging
 grid_eps = [0.1, 0.1]
-# minDist=0.05
+min_smt_sample_dist = 0.05
 num_samples = 2
 # ss: pending...
 

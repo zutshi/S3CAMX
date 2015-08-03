@@ -3,8 +3,10 @@
 
 % def sim(TT, XX, D, P, U, I, property_checker, property_violated_flag):
 function [tt,YY,D,P,prop_violated_flag] = vanDerPol(t,T,XX,D,P,U,I,property_check)
+%figure(1)
+%hold on
 
-error_set = [-1, -6.5; -0.7, -5.6]
+error_set = [-1, -6.5; -0.7, -5.6];
 prop_violated_flag = 0;
 
 %TODO: push odeset() in some init function
@@ -24,15 +26,29 @@ if property_check == 1
     if length(idx_list) > 0
         prop_violated_flag = 1;
         first_violation_idx = idx_list(1);
-        YY = YY(1:first_violation_idx,:);
-        tt = tt(1:first_violation_idx,:);
+        %YY = YY(1:first_violation_idx,:);
+        %tt = tt(1:first_violation_idx,:);
+        YY = YY(first_violation_idx,:);
+        tt = tt(first_violation_idx,:);
+        %display('ERROR FOUND!!')
     end
 end
 tt = tt + repmat(t,size(tt,1),1);
+
+%figure(1)
+%plot(YY(:, 1), YY(:, 2));
+
+tt = tt(end);
+YY = YY(end, :);
+
+%if prop_violated_flag == 1
+%  tt
+%  YY
+%end
 end
 
 function Y = dyn(~,X,~,~)
     Y(1) = X(2);
-    Y(2) = 5 * (1 - X(1)^2) * X(2) - X(1);
+    Y(2) = 5.0 * (1 - X(1)^2) * X(2) - X(1);
     Y = Y';
 end

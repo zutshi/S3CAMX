@@ -31,13 +31,13 @@ SQ = '\''
 
 
 def simulator_factory(
-    config_dict,
-    benchmark_os_path,
-    plt,
-    plant_pvt_init_data,
-    parallel=False,
-    test_params=None,
-    ):
+        config_dict,
+        benchmark_os_path,
+        plt,
+        plant_pvt_init_data,
+        parallel=False,
+        test_params=None,
+        ):
 
     # ##!!##logger.debug('requested simulator creation')
 
@@ -50,16 +50,14 @@ def simulator_factory(
                 # get the m_file's path
 
                 m_file_path = config_dict['plant_path']
-                abs_m_file_path = fp.construct_path(m_file_path,
-                        benchmark_os_path)
+                abs_m_file_path = fp.construct_path(m_file_path, benchmark_os_path)
                 if fp.validate_file_names([abs_m_file_path]):
 
                     # return MatlabSim(m_file_path, benchmark_os_path, parallel)
 
                     return MEngPy(m_file_path, benchmark_os_path, parallel)
                 else:
-                    raise err.FileNotFound('file does not exist: '
-                            + m_file_path)
+                    raise err.FileNotFound('file does not exist: ' + m_file_path)
             elif sim_type == 'simulink':
                 return SimulinkSim()
             elif sim_type == 'python':
@@ -72,13 +70,11 @@ def simulator_factory(
                 (module_name, file_ext) = fp.split_filename_ext(python_file_path)
                 if file_ext != 'py':
                     raise err.Fatal('Python file extension py expected, found: {}'.format(file_ext))
-                module_path = fp.construct_path(python_file_path,
-                        benchmark_os_path)
+                module_path = fp.construct_path(python_file_path, benchmark_os_path)
                 if fp.validate_file_names([module_path]):
                     return NativeSim(module_name, module_path, plt, plant_pvt_init_data, parallel)
                 else:
-                    raise err.FileNotFound('file does not exist: '
-                            + python_file_path)
+                    raise err.FileNotFound('file does not exist: ' + python_file_path)
             elif sim_type == 'test':
                 return TestSim(test_params)
             else:
@@ -94,9 +90,9 @@ def simulator_factory(
     else:
         raise err.Fatal('unhandled non string type config_dict!')
 
-
         # for attr in config_dict:
         #    setattr(self, attr, config_dict[attr])
+
 
 class Simulator(object):
 
@@ -124,12 +120,12 @@ class Simulator(object):
     # else [inf, inf, inf, ... inf] is returned
 
     def simulate(
-        self,
-        sim_states,
-        T,
-        property_checker=None,
-        property_violated_flag=None,
-        ):
+            self,
+            sim_states,
+            T,
+            property_checker=None,
+            property_violated_flag=None,
+            ):
         raise NotImplementedError
 
     def simulate_entire_trajectories(self, sim_states, T):
@@ -156,19 +152,19 @@ class MatlabCommunicator(object):
         pass
 
     def call_function(
-        self,
-        ret_val_list,
-        fun_name,
-        arg_list,
-        ):
+            self,
+            ret_val_list,
+            fun_name,
+            arg_list,
+            ):
         raise NotImplementedError
 
     def call_function_retVal(
-        self,
-        ret_val_list,
-        fun_name,
-        arg_list,
-        ):
+            self,
+            ret_val_list,
+            fun_name,
+            arg_list,
+            ):
         raise NotImplementedError
 
     def put_value(self, var_name, var_val):
@@ -213,11 +209,11 @@ class PyMatlab(MatlabCommunicator):
         self.session = pymatlab.session_factory()
 
     def call_function(
-        self,
-        ret_val_list,
-        fun_name,
-        arg_list,
-        ):
+            self,
+            ret_val_list,
+            fun_name,
+            arg_list,
+            ):
         arg_str = COMMA.join(arg_list)
         ret_val_str = COMMA.join(ret_val_list)
         fun_call_str = self.get_fun_call_str(ret_val_str, fun_name, arg_str)
@@ -227,15 +223,14 @@ class PyMatlab(MatlabCommunicator):
         self.exec_command(fun_call_str)
 
     def call_function_retVal(
-        self,
-        ret_val_list,
-        fun_name,
-        arg_list,
-        ):
+            self,
+            ret_val_list,
+            fun_name,
+            arg_list,
+            ):
         arg_composed_str = COMMA.join(arg_list)
         ret_val_composed_str = COMMA.join(ret_val_list)
-        fun_call_str = self.get_fun_call_str(ret_val_composed_str, fun_name,
-                arg_composed_str)
+        fun_call_str = self.get_fun_call_str(ret_val_composed_str, fun_name, arg_composed_str)
 
         # ##!!##logger.debug('created fun call with retVal: ' + fun_call_str)
 
@@ -293,11 +288,11 @@ class MatlabSim(Simulator):
         return idx + 1
 
     def __init__(
-        self,
-        m_file_path,
-        benchmark_os_path,
-        parallel,
-        ):
+            self,
+            m_file_path,
+            benchmark_os_path,
+            parallel,
+            ):
         super(MatlabSim, self).__init__()
 
         self.parallel = parallel
@@ -325,8 +320,7 @@ class MatlabSim(Simulator):
 
         if self.parallel:
             comm.exec_command('matlabpool')
-            [pool_size, ] = comm.call_function_retVal(['pool_size'],
-                    'matlabpool', ['{0}size{0}'.format(SQ)])
+            [pool_size, ] = comm.call_function_retVal(['pool_size'], 'matlabpool', ['{0}size{0}'.format(SQ)])
             logger.info('simulator is parallel with #threads: %s',
                         str(pool_size))
         else:
@@ -344,12 +338,12 @@ class MatlabSim(Simulator):
         logger.info('loaded functions from simulate_m_file.m')
 
     def simulate(
-        self,
-        sim_states,
-        T,
-        property_checker=None,
-        property_violated_flag=None,
-        ):
+            self,
+            sim_states,
+            T,
+            property_checker=None,
+            property_violated_flag=None,
+            ):
 
         # print sim_states.cont_states
         # print sim_states.discrete_states
@@ -392,13 +386,10 @@ class MatlabSim(Simulator):
             print 'unhandled..modify signature to include time first'
             exit()
             fun_name_str = 'simulate_system_par'
-            [X_, D_, P_] = comm.call_function_retVal(ret_val_str_list,
-                    fun_name_str, arg_str_list)
+            [X_, D_, P_] = comm.call_function_retVal(ret_val_str_list, fun_name_str, arg_str_list)
         else:
             fun_name_str = 'simulate_system'
-            [T_, X_, D_, P_, pvf] = \
-                comm.call_function_retVal(ret_val_str_list, fun_name_str,
-                    arg_str_list)
+            [T_, X_, D_, P_, pvf] = comm.call_function_retVal(ret_val_str_list, fun_name_str, arg_str_list)
 
         # print 'output'
         # print X_
@@ -457,8 +448,7 @@ class MatlabSim(Simulator):
             ]
         fun_name_str = 'simulate_entire_trajectories'
         if self.parallel:
-            [data_arr, idx_arr] = comm.call_function_retVal(ret_val_str_list,
-                    fun_name_str, arg_str_list)
+            [data_arr, idx_arr] = comm.call_function_retVal(ret_val_str_list, fun_name_str, arg_str_list)
         else:
 
             logger.warning('non-parallel simulate_entire_trajectories isunimplemented'
@@ -497,8 +487,7 @@ class MatlabSim(Simulator):
         ret_val_str_list = ['data_mat', 'idx_arr']
         arg_str_list = ['sim_function', 'initial_continuous_states', 'T']
         fun_name_str = 'simulate_entire_trajectories_cont'
-        [data_arr, idx_arr] = comm.call_function_retVal(ret_val_str_list,
-                fun_name_str, arg_str_list)
+        [data_arr, idx_arr] = comm.call_function_retVal(ret_val_str_list, fun_name_str, arg_str_list)
 
         # ##!!##logger.debug('converting indices')
 
@@ -539,13 +528,13 @@ class MatlabSim(Simulator):
 class NativeSim(Simulator):
 
     def __init__(
-        self,
-        module_name,
-        module_path,
-        plt,
-        plant_pvt_init_data,
-        parallel,
-        ):
+            self,
+            module_name,
+            module_path,
+            plt,
+            plant_pvt_init_data,
+            parallel,
+            ):
         super(NativeSim, self).__init__()
 
         sim_module = imp.load_source(module_name, module_path)
@@ -553,12 +542,12 @@ class NativeSim(Simulator):
         self.sim = self.sim_obj.sim
 
     def simulate(
-        self,
-        sim_states,
-        T,
-        property_checker=None,
-        property_violated_flag=None,
-        ):
+            self,
+            sim_states,
+            T,
+            property_checker=None,
+            property_violated_flag=None,
+            ):
         t_array = np.empty((sim_states.n, 1))
 
         num_dim = sim_states.cont_states.shape[1]
@@ -642,26 +631,26 @@ class TestSim(Simulator):
                     self.G.add_node(final_abs_state)
         elif self.G.Type == 'test_random':
 
-    # Connect only one initial state
-#            for init_abs_state in abstraction.initial_state_set:
-#                # add initial states as nodes, do not create edges!
-#                if init_abs_state not in self.G:
-#                    self.G.add_node(init_abs_state)
-#            for final_abs_state in abstraction.final_state_set:
-#                # add final states as nodes, do not create edges!
-#                if final_abs_state not in self.G:
-#                    self.G.add_node(final_abs_state)
+                # Connect only one initial state
+            #            for init_abs_state in abstraction.initial_state_set:
+            #                # add initial states as nodes, do not create edges!
+            #                if init_abs_state not in self.G:
+            #                    self.G.add_node(init_abs_state)
+            #            for final_abs_state in abstraction.final_state_set:
+            #                # add final states as nodes, do not create edges!
+            #                if final_abs_state not in self.G:
+            #                    self.G.add_node(final_abs_state)
 
-#            ais = abstraction.initial_state_set.pop()
-#            abstraction.initial_state_set.add(ais)
-#            self.G.add_edge(ais, random.choice(self.G.nodes()))
-#
-#            # Connect only one final state
-#            afs = abstraction.final_state_set.pop()
-#            abstraction.final_state_set.add(afs)
-#            self.G.add_edge(afs, random.choice(self.G.nodes()))
+            #            ais = abstraction.initial_state_set.pop()
+            #            abstraction.initial_state_set.add(ais)
+            #            self.G.add_edge(ais, random.choice(self.G.nodes()))
+            #
+            #            # Connect only one final state
+            #            afs = abstraction.final_state_set.pop()
+            #            abstraction.final_state_set.add(afs)
+            #            self.G.add_edge(afs, random.choice(self.G.nodes()))
 
-    # Connect all init states
+            # Connect all init states
 
             for init_abs_state in abstraction.initial_state_set:
                 if init_abs_state not in self.G:
@@ -719,17 +708,17 @@ class TestSim(Simulator):
                 t = n * T + T
                 t_array_complete[i] = t
                 X_array_complete[i, :] = X_array
-            else:
-
-            # If not state is reachable!
+            else: # If not state is reachable!
 
                 n = self.A.get_n_for(abs_state)
                 t = n * T + T
                 t_array_complete[i] = np.tile(t, 1)
                 X_array_complete[i, :] = inf_array
 
-        concrete_state_arr = st.StateArray(t_array_complete, X_array_complete,
-                dummy_d_array_complete, dummy_p_array_complete)
+        concrete_state_arr = st.StateArray(t_array_complete,
+                                           X_array_complete,
+                                           dummy_d_array_complete,
+                                           dummy_p_array_complete)
         return concrete_state_arr
 
 
@@ -738,11 +727,11 @@ class TestSim(Simulator):
 class MEngPy(Simulator):
 
     def __init__(
-        self,
-        m_file_path,
-        benchmark_os_path,
-        parallel,
-        ):
+            self,
+            m_file_path,
+            benchmark_os_path,
+            parallel,
+            ):
         self.parallel = parallel
         import matlab.engine as matlab_engine
         import matlab as matlab
@@ -775,14 +764,16 @@ class MEngPy(Simulator):
     # else [inf, inf, inf, ... inf] is returned
 
     def simulate(
-        self,
-        sim_states,
-        T,
-        property_checker=None,
-        property_violated_flag=None,
-        ):
+            self,
+            sim_states,
+            T,
+            property_checker=None,
+            property_violated_flag=None,
+            ):
 
-        print 'T', T
+        #print '='*100
+        #print sim_states
+        #print '='*100
 
         if property_checker is None:
             property_check = 0
@@ -797,8 +788,9 @@ class MEngPy(Simulator):
         m_d = matlab.double(sim_states.discrete_states.tolist())
         m_p = matlab.double(sim_states.pvt_states.tolist())
         m_u = matlab.double(sim_states.controller_outputs.tolist())
-        m_p = matlab.double([0.0] * sim_states.cont_states.shape[0])
-        m_pc = matlab.double([property_check])
+        #m_p = matlab.double([0.0] * sim_states.cont_states.shape[0])
+        #m_pc = matlab.double([property_check])
+        m_pc = property_check
 
         [T__, X__, D__, P__, pvf_] = self.eng.simulate_plant(
             self.m_fun,
@@ -816,18 +808,17 @@ class MEngPy(Simulator):
         X_ = np.array(X__)
         D_ = np.array(D__)
         P_ = np.array(P__)
-        pvf = pvf_
+        #print T__, X__
+        #print T_, X_
 
-        # property_violated_flag = property_checker
+        pvf = pvf_
 
         if property_checker is not None:
             property_violated_flag[0] = bool(pvf)
 
-            # print pvf, property_violated_flag[0]
-        # return st.StateArray(t_array, X_, D_, P_)
         # TODO: fix this weird matlab-numpy interfacing
-
-        t_array = np.array(T_, ndmin=2).T
+        # FIXED: is it correct though?
+        t_array = np.array(T_, ndmin=2)
         x = np.array(X_, ndmin=2)
         if D_.ndim <= 1:
             d = np.array(D_, ndmin=2).T
@@ -837,7 +828,7 @@ class MEngPy(Simulator):
             pvt = np.array(P_, ndmin=2).T
         else:
             pvt = P_
-        return st.StateArray(
+        statearray = st.StateArray(
             t=t_array,
             x=x,
             d=d,
@@ -847,3 +838,7 @@ class MEngPy(Simulator):
             pi=sim_states.plant_extraneous_inputs,
             ci=sim_states.controller_extraneous_inputs,
             )
+        #print '='*100
+        #print statearray
+        #print '='*100
+        return statearray

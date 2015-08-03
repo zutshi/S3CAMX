@@ -51,7 +51,8 @@ class TopLevelAbs:
         config_dict,
         T,
         num_dims,
-        controller_path_dir_path,
+        controller_sym_path_obj,
+        min_smt_sample_dist,
         plant_abstraction_type,
         controller_abstraction_type,
         plant_abs=None,
@@ -67,7 +68,8 @@ class TopLevelAbs:
         self.N = None
         self.state = None
         self.scale = None
-        self.controller_path_dir_path = controller_path_dir_path
+        self.controller_sym_path_obj = controller_sym_path_obj
+        self.min_smt_sample_dist = min_smt_sample_dist
         self.plant_abstraction_type = plant_abstraction_type
         self.controller_abstraction_type = controller_abstraction_type
 
@@ -109,11 +111,11 @@ class TopLevelAbs:
         if controller_abstraction_type == 'symbolic_pathcrawler':
             import CASymbolicPCrawler as CA
             controller_abs = CA.ControllerSymbolicAbstraction(self.num_dims,
-                    controller_path_dir_path)
+                    controller_sym_path_obj, min_smt_sample_dist)
         elif controller_abstraction_type == 'symbolic_klee':
             import CASymbolicKLEE as CA
             controller_abs = CA.ControllerSymbolicAbstraction(self.num_dims,
-                    controller_path_dir_path)
+                    controller_sym_path_obj, min_smt_sample_dist)
         elif controller_abstraction_type == 'concolic':
             #from CAConcolic import *
             import CAConcolic as CA
@@ -154,6 +156,10 @@ class TopLevelAbs:
         self.plant_abs = plant_abs
         self.controller_abs = controller_abs
 
+        if self.controller_abstraction_type.startswith('symbolic'):
+            self.get_reachable_states = self.get_reachable_states_sym
+        else:
+            self.get_reachable_states = self.get_reachable_states_conc
         return
 
     def parse_config(self, config_dict):
@@ -216,61 +222,57 @@ class TopLevelAbs:
 
     # TODO: does not have access to step plant and step controller!
 
-    def get_reachable_states(self, abs_state, system_params):
+    def get_reachable_states_sym(self, abs_state, system_params):
         abs2rchd_abs_state_set = set()
-        #if self.controller_abstraction_type == 'symbolic':
-        if self.controller_abstraction_type.startswith('symbolic'):
-            reachable_state_list = \
-                self.controller_abs.get_reachable_abs_states(abs_state, self, system_params)
-            for (cs, c) in reachable_state_list:
+        reachable_state_list = \
+            self.controller_abs.get_reachable_abs_states(abs_state, self, system_params)
+        for (cs, c) in reachable_state_list:
 
-                # reachable_plant_state_set = self.plant_abs.get_reachable_abs_states_sym(c, self, system_params)
+            # reachable_plant_state_set = self.plant_abs.get_reachable_abs_states_sym(c, self, system_params)
 
-                reachable_plant_state_list = self.plant_abs.get_reachable_abs_states_sym(
-                    c,
-                    self,
-                    system_params)
-                for (ps, ci) in reachable_plant_state_list:
-                    reachable_abs_state = AbstractState(ps, cs)
-                    abs2rchd_abs_state_set.add(reachable_abs_state)
+            reachable_plant_state_list = self.plant_abs.get_reachable_abs_states_sym(
+                c,
+                self,
+                system_params)
+            for (ps, ci) in reachable_plant_state_list:
+                reachable_abs_state = AbstractState(ps, cs)
+                abs2rchd_abs_state_set.add(reachable_abs_state)
 
-                    # why making a tuple?
-                    # edge_attr = (ci,)
+                # why making a tuple?
+                # edge_attr = (ci,)
 
-                    edge_attr = ci
-                    self.add_relation(abs_state, reachable_abs_state,
-                                      edge_attr)
-        else:
+                edge_attr = ci
+                self.add_relation(abs_state, reachable_abs_state,
+                                  edge_attr)
+        return abs2rchd_abs_state_set
 
-            # TODO: RECTIFY the below GIANT MESS
-            # Sending in self and the total abstract_state to plant and controller
-            # abstraction!!
+    def get_reachable_states_conc(self, abs_state, system_params):
+        abs2rchd_abs_state_set = set()
 
-            intermediate_state = \
-                self.controller_abs.get_reachable_abs_states(abs_state, self,
-                    system_params)
-            abs2rchd_abs_state_ci_list = \
-                self.plant_abs.get_reachable_abs_states(intermediate_state,
-                    self, system_params)
-            for (rchd_abs_state, ci) in abs2rchd_abs_state_ci_list:
+        # TODO: RECTIFY the below GIANT MESS
+        # Sending in self and the total abstract_state to plant and controller
+        # abstraction!!
 
-                # print ci
+        intermediate_state = \
+            self.controller_abs.get_reachable_abs_states(abs_state, self, system_params)
+        abs2rchd_abs_state_ci_list = \
+            self.plant_abs.get_reachable_abs_states(intermediate_state, self, system_params)
+        for (rchd_abs_state, ci) in abs2rchd_abs_state_ci_list:
 
-                self.add_relation(abs_state, rchd_abs_state, ci)
-                abs2rchd_abs_state_set.add(rchd_abs_state)
+            # print ci
 
+            self.add_relation(abs_state, rchd_abs_state, ci)
+            abs2rchd_abs_state_set.add(rchd_abs_state)
         return abs2rchd_abs_state_set
 
     def compute_error_paths(self, initial_state_set, final_state_set):
         print 'self.N', self.N
-        return self.G.get_path_generator(initial_state_set, final_state_set,
-                self.N + 2)
+        return self.G.get_path_generator(initial_state_set, final_state_set, self.N + 2)
 
     def get_seq_of_ci(self, path):
         return self.G.get_path_attr_list(path)
 
-    def get_initial_states_from_error_paths(self, initial_state_set,
-            final_state_set):
+    def get_initial_states_from_error_paths(self, initial_state_set, final_state_set):
         MAX_ERROR_PATHS = 100
         ci_dim = self.num_dims.ci
         init_set = set()

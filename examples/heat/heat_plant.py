@@ -4,7 +4,7 @@
 
 import numpy as np
 from scipy.integrate import ode
-import matplotlib.pyplot as PLT
+#import matplotlib.pyplot as PLT
 
 import heat as H
 
@@ -73,7 +73,7 @@ class SIM(object):
             return np.array(X_.T)
 
         self.dyn = dyn
-        self.plt = PLT#plt
+        #self.plt = PLT#plt
 
     def sim(self, TT, X0, D, P, U, I, property_checker, property_violated_flag):
         # atol = 1e-10

@@ -1,2 +1,2 @@
 #!/bin/bash
-grep -n '^[ ]*err\.Fatal' *.py
+grep -n '^[ ]*err\.Fatal' *

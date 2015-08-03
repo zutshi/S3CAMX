@@ -38,7 +38,7 @@ num_samples = 5
 # maximum iteration before SS iter outs.
 MAX_ITER = 5
 
-# minDist=0.05
+min_smt_sample_dist = 0.05
 ########################
 
 # initial controller states which are C ints

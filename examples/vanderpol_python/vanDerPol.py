@@ -7,95 +7,99 @@ import numpy as np
 from scipy.integrate import ode
 
 
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
-# def vanDerPol(T, XX, D, P, I):
 
-def sim(TT, XX, D, P, U, I, property_checker, property_violated_flag):
+class SIM(object):
 
-    # local prop vio flag
+    def __init__(self, plt, plant_pvt_init_data):
+        pass
 
-    pvf_local = [False]
+    def sim(self, TT, XX, D, P, U, I, property_checker, property_violated_flag):
 
-    # print TT[0]
-    # print XX
+        # local prop vio flag
 
-    plot_data = [np.empty(1, dtype=float), np.empty((0, 2), dtype=float)]
+        pvf_local = [False]
 
-    # atol = 1e-10
+        # print TT[0]
+        # print XX
 
-    rtol = 1e-6
-    if property_checker is not None:
-        max_step = 1e-2
-    else:
-        max_step = 0.0
-    nsteps = 1000
+        plot_data = [np.empty(1, dtype=float), np.empty((0, 2), dtype=float)]
 
-    # tt,YY,dummy_D,dummy_P
-    # The orer of these calls is strict... do not change
-    # (1):set_integrator -> (2):set_solout -> (3):set_initial_value
+        # atol = 1e-10
 
-    solver = ode(dyn).set_integrator('dopri5', rtol=rtol, max_step=max_step,
-                                     nsteps=nsteps)  # (1)
-    if property_checker:
-        violating_state = [()]
-        solver.set_solout(solout_fun(property_checker, pvf_local,
-                          violating_state, plot_data))  # (2)
-    solver.set_initial_value(XX, 0.0)  # (3)
-
-    Ti = TT[0]
-    Tf = TT[1]
-    T = Tf - Ti
-
-    # print '='*40, 'result', '='*40
-    # print T
-
-    Y = solver.integrate(T)
-    if pvf_local[0]:
-
-        # TODO: changing t will mess up 'n' calculaitons in the
-        # abstraction? Not changing will cause issues? Figure a way out!
-        # t = violating_state[0][0]
-        # print 'violating_state:', violating_state[0]
-        # print 'setting Y', violating_state[0]
-
-        Y = violating_state[0][1]
-    else:
+        rtol = 1e-6
         if property_checker is not None:
-            if property_checker(Tf, Y):
-                pvf_local[0] = True
+            max_step = 1e-2
+        else:
+            max_step = 0.0
+        nsteps = 1000
 
-    # print Y
-    # print '='*80
+        # tt,YY,dummy_D,dummy_P
+        # The orer of these calls is strict... do not change
+        # (1):set_integrator -> (2):set_solout -> (3):set_initial_value
 
-    ret_t = Tf
-    ret_X = Y
-    ret_D = D
-    ret_P = P
-    if pvf_local[0]:
-        property_violated_flag[0] = True
+        solver = ode(dyn).set_integrator('dopri5', rtol=rtol, max_step=max_step,
+                                         nsteps=nsteps)  # (1)
+        if property_checker:
+            violating_state = [()]
+            solver.set_solout(solout_fun(property_checker, pvf_local,
+                              violating_state, plot_data))  # (2)
+        solver.set_initial_value(XX, 0.0)  # (3)
 
-    # print plot_data[1]
-    plt.plot(plot_data[1][:,0], plot_data[1][:,1])
-    # print 'sim:',ret_X, pvf_local[0]
+        Ti = TT[0]
+        Tf = TT[1]
+        T = Tf - Ti
 
-    return (ret_t, ret_X, ret_D, ret_P)
+        # print '='*40, 'result', '='*40
+        # print T
+
+        Y = solver.integrate(T)
+        if pvf_local[0]:
+
+            # TODO: changing t will mess up 'n' calculaitons in the
+            # abstraction? Not changing will cause issues? Figure a way out!
+            # t = violating_state[0][0]
+            # print 'violating_state:', violating_state[0]
+            # print 'setting Y', violating_state[0]
+
+            Y = violating_state[0][1]
+        else:
+            if property_checker is not None:
+                if property_checker(Tf, Y):
+                    pvf_local[0] = True
+
+        # print Y
+        # print '='*80
+
+        ret_t = Tf
+        ret_X = Y
+        ret_D = D
+        ret_P = P
+        if pvf_local[0]:
+            property_violated_flag[0] = True
+
+        # print plot_data[1]
+        #plt.plot(plot_data[1][:,0], plot_data[1][:,1])
+        # print 'sim:',ret_X, pvf_local[0]
+
+        return (ret_t, ret_X, ret_D, ret_P)
 
 
 def dyn(t, X):
     x1 = X[0]
     x2 = X[1]
     y1 = x2
-    y2 = 5 * (1 - x1 ** 2) * x2 - x1
+    y2 = 5.0 * (1 - x1 ** 2) * x2 - x1
     return np.array([y1, y2])
 
 
 def solout_fun(
-    property_checker,
-    pvf_local,
-    violating_state,
-    plot_data,
-    ):
+        property_checker,
+        pvf_local,
+        violating_state,
+        plot_data,
+        ):
 
     def solout(t, Y):
 

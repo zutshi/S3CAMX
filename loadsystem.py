@@ -27,7 +27,8 @@ class System(object):
     def __init__(self, controller_path, num_dims,
                  plant_config_dict, delta_t,
                  controller_path_dir_path,
-                 controller_object_str, path, plant_pvt_init_data):
+                 controller_object_str, path, plant_pvt_init_data,
+                 min_smt_sample_dist):
         self.controller_path = controller_path
         self.controller_object_str = controller_object_str
         self.num_dims = num_dims
@@ -39,6 +40,10 @@ class System(object):
         self.delta_t = delta_t
         self.controller_path_dir_path = controller_path_dir_path
         self.path = path
+
+        # TODO: sampling_dist along with abstraction params need to be
+        # separated and the plat abs dict needs to go!
+        self.min_smt_sample_dist = min_smt_sample_dist
 
         self.sanity_check = U.assert_no_Nones
 
@@ -83,6 +88,8 @@ class Property(object):
         return
 
 
+# No longer being used
+# Instead, all options are now passed using the commandline
 class Options(object):
     def __init__(self, plot, MODE, num_sim_samples, METHOD, symbolic_analyzer):
         self.plot = plot
@@ -150,11 +157,15 @@ def parse(file_path):
                                   np.array(sut.error_set[1]))
     T = sut.T
 
-    controller_object_str = fp.split_filename_ext(sut.controller_path)[0]
+    if sut.controller_path is not None:
+        controller_object_str = fp.split_filename_ext(sut.controller_path)[0]
+        controller_path_dir_path = fp.construct_path(sut.controller_path_dir_path, path)
+    else:
+        controller_object_str = None
+        controller_path_dir_path = None
 
     delta_t = sut.delta_t
     #try:  # enforce it for now!
-    controller_path_dir_path = fp.construct_path(sut.controller_path_dir_path, path)
     #except:
     #    controller_path_dir_path = None
     initial_discrete_state = sut.initial_discrete_state
@@ -169,7 +180,7 @@ def parse(file_path):
     controller_path = sut.controller_path
     plant_pvt_init_data = sut.plant_pvt_init_data
 
-    sys = System(controller_path, num_dims, plant_config_dict, delta_t, controller_path_dir_path, controller_object_str, path, plant_pvt_init_data)
+    sys = System(controller_path, num_dims, plant_config_dict, delta_t, controller_path_dir_path, controller_object_str, path, plant_pvt_init_data, sut.min_smt_sample_dist)
     prop = Property(T, init_cons_list, init_cons, final_cons, ci, pi, initial_discrete_state, initial_controller_state, MAX_ITER, num_segments)
 
     #num_sim_samples = sut.num_sim_samples

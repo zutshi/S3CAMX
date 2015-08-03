@@ -4,7 +4,7 @@
 import numpy as np
 from scipy.integrate import ode
 
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 J = 0.01
 K = 0.01

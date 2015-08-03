@@ -1,17 +1,20 @@
 function [tt,YY,D,P,prop_violated_flag] = AbstractFuelControl(t,T,XX,D,P,U,I,property_check)
-% figure(1)
-% hold on
-% figure(2)
-% hold on
-% figure(3)
-% hold on
+display(XX)
+fprintf('%f, %f\n', t, T);
+%figure(1)
+%hold on
+%figure(2)
+%hold on
+%figure(3)
+%hold on
 
 % TODO: call only once!
 init()
 
 set_states(XX);
+
 %warning('forcing control inputs!')
-%U = [0.3 0 14.7];
+%U = [0.441 0 14.7];
 % set control inputs
 set_param('AbstractFuelControl_M1/Model 1/AFC/commanded_fuel_c', 'Value', num2str(U(1)));
 set_param('AbstractFuelControl_M1/Model 1/AFC/airbyfuel_ref_c', 'Value', num2str(U(3))); 
@@ -19,17 +22,20 @@ set_param('AbstractFuelControl_M1/Model 1/AFC/airbyfuel_ref_c', 'Value', num2str
 % Run the model
 
 % options=simset('SrcWorkspace','current','DstWorkspace','base', 'ReturnWorkspaceOutputs', 'on');
-mySimOut = sim(model_name, 'StartTime', num2str(t),'StopTime', num2str(T), 'SaveFinalState', 'on', 'FinalStateName',[model_name 'SimState'], 'SaveCompleteFinalSimState', 'on', 'SaveFormat','Structure', 'SimulationMode', 'normal');
+mySimOut = sim(model_name, 'StartTime', num2str(t),'StopTime', num2str(T), 'SaveFinalState', 'on', 'FinalStateName',[model_name 'SimState'], 'SaveCompleteFinalSimState', 'on', 'SaveFormat', 'dataset', 'SimulationMode', 'accelerator');
 %assignin('base', 'mySimOut', mySimOut);
 YY = get_states(mySimOut);
 YY(13) = XX(13);  % engine speed
 
-% figure(1)
-% plot(t, YY(12,:))
-% figure(2)
-% plot(t, U(1))
-% figure(3)
-% plot(t, U(3))
+%figure(1)
+%plot(mySimOut.get('verification_measurement_wk').Time, mySimOut.get('verification_measurement_wk').Data);
+
+%figure(2)
+%plot(mySimOut.get('compare_wk').Time, mySimOut.get('compare_wk').Data)
+%display(mySimOut.get('compare_wk').Data')
+  
+%figure(3)
+%plot(t, U(1), '*')
 
 YY = YY';
 tt = T;
@@ -42,30 +48,37 @@ if YY(12) >= 0.02
 end
 end
 
-function [state_path, state_name] = state_id_map(state_id)
+function [state_path, state_name, state_abbrv] = state_id_map(state_id)
 
 switch state_id
     case 1 % X0 = 0
         state_path = [model_name M1 CnE '/Integrator'];
         state_name = 'InitialCondition';
+        state_abbrv = 'cyl_ex';
     case 2 % X0 = 0
         state_path = [model_name M1 '/Throttle delay'];
         state_name = 'X0';
+        state_abbrv = 'throttle_delay';
     case 3 % X0 = 0.982000
         state_path = [model_name M1 IM '/p0 = 0.543 (bar)'];
         state_name = 'InitialCondition';
+        state_abbrv = 'intake_manifold';
     case 4 % X0 = 0.011200
         state_path = [model_name M1 '/Wall wetting/Integrator'];
         state_name = 'InitialCondition';
+        state_abbrv = 'wall_wetting';
     case 5 % X0 = 0
         state_path = [model_name '/V&V stub system/Calcuate Error/RMS error/Integrator'];
         state_name = 'InitialCondition';
+        state_abbrv = 'vnv';
     case 6  % X0 \in [0 61.1];
         state_path = [model_name '/Pedal Angle (deg)'];
         state_name = 'Amplitude';
+        state_abbrv = 'NA';
     case 7  % X0 \in [10 30];
         state_path = [model_name '/Pedal Angle (deg)'];
         state_name = 'Period';
+        state_abbrv = 'NA';
 %     case 8
 %         % output modeled as a pseudo state...this should not be called
 %         Omega -> engine_speed_wk
@@ -88,10 +101,10 @@ end
 
 
 function set_states(X)
-display('setting states')
+%display('setting states')
 for i = 1:7
-    [state_path, state_name] = state_id_map(i);
-    display(['setting' state_path state_name ' = ' num2str(X(i))])
+    [state_path, state_name, ~] = state_id_map(i);
+    %display(['setting' state_path state_name ' = ' num2str(X(i))])
     set_param(state_path, state_name, num2str(X(i)));
 end
 
@@ -105,21 +118,35 @@ assignin('base', 'xf', xf);
 Y_str = cell(NUM_TOTAL_STATES, 1);
 Y = zeros(NUM_TOTAL_STATES, 1);
 
+%% old code, when simstates were of type 'structure'
+%for i = 1:NUM_STATES-2
+%    [state_path, state_name] = state_id_map(i);
+%    Y(i) = xf.loggedStates(i).values;
+%    Y_str{i} = xf.loggedStates(i).blockName;
+%    % Verify that strings are the same, if not raise error.
+%    if strcmp(state_path,Y_str{i}) ~= 1
+%        error('state string mismatch: %s != %s', state_path,Y_str{i});
+%    end
+%end
+
+%% sim states are datasets now
 for i = 1:NUM_STATES-2
-    [state_path, state_name] = state_id_map(i);
-    Y(i) = xf.loggedStates(i).values;
-    Y_str{i} = xf.loggedStates(i).blockName;
+    [state_path, state_name, state_abbrv] = state_id_map(i);
+    Y(i) = xf.loggedStates.get(state_abbrv).Values.Data;
+    % TODO: below is redundant. Retained as an assertion ...
+    Y_str{i} = xf.loggedStates.get(state_abbrv).BlockPath.getBlock(1);
     % Verify that strings are the same, if not raise error.
     if strcmp(state_path,Y_str{i}) ~= 1
         error('state string mismatch: %s != %s', state_path,Y_str{i});
     end
 end
+
 %% parameters
 % The pedal amplitude and period remains the same and can be read using
 % get_param
-[state_path, state_name] = state_id_map(6);
+[state_path, state_name, ~] = state_id_map(6);
 Y(6) = str2double(get_param(state_path, state_name));
-[state_path, state_name] = state_id_map(7);
+[state_path, state_name, ~] = state_id_map(7);
 Y(7) = str2double(get_param(state_path, state_name));
 %% outputs
 % get engine_speed. Only 1 data point is stored
@@ -153,7 +180,6 @@ end
 
 function y = mdl_path()
 y = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/abstractFuelControl/AbstractFuelControl_M1.slx';
-% y = './AbstractFuelControl_M1.slx';
 end
 function y = M1()
 y = '/Model 1';
@@ -168,14 +194,16 @@ end
 
 function init()
 disp('loading simulink model...')
-disp('done...')
 load_system(mdl_path);
+disp('done...')
+
+% TODO: fix simtime using pvt data!
 % simulation time (sec)
-simTime = 50;
+simTime = 20;
 assignin('base', 'simTime', simTime);
 % engine speed (rpm)
-en_speed = 1000;
-assignin('base', 'en_speed', en_speed);
+%en_speed = 1000;
+%assignin('base', 'en_speed', en_speed);
 % time to start to measurement for verification (sec)
 measureTime = 1;
 assignin('base', 'measureTime', measureTime);
