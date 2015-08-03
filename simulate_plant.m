@@ -3,10 +3,9 @@ function ret_cell = simulate_plant(sim_function, t, T, initial_continuous_states
 delete 'log_matlab'
 diary log_matlab
 
-sim_function = str2func(sim_function)
+sim_function = str2func(sim_function);
 
 plot_to_debug = 0;
-pvf = 0;
 
 % t
 % T
@@ -26,9 +25,17 @@ pvf = 0;
 % hold on
 
 num_initial_conditions = size(initial_continuous_states, 1);
+
+%num_initial_conditions
+%initial_discrete_states
+%initial_pvt_states
+%inputs
+
 if num_initial_conditions ~= size(initial_discrete_states, 1) || num_initial_conditions ~= size(initial_pvt_states, 1) || num_initial_conditions ~= size(inputs, 1)
         error('size of state arrays or input arrays do not match')
 end
+
+
 
 my_print('num_initial_conditions', num_initial_conditions)
 my_print('control inputs', control_inputs)
@@ -45,6 +52,8 @@ ret_t = zeros(num_initial_conditions, 1);
 ret_X = zeros(num_initial_conditions, num_continuous_states);
 ret_D = zeros(num_initial_conditions, num_discrete_states);
 ret_P = zeros(num_initial_conditions, num_private_states);
+
+pvf_array = zeros(num_initial_conditions, 1);
 
 data_set = cell(1, num_initial_conditions);
 
@@ -72,7 +81,7 @@ for i = 1:num_initial_conditions
     [t_arr,X_arr,D_arr,P_arr,prop_violated_flag] = sim_function(t0,t0+T,X0,D0,P0,U0,I0,property_check);
 
     if property_check == 1
-        pvf = prop_violated_flag;
+        pvf_array(i) = prop_violated_flag;
     end
     
     my_print('t', t_arr)
@@ -117,6 +126,7 @@ if plot_to_debug == 1
         plot(data_set{j}(:,1),data_set{j}(:,2))
     end
 end
+pvf = any(pvf_array);
 ret_cell = {ret_t, ret_X, ret_D, ret_P, pvf};
 end
 

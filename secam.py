@@ -28,6 +28,7 @@ import err
 import loadsystem
 import traces
 import example_list as egl
+import CSymLoader as CSL
 
 
 # start logger
@@ -136,25 +137,46 @@ def create_abstraction(sys, prop, opts):
         sampler = sample.IntervalSampler()
         sampler = sample.IntervalSampler()
         controller_abstraction_type = 'concrete'
+        controller_sym_path_obj = None
+
+        # TODO: manual contruction of paths!!!!
+        # use OS independant APIs from fileOps
     elif METHOD == 'symbolic':
         sampler = None
         if opts.symbolic_analyzer == 'klee':
-            controller_path_dir_path += '/klee/'
             controller_abstraction_type = 'symbolic_klee'
+            if opts.cntrl_rep == 'smt2':
+                controller_path_dir_path += '/klee/'
+            else:
+                raise err.Fatal('KLEE supports only smt2 files!')
         elif opts.symbolic_analyzer == 'pathcrawler':
-            controller_path_dir_path += '/pathcrawler/'
             controller_abstraction_type = 'symbolic_pathcrawler'
+            if opts.cntrl_rep == 'smt2':
+                controller_path_dir_path += '/pathcrawler/'
+            elif opts.cntrl_rep == 'trace':
+                controller_path_dir_path += '/controller'
+            else:
+                raise err.Fatal('argparse should have caught this!')
+
+            # Parse PC Trace
+            controller_sym_path_obj = CSL.load_sym_obj((opts.cntrl_rep, opts.trace_struct), controller_path_dir_path)
         else:
             raise err.Fatal('unknown symbolic analyzer requested:{}'.format(opts.symbolic_analyzer))
 
     else:
         raise NotImplementedError
 
+    # TODO: parameters like controller_sym_path_obj are absraction dependant
+    # and should not be passed directly to abstraction_factory. Instead a
+    # flexible structure should be created which can be filled by the
+    # CAsymbolic abstraction module and supplied as a substructure. I guess the
+    # idea is that an abstraction module should be 'pluggable'.
     current_abs = abstraction.abstraction_factory(
         plant_config_dict,
         T,
         num_dims,
-        controller_path_dir_path,
+        controller_sym_path_obj,
+        sys.min_smt_sample_dist,
         plant_abstraction_type,
         controller_abstraction_type,
         )
@@ -232,8 +254,7 @@ def falsify(sys, prop, opts, current_abs, sampler):
         else:
             print('analyzing graph...')
         (promising_initial_states, ci_seq_list) = \
-            current_abs.get_initial_states_from_error_paths(initial_state_set,
-                final_state_set)
+            current_abs.get_initial_states_from_error_paths(initial_state_set, final_state_set)
 
         # ##!!##logger.debug('promising initial states: {}'.format(promising_initial_states))
 
@@ -242,10 +263,19 @@ def falsify(sys, prop, opts, current_abs, sampler):
             f2 = plt.figure()
             f2.suptitle('random testing')
 
+        # TODO: ugly...should it be another function?
+        # Read the TODO above the function definition for more details
+        valid_promising_initial_state_list = SS.filter_invalid_abs_states(
+                promising_initial_states,
+                current_abs,
+                init_cons)
+        if valid_promising_initial_state_list == []:
+            print('no valid sample found during random testing. STOP', file=SYS.stderr)
+            return
         done = SS.random_test(
             current_abs,
             system_params,
-            promising_initial_states,
+            valid_promising_initial_state_list,
             ci_seq_list,
             init_cons,
             initial_discrete_state,
@@ -257,24 +287,29 @@ def falsify(sys, prop, opts, current_abs, sampler):
             print('Concretized', file=SYS.stderr)
             return
 
-        (current_abs, init_cons_list) = SS.refine_init_based(current_abs,
-                promising_initial_states, original_plant_cons_list)
+        (current_abs, init_cons_list) = SS.refine_init_based(
+                current_abs,
+                promising_initial_states,
+                original_plant_cons_list)
         i += 1
 
     print('Failed: MAX iterations {} exceeded.format(MAX_ITER)', file=SYS.stderr)
 
 
 def run_secam(sys, prop, opts):
-    start_time = time.time()
     MODE = opts.MODE
     plot = opts.plot
 
     if MODE == 'simulate':
+        start_time = time.time()
         trace_list = simulate(sys, prop, opts)
         if plot:
             traces.plot_trace_list(trace_list, plt)
     elif MODE == 'falsify':
+        # ignore time taken to create_abstraction: mainly to ignore parsing
+        # time
         current_abs, sampler = create_abstraction(sys, prop, opts)
+        start_time = time.time()
         falsify(sys, prop, opts, current_abs, sampler)
     else:
         raise err.Fatal('bad MODE supplied: {}'.format(MODE))
@@ -288,6 +323,8 @@ def run_secam(sys, prop, opts):
 def main():
     logger.info('execution begins')
     LIST_OF_SYEMX_ENGINES = ['klee', 'pathcrawler']
+    LIST_OF_CONTROLLER_REPRS = ['smt2', 'trace']
+    LIST_OF_TRACE_STRUCTS = ['list', 'tree']
 
     usage = '%(prog)s <filename>'
     parser = argparse.ArgumentParser(description='S3CAM', usage=usage)
@@ -296,17 +333,26 @@ def main():
     #parser.add_argument('--run-benchmarks', action="store_true", default=False,
     #                    help='run pacakged benchmarks')
 
-    parser.add_argument('--simulate', type=int, metavar='num-simulations',
+    parser.add_argument('--simulate', type=int, metavar='num-sims',
                         help='simulate')
     parser.add_argument('--ss-concrete', action="store_true",
                         help='scatter & simulate')
     parser.add_argument('--ss-concolic', action="store_true",
                         help='scatter & simulate with concolic execution using KLEE')
-    parser.add_argument('--ss-symex', type=str, metavar='SymEx-engine', choices=LIST_OF_SYEMX_ENGINES,
-                        help='SS + SymEx with static paths.')
+    parser.add_argument('--ss-symex', type=str, metavar='engine', choices=LIST_OF_SYEMX_ENGINES,
+                        help='SS + SymEx with static paths')
+
+    parser.add_argument('--cntrl-rep', type=str, metavar='repr', choices=LIST_OF_CONTROLLER_REPRS,
+                        help='Controller Representation')
 
     parser.add_argument('-p', '--plot', action='store_true',
                         help='enable plotting')
+
+    parser.add_argument('--seed', type=int, metavar='seed_value',
+                        help='seed for the random generator')
+
+    parser.add_argument('--trace-struct', type=str, metavar='struct', default='tree',
+                        choices=LIST_OF_TRACE_STRUCTS, help='structure for cntrl-rep')
 
 #    argcomplete.autocomplete(parser)
     args = parser.parse_args()
@@ -325,6 +371,9 @@ def main():
         filepath = fp.construct_path(filename, path)
     else:
         filepath = args.filename
+
+    if args.seed is not None:
+        np.random.seed(args.seed)
 
     # TODO:
     # dynamicall generate an opt class to mimic the same defined in
@@ -345,8 +394,13 @@ def main():
         opts.MODE = 'falsify'
         opts.METHOD = 'symbolic'
         opts.symbolic_analyzer = args.ss_symex
-        if opts.symbolic_analyzer not in LIST_OF_SYEMX_ENGINES:
-            raise err.Fatal('unknown symbolic analyses engine requested.')
+        #if opts.symbolic_analyzer not in LIST_OF_SYEMX_ENGINES:
+        #    raise err.Fatal('unknown symbolic analyses engine requested.')
+        if args.cntrl_rep is None:
+            raise err.Fatal('controller representation must be provided')
+        else:
+            opts.cntrl_rep = args.cntrl_rep
+            opts.trace_struct = args.trace_struct
     else:
         raise err.Fatal('no options passed. Check usage.')
     opts.plot = args.plot

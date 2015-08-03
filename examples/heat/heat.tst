@@ -5,7 +5,7 @@ benchmark_id = 1
 
 plant_pvt_init_data = benchmark_id
 
-delta_t = 0.1
+delta_t = 0.5
 
 
 X0, Xf, H0, NUM_ROOMS  = H.get_benchmark_inits(benchmark_id)
@@ -13,17 +13,18 @@ H.create_benchmark_specefic_controller_header(benchmark_id)
 NUM_ROOMS = 3
 
 # P1
-T = 50.0
+#T = 50.0
+T = 10.0
 
-initial_set = [[19.75894131, 19.07248385, 19.60889913], [19.75894131, 19.07248385, 19.60889913]]
-#initial_set = [[18.0, 18.0, 18.0], [19.0, 19.0, 19.0]]
+#initial_set = [[19.75894131, 19.07248385, 19.60889913], [19.75894131, 19.07248385, 19.60889913]]
+initial_set = [[19.0, 19.0, 19.0], [20.0, 20.0, 20.0]]
 #initial_set = X0
 
 ci = [[0.0], [0.0]]
 
-error_set = [[-np.inf, -np.inf, -np.inf], [17.5, 17.5, 17.5]]
-#error_set = [[-np.inf, -np.inf, -np.inf], Xf]
+# easy prop!
 
+error_set = [[-np.inf, -np.inf, -np.inf], [17.5, np.inf, np.inf]]
 # vio = _/100k took _ mins [plotting, logging?]
 # SS = falsified in _ [plotting, logging?]
 # grid_eps = <[0.0, 0.0]>
@@ -31,9 +32,29 @@ error_set = [[-np.inf, -np.inf, -np.inf], [17.5, 17.5, 17.5]]
 # SS + symex: falsified in _ [plotting, logging?]
 #
 grid_eps = [1.0, 1.0, 1.0]
-# minDist=0.0
+min_smt_sample_dist = 0.5
 
 num_samples = 1
+
+# hard prop
+
+error_set = [[-np.inf, -np.inf, -np.inf], [17.23, np.inf, np.inf]]
+# vio = _/100k took _ mins [plotting, logging?]
+# SS = falsified in _ [plotting, logging?]
+# grid_eps = <[0.0, 0.0]>
+# num_samples = <2>
+# SS + symex: falsified in _ [plotting, logging?]
+#
+grid_eps = [1.0, 1.0, 1.0]
+min_smt_sample_dist = 0.5
+num_samples = 3
+
+
+#TODO : add OR operator for error set!
+#error_set = [[-np.inf, -np.inf, -np.inf], [np.inf, 17.5, np.inf]]
+#error_set = [[-np.inf, -np.inf, -np.inf], [np.inf, np.inf , 17.5]]
+#error_set = [[-np.inf, -np.inf, -np.inf], Xf]
+
 
 initial_discrete_state = [0]
 

@@ -120,15 +120,13 @@ class Z(Solver):
             raise err.Fatal('unhandled type: {}'.format(type(x)))
         return z3.And(cons_list)
 
-
     # TODO: fix the function call!
-
     def substitute(
-        self,
-        C,
-        v,
-        v_,
-        ):
+            self,
+            C,
+            v,
+            v_,
+            ):
         return z3.substitute(C, (v, v_))
 
     def simplify(self, *args):
@@ -138,14 +136,14 @@ class Z(Solver):
         return z3.Solver()
 
     def sample_bvArray(
-        self,
-        surface,
-        num_points,
-        outputVarList,
-        var2dim_dict,
-        var2sample_list,
-        minDist,
-        ):
+            self,
+            surface,
+            num_points,
+            outputVarList,
+            var2dim_dict,
+            var2sample_list,
+            minDist,
+            ):
 
         # minDist = 1
 
@@ -186,8 +184,7 @@ class Z(Solver):
                 # get norm constraints for next iteration
                 var_val2sample_list = [(k, sample_dict[str(k)]) for k in
                                        var2sample_list]
-                normCons = get_norm_cons_bvArray(var_val2sample_list, var2dim_dict,
-                                       minDist)
+                normCons = get_norm_cons_bvArray(var_val2sample_list, var2dim_dict, minDist)
             else:
                 if i == 0:
 
@@ -206,45 +203,59 @@ class Z(Solver):
         return samplesDict
 
     def sample_scalars(
-        self,
-        surface,
-        num_points,
-        var2sample_list,
-        minDist,
-        ):
+            self,
+            solver,
+            num_points,
+            var2sample_list,
+            minDist,
+            ):
 
         # minDist = 1
 
         num_actual_samples = 0
-        surface2Sample = surface
         samplesDict = {}
 
-        # initialize samples dict
-
-        #for outputVar in varList:
-        #    samplesDict[outputVar.hash()] = []
-
-        s = z3.Solver()
+        # The model must be there according to the current usage
+        # If not, then this call will raise an exception
+        s = solver
+        try:
+            model = s.model()
+            check_res = z3.sat
+        except z3.Z3Exception as e:
+            # NOTE: not the best way to check exception, but is there an
+            # option?
+            if str(e) == 'model is not available':
+                check_res = s.check()
+                if check_res == z3.sat:
+                    model = s.model()
+                elif check_res == z3.unsat:
+                    return {}, 0
+                else: # check_res == z3.unknown:
+                    print s.reason_unknown()
+                    raise err.Fatal('unhandled: z3 unkown!')
+            else:
+                raise e
 
         # normCons = z3.BoolVal(True)
-
-        normCons = []
 
     #  print '---------------- sampling ----------------'
     #  print surface2Sample
     #  print '------------------------------------------'
 
-        s.add(surface2Sample)
-        for i in range(num_points):
+        num_actual_samples += 1
+        # sample first constraint
+        # get model again for the case when the model was not available
+        sample_dict = model2var_scalar(model)
+        for var_hash, sample in sample_dict.iteritems():
+            samplesDict[var_hash] = samplesDict.get(var_hash, []) + [sample]
+        var_val2sample_list = [(k, sample_dict[k.hash()]) for k in var2sample_list]
+        normCons = get_norm_cons_scalar(var_val2sample_list, minDist)
 
-            # print U.decorate(str(normCons))
-
+        for i in range(num_points - 1):
             s.add(normCons)
+            check_res = s.check()
 
-            #print U.decorate(str(s))
-            # ##!!##logger.debug(str(s))
-
-            if s.check() == z3.sat:
+            if check_res == z3.sat:
                 num_actual_samples += 1
                 model = s.model()
                 sample_dict = model2var_scalar(model)
@@ -257,32 +268,31 @@ class Z(Solver):
                 var_val2sample_list = [(k, sample_dict[k.hash()]) for k in
                                        var2sample_list]
                 normCons = get_norm_cons_scalar(var_val2sample_list, minDist)
-            else:
+            elif check_res == z3.unsat:
                 if i == 0:
-
+                    pass
                     # ##!!##logger.debug('surface is UNSAT')
                     # # ##!!##logger.debug('unsat core:\n{}'.format(s.unsat_core))
-
-                    return {}, 0
                 else:
-
                     # ##!!##logger.debug('!!!!!!!!!! no more samples possible !!!!!!!!!!!')
                     # ##!!##logger.debug('max samples: {}'.format(i))
-
                     print 'max samples: {}'.format(i)
-                    break
+                break
 
+            else:
+                print s.reason_unknown()
+                raise err.Fatal('unhandled: z3 unkown!')
         return samplesDict, num_actual_samples
 
     def sample_realVec(
-        self,
-        surface,
-        num_points,
-        outputVarList,
-        var2dim_dict,
-        var2sample_list,
-        minDist,
-        ):
+            self,
+            surface,
+            num_points,
+            outputVarList,
+            var2dim_dict,
+            var2sample_list,
+            minDist,
+            ):
 
         # minDist = 1
 
@@ -323,8 +333,7 @@ class Z(Solver):
                 # get norm constraints for next iteration
                 var_val2sample_list = [(k, sample_dict[str(k)]) for k in
                                        var2sample_list]
-                normCons = get_norm_cons_realVec(var_val2sample_list, var2dim_dict,
-                                       minDist)
+                normCons = get_norm_cons_realVec(var_val2sample_list, var2dim_dict, minDist)
             else:
                 if i == 0:
 
@@ -467,7 +476,7 @@ def model2var_scalar(model):
     for var in model:
         var_val = model[var]
         # TODO: annoying computation at every step!!
-        py_zero = 0.0 if var_val.is_real() else 0
+        #py_zero = 0.0 if var_val.is_real() else 0
         var_val = z3val2pyval(var_val)
         sample_dict[var.hash()] = var_val
     return sample_dict
@@ -512,6 +521,7 @@ def get_norm_cons_realVec(varValList, var2dim_dict, min_dist):
         normConsList += c_upper_bound + c_lower_bound
 
     return z3.Or(*normConsList)
+
 
 def get_norm_cons_scalar(varValList, min_dist):
     c_upper_bound_list = [var <= var_val - min_dist for (var, var_val) in varValList]

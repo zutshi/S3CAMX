@@ -388,7 +388,8 @@ def refine_init_based(A, promising_initial_abs_states,
         param_dict,
         A.T,
         A.num_dims,
-        A.controller_path_dir_path,
+        A.controller_sym_path_obj,
+        A.min_smt_sample_dist,
         A.plant_abstraction_type,
         A.controller_abstraction_type,
         )
@@ -457,28 +458,47 @@ def get_reachable_abs_states(A, system_params, abs_state_list):
     abs2rchd_abs_state_map = {}
 
     for abs_state in abs_state_list:
-        abs2rchd_abs_state_map[abs_state] = A.get_reachable_states(abs_state,
-                system_params)
+        abs2rchd_abs_state_map[abs_state] = A.get_reachable_states(abs_state, system_params)
 
     return abs2rchd_abs_state_map
 
 
-def get_ci_array_from_seq(ci_seq_list):
+# TODO: ugly...should it be another function?
+# Only reason its been pulled out from random_test is to ease the detection of
+# the case when no valid abstract state is left!
+# VERY INEFFICIENT
+# Repeats some work done in random_test...
+def filter_invalid_abs_states(state_list, A, init_cons):
+    valid_state_list = []
+    for abs_state in state_list:
+        ival_cons = A.plant_abs.get_ival_constraints(abs_state.plant_state)
 
-    # for
+        # ##!!##logger.debug('ival_cons: {}'.format(ival_cons))
 
-    yield ci_array
+        # find the intersection b/w the cell and the initial cons
+        # print 'init_cons', init_cons
+
+        ic = ival_cons & init_cons
+        if ic is not None:
+            valid_state_list.append(abs_state)
+
+    # TODO: this should be logged and not printed
+    if valid_state_list == []:
+        for abs_state in state_list:
+            ival_cons = A.plant_abs.get_ival_constraints(abs_state.plant_state)
+            print ival_cons
+    return valid_state_list
 
 
 def random_test(
-    A,
-    system_params,
-    initial_state_list,
-    ci_seq_list,
-    init_cons,
-    init_d,
-    initial_controller_state,
-    ):
+        A,
+        system_params,
+        initial_state_list,
+        ci_seq_list,
+        init_cons,
+        init_d,
+        initial_controller_state,
+        ):
 
     # ##!!##logger.debug('random testing...')
 
@@ -519,6 +539,7 @@ def random_test(
 
             x_array = np.concatenate((x_array, x_samples))
         else:
+            raise err.Fatal('Can not happen! Invalid states have already been filtered out by filter_invalid_abs_states()')
 
             # # ##!!##logger.debug('{}'.format(samples.x_array))
 
@@ -534,7 +555,9 @@ def random_test(
 
     num_samples = len(x_array)
     if num_samples == 0:
+        print initial_state_list
         print 'no valid sample found during random testing. STOP'
+        return False
     else:
 
         # ##!!##logger.debug('num_samples = 0')

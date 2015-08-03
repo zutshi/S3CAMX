@@ -6,8 +6,13 @@ import logging
 import err
 import glob
 import stat
+import hashlib
 
 logger = logging.getLogger(__name__)
+
+
+def sanitize_path(path):
+    return osp.normpath(path)
 
 
 def split_filename_ext(file_path):
@@ -61,6 +66,10 @@ def make_n_change_dir(dir_path):
     os.chdir(dir_path)
 
 
+def get_abs_path(file_name):
+    return osp.abspath(file_name)
+
+
 def get_abs_base_path(path):
     dir_name = osp.dirname(path)
     return osp.abspath(dir_name)
@@ -70,10 +79,10 @@ def construct_path(file_name, path):
     return osp.normpath(path + '/' + file_name)
 
 
-def get_data(filename):
+def get_data(filename, mode='r'):
     logger.info('reading file: {}'.format(filename))
     try:
-        with open(filename, 'r') as f:
+        with open(filename, mode) as f:
             data = f.read()
             return data
     except (OSError, IOError), e:
@@ -87,9 +96,9 @@ def append_data(filename, data):
         return
 
 
-def write_data(filename, data):
+def write_data(filename, data, mode='w'):
     logger.info('writing file: {}'.format(filename))
-    with open(filename, 'w') as f:
+    with open(filename, mode) as f:
         f.write(data)
         return
 
@@ -99,3 +108,15 @@ def get_non_blank_lines(filename):
         lines = f.read().splitlines()
         non_blank_lines = [line for line in lines if line]
         return non_blank_lines
+
+
+# just a wrapper
+def open_file(file_path, mode):
+    return open(file_path, mode)
+
+
+def compute_hash(file_path):
+    data = get_data(file_path, 'rb')
+    m = hashlib.md5(data)
+    md5sum = m.hexdigest()
+    return md5sum

@@ -98,7 +98,6 @@ class Trace(object):
 , {}, x
 {}, s
 {}, u
-{}, r
 {}, ci
 {}, pi
 {}'''.format(
@@ -106,7 +105,6 @@ class Trace(object):
             self.x_array,
             self.s_array,
             self.u_array,
-            self.r,
             self.ci,
             self.pi,
             )
@@ -163,6 +161,9 @@ def plot_trace_list(trace_list, plt):
     # plot all continuous plant states against time
     NUM_PLOTS = trace_list[0].x_array.shape[1]
     AX_list = []
+    plt.figure()
+    #AX0X1 = plt.gca()
+
     for i in range(NUM_PLOTS):
         plt.figure()
         AX_list.append(plt.gca())
@@ -189,23 +190,11 @@ def plot_trace_list(trace_list, plt):
         # plt_x0 = AX0.plot(t_array, x_array[:, 10], label='x10')
 
         for i in range(NUM_PLOTS):
-
             # AX_list[i].plot(t_array, x_array[:, i], 'b-',lw=1)
-
             AX_list[i].plot(t_array, x_array[:, i])
 
-        #   AX_list[i+1].plot(x_array[:, 0], x_array[:, 1])
+        #plt_x0x1 = AX0X1.plot(x_array[:, 0], x_array[:, 1], label='x0x1')
 
-        # plt_x1 = AX1.plot(t_array, x_array[:, 1], label='x1')
-        # plt_x2 = AX2.plot(t_array, x_array[:, 2], label='x2')
-        # plt_x0x1 = AX0X1.plot(x_array[:, 0], x_array[:, 1], label='x0x1')
-
-        # #plt_s0 = plt.plot(t_array, trace.s_array[:, 0], label='err')
-        # plt_s1 = plt.plot(t_array, trace.s_array[:, 1], label='ref')
-        # plt_u = AU.plot(t_array, trace.u_array[:, 0], label='u')
-        # plt_ci = AC.plot(t_array, trace.ci[:, 0], label='ci')
-        # print trace.s_array
-        # plt.legend()
         # plt.legend([plt_x0, plt_x1, plt_s0, plt_s1], ['x0', 'x1', 's0', 's1'])
 
     # plt.plot(t_array, ref_signal, drawstyle='steps-post')

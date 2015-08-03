@@ -37,7 +37,7 @@ def compute_concrete_plant_output(
 #                                                     property_checker=None)
 
     rchd_concrete_state_array = plant_sim.simulate(concrete_states, A.delta_t,
-            property_checker, [False])
+                                                   property_checker, [False])
 
     # ##!!##logger.debug('output concrete states\n{}'.format(rchd_concrete_state_array))
 

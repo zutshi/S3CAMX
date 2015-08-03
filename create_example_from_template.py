@@ -233,7 +233,7 @@ CONTROLLER_C = '{}_controller.c'
 
 
 def main():
-    dir_path = sys.argv[1]
+    dir_path = f.sanitize_path(sys.argv[1])
     if f.file_exists(dir_path):
         print 'Failed: requested directory exists: {}'.format(dir_path)
         return
@@ -246,7 +246,7 @@ def main():
     f.write_data(COMPILATION_SCRIPT, compile_script_str)
     f.write_data(CONTROLLER_H, controller_h_str)
     f.write_data(CONTROLLER_C.format(dir_name), controller_c_str)
-    f.make_dir(dir_path, PC_DIR_PATH)
+    f.make_dir(PC_DIR_PATH)
 
     # make compilation script executable
     f.make_exec(COMPILATION_SCRIPT)

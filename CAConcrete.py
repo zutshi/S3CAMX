@@ -95,7 +95,7 @@ class ControllerCollectionAbstraction:
         # print x_array, s_array
 
         (s_array_, u_array) = cc.compute_concrete_controller_output(A,
-                system_params.controller_sim, x_array, s_array,
+                system_params.controller_sim, ci_array, x_array, s_array,
                 total_num_samples)
 
         # print s_array_, u_array

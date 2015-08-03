@@ -118,7 +118,7 @@ class ControllerCollectionAbstraction:
             t=t_array,
             x=x_array,
             d=d_array,
-            pvt=p_array,
+            pvt=pvt_array,
             s=s_array_,
             u=u_array,
             pi=pi_array,

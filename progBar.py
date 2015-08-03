@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 from blessings import Terminal
 from progressbar import ProgressBar
 

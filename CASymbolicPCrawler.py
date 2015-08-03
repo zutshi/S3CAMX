@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import glob
 import logging
 import numpy as np
 
@@ -9,12 +8,11 @@ import numpy as np
 # matplotlib.use('GTK3Agg')
 # import matplotlib.pyplot as plt
 
-import fileOps as fp
 import smtSolver as smt
 import state as st
 import utils
-import sample
 import err
+
 # import controlifc as cifc
 
 import time
@@ -32,40 +30,59 @@ X = 'X'
 I = 'ci'
 
 
+class SMTVar(object):
+    def __init__(self, var, name_str, dim, typ):
+        self.var = var
+        self.dim = dim
+        self.name_str = name_str
+        self.typ = typ
+        return
+
+
+class ControllerVars(object):
+    def __init__(self, var_name_2_len_dict, z3_decls):
+        self.iv_i = SMTVar()
+        self.iv_x = SMTVar()
+        self.iv_si = SMTVar()
+        self.iv_sf = SMTVar()
+        self.rv_u = SMTVar()
+        self.rv_si = SMTVar()
+        self.rv_sf = SMTVar()
+
+
 class ControllerSymbolicAbstraction:
 
     # @staticmethod
     # def get_abs_state(s):
     #    return ControllerSymbolicAbstractState(s)
 
-    @staticmethod
-    def get_paths(solver, controller_path_dir_path, decls):
-        path = controller_path_dir_path
-
-        # get path files, which are in smt2 format with the same extension
-        # ##!!##logger.debug('reading files(controller_paths) form {}'.format(path))
-
-        filenames = glob.glob(path + '*.smt2')
-        path_dict = {}
-        for (idx, f) in enumerate(filenames):
-
-            # ##!!##logger.debug('reading path: {}'.format(f))
-
-            smt_string = fp.get_data(f)
-            pc = solver.smt2_2_constraints(smt_string, decls)
-            path_dict[str(idx)] = pc
-        return path_dict
+    # creates smt vars
+    def create_smt_var(self, id_str, aux_str=''):
+        var_details = self.var_name_2_len_dict[id_str]
+        name_str = var_details[0] + aux_str
+        length = var_details[1]
+        # if array length is 0, do not create a z3 var
+        #if length == 0:
+        #    return None
+        if var_details[2] is float:
+            return self.solver.RealVector(name_str, length)
+        elif var_details[2] is int:
+            return self.solver.IntVector(name_str, length)
+        else:
+            raise err.Fatal('unhandled type')
 
     def __init__(
             self,
             num_dims,
-            controller_path_dir_path,
+            controller_sym_path_obj, #controller_path_dir_path,
+            min_smt_sample_dist,
             max_hd=0,
             ):
 
         # ##!!##logger.debug('ControllerSymbolicAbstraction instance created')
         # super(Abstraction, self).__init__()
 
+        self.min_smt_sample_dist = min_smt_sample_dist
         self.max_hd = max_hd
         self.num_dims = num_dims
 
@@ -82,47 +99,40 @@ class ControllerSymbolicAbstraction:
 
         #var_id_list = [IV + X, IV + SI, IV + SF, RV + U, RV + SI, RV + SF, IV + I]
 
-        var_name_2_len_dict = {IV + X: ('iv_x_arr', num_dims.x, float),
-                               IV + SI: ('iv_int_state_arr', num_dims.si, int),
-                               IV + SF: ('iv_float_state_arr', num_dims.sf, float),
-                               RV + U: ('rv_output_arr', num_dims.u, float),
-                               RV + SI: ('rv_int_state_arr', num_dims.si, int),
-                               RV + SF: ('rv_float_state_arr', num_dims.sf, float),
-                               IV + I: ('iv_input_arr', num_dims.ci, float)}
+        self.var_name_2_len_dict = {IV + X: ('iv_x_arr', num_dims.x, float),
+                                    IV + SI: ('iv_int_state_arr', num_dims.si, int),
+                                    IV + SF: ('iv_float_state_arr', num_dims.sf, float),
+                                    RV + U: ('rv_output_arr', num_dims.u, float),
+                                    RV + SI: ('rv_int_state_arr', num_dims.si, int),
+                                    RV + SF: ('rv_float_state_arr', num_dims.sf, float),
+                                    IV + I: ('iv_input_arr', num_dims.ci, float)}
         #var_name_list = cifc.ControllerIfcVarNames(num_dims)
 
-        # creates smt vars
-        def create_smt_var(id_str, aux_str=''):
-            var_details = var_name_2_len_dict[id_str]
-            name_str = var_details[0] + aux_str
-            length = var_details[1]
-            # if array length is 0, do not create a z3 var
-            #if length == 0:
-            #    return None
-            if var_details[2] is float:
-                return self.solver.RealVector(name_str, length)
-            elif var_details[2] is int:
-                return self.solver.IntVector(name_str, length)
-            else:
-                raise err.Fatal('unhandled type')
-
-        self.create_smt_var = create_smt_var
+        #self.create_smt_var = create_smt_var
 
         z3_decls = {}
         # filter out vars with 0 length
         #for var_id in var_id_list:
         #z3_decls[var_id] = self.create_smt_var(var_id)
-        nested_list_gen = (self.create_smt_var(k) for k in var_name_2_len_dict)
+        nested_list_gen = (self.create_smt_var(k) for k in self.var_name_2_len_dict)
         # cull empty lists which corresponds to empty arrays
         nested_list = [i for i in nested_list_gen if i]
         l_flat = utils.flatten(nested_list) #[e for sub_list in nested_list for e in sub_list]
         z3_decls = {str(d): d for d in l_flat}
         self.path_var_dict = z3_decls
 
-        self.path_dict = ControllerSymbolicAbstraction.get_paths(
-            self.solver,
-            controller_path_dir_path,
-            self.path_var_dict)
+        #self.path_dict = ControllerSymbolicAbstraction.get_paths(
+        #    self.solver,
+        #    controller_path_dir_path,
+        #    self.path_var_dict)
+
+        #self.init_path_obj('list', controller_path_dir_path)
+        #self.init_path_obj('list', paths)
+        self.controller_sym_path_obj = controller_sym_path_obj
+        #self.base_smt_vars = z3_decls
+
+        #self.get_reachable_abs_states = self.get_reachable_abs_states_discards_model
+        self.get_reachable_abs_states = self.get_reachable_abs_states_reuses_model
 
     def gen_id_(self):
         for i in range(MAX_NUM_VARS_EXPECTED):
@@ -168,6 +178,28 @@ class ControllerSymbolicAbstraction:
 
         return (si, sf, u)
 
+    def substitute_curr_vars(self, cs):
+        cons = cs.C
+        num_dims = self.num_dims
+
+        def substitute(cons, v, base_var_name_str, dims):
+            for idx in range(dims):
+                var_name_str = base_var_name_str + '__' + str(idx)
+                #print 'replacing', v[idx], '->', self.path_var_dict[var_name_str]
+                cons = self.solver.substitute(cons, v[idx], self.path_var_dict[var_name_str])
+            return cons
+
+        #print pc
+        # current state gets modified to standard vars
+        cons = substitute(cons, cs.x, 'iv_x_arr', num_dims.x)
+        cons = substitute(cons, cs.si, 'iv_int_state_arr', num_dims.si)
+        cons = substitute(cons, cs.sf, 'iv_float_state_arr', num_dims.sf)
+        cons = substitute(cons, cs.si_, 'rv_int_state_arr', num_dims.si)
+        cons = substitute(cons, cs.sf_, 'rv_float_state_arr', num_dims.sf)
+        cons = substitute(cons, cs.u, 'rv_output_arr', num_dims.u)
+        cons = substitute(cons, cs.ci, 'iv_input_arr', num_dims.ci)
+        return cons
+
     def instantiate(
           self,
           pc,
@@ -189,7 +221,10 @@ class ControllerSymbolicAbstraction:
         def substitute(pc, base_var_name_str, v, dims):
             for idx in range(dims):
                 var_name_str = base_var_name_str + '__' + str(idx)
+                #print 'replacing', self.path_var_dict[var_name_str], '->', v[idx]
                 pc = self.solver.substitute(pc, self.path_var_dict[var_name_str], v[idx])
+                #print '[]'*10
+                #print pc
             return pc
 
         #print pc
@@ -207,30 +242,9 @@ class ControllerSymbolicAbstraction:
 
         return pc
 
-    # def valid(self, abs_state):
-        # return self.solver.SAT(abs_state.C)
-
-    def meta_sampler(
-          self,
-          abs_state,
-          num_req_samples,
-          time_budget,
-          ):
-        raise NotImplementedError
-
-    def timed_sampler(
-          self,
-          abs_state,
-          num_req_samples,
-          time_budget,
-          ):
-        raise NotImplementedError
-
-    # optimized version of sample_smt_realVec
-    # uses reals as opposed to z3 RealVec
-    # This enables the usage of z3_obj.hash() which are
-    # way faster than using str(z3_obj)
-    def sample_smt(self, abs_state, num_req_samples):
+    # same as sample_smt_cons but uses solver
+    def sample_smt_solver(self, abs_state, num_req_samples, solver):
+        minDist = self.min_smt_sample_dist
 
         # print abs_state
         # get back samples for plant states and inputs
@@ -247,16 +261,26 @@ class ControllerSymbolicAbstraction:
         ###############################
         var2sample_list = utils.flatten([abs_state.x])  # , abs_state.u]
         #print var_list
+        #print '='*20, 'sampling', '='*20
+        #print abs_state.C
+
         sample_dict, num_actual_samples = self.solver.sample_scalars(
-            abs_state.C,
+            solver,
             num_req_samples,
             var2sample_list,
-            minDist=0.05,
+            minDist,
             )
+        #for k in sample_dict:
+        #    print k, ':', sample_dict[k]
+        #print '='*20
+        #for var_vec in var_list:
+        #    for var in var_vec:
+        #        print var, ':', var.hash()
         normalized_sample_array_list = []
         if sample_dict:
             for var_vec in var_list:
                 if var_vec:
+                    #print var_vec
                     sample_list = [sample_dict[var.hash()] for var in var_vec]
                     normalized_sample_array = np.array(sample_list).T
                 else:
@@ -265,79 +289,68 @@ class ControllerSymbolicAbstraction:
                 normalized_sample_array_list.append(normalized_sample_array)
             return normalized_sample_array_list + [num_actual_samples]
         else:
+            #print 'UNSAT'
             return [None]*len(var_list) + [num_actual_samples]
 
-    def sample_smt_delme(self, abs_state, num_req_samples):
-        num_dims = self.num_dims
+    # optimized version of sample_smt_realVec
+    # uses reals as opposed to z3 RealVec
+    # This enables the usage of z3_obj.hash() which are
+    # way faster than using str(z3_obj)
+    #
+    # Uses cons to sample
+    def sample_smt_cons(self, abs_state, num_req_samples):
+        #minDist=0.5
+        #minDist = 0.05
+        minDist = self.min_smt_sample_dist
 
         # print abs_state
         # get back samples for plant states and inputs
 
-        # #############################
-        # NOTE: var_list and var_dim_list must have the same ordering of vars!!
-        var_list = utils.flatten([
+        var_list = [
             abs_state.x,
             abs_state.u,
             abs_state.si,
             abs_state.sf,
             abs_state.si_,
             abs_state.sf_,
-            abs_state.ci])
+            abs_state.ci]
 
-        var_dim_list = [
-            num_dims.x,
-            num_dims.u,
-            num_dims.si,
-            num_dims.sf,
-            num_dims.si,
-            num_dims.sf,
-            num_dims.ci]
         ###############################
         var2sample_list = utils.flatten([abs_state.x])  # , abs_state.u]
-        print var_list
+        #print var_list
+        #print '='*20, 'sampling', '='*20
+        #print abs_state.C
+
+        # if solver is not passed
+        solver = self.solver.solver()
+        solver.add(abs_state.C)
         sample_dict, num_actual_samples = self.solver.sample_scalars(
-            abs_state.C,
+            solver,
             num_req_samples,
             var2sample_list,
-            minDist=5,
+            minDist,
             )
+        #for k in sample_dict:
+        #    print k, ':', sample_dict[k]
+        #print '='*20
+        #for var_vec in var_list:
+        #    for var in var_vec:
+        #        print var, ':', var.hash()
+        normalized_sample_array_list = []
         if sample_dict:
+            for var_vec in var_list:
+                if var_vec:
+                    #print var_vec
+                    sample_list = [sample_dict[var.hash()] for var in var_vec]
+                    normalized_sample_array = np.array(sample_list).T
+                else:
+                    normalized_sample_array = np.empty((num_actual_samples, 0))
 
-            # NOTE: list(sample_dict) won't work because ordering in var_list is
-            # important
-            sample_list_flat = [sample_dict.get(var.hash(), []) for var in var_list]
-            # TODO: The below two transformations are not easy to udnerstand or work
-            # with. Consider simplification!!
-            sample_list = utils.group_list(sample_list_flat, var_dim_list)
-
-            # replace empty list by [[]] to mantain numpy array dimensions
-            normalized_sample_list =\
-                [np.array(val).T if val else np.empty((num_actual_samples, 0)) for val in sample_list]
-
-            print 'SAMPLES'
-
-            for i in var_list:
-                print i
-            print '='*20
-            for i in normalized_sample_list:
-                print i
-            exit()
-            for (var, val) in zip(var_list, normalized_sample_list):
-                #print '{}: {}'.format(var, val)
-                # ##!!##logger.debug('{}: {}'.format(var, val))
-                pass
-
-            normalized_sample_list.append(num_actual_samples)
-            print 'num_actual_samples:', num_actual_samples
-
-            # return (x_array, u_array, s_array, s__array, ci_array, n)
-
-            return tuple(normalized_sample_list)
+                normalized_sample_array_list.append(normalized_sample_array)
+            return normalized_sample_array_list + [num_actual_samples]
         else:
-
-            # print 'UNSAT'
-
-            return tuple([None]*len(var_dim_list) + [0])
+            #print 'UNSAT'
+            return [None]*len(var_list) + [num_actual_samples]
 
     # \alpha()
     # def get_abs_state_from_concrete_state(self, concrete_state, hd=0, p='XXX', cp='XXX'):
@@ -374,11 +387,16 @@ class ControllerSymbolicAbstraction:
         u = self.create_smt_var(RV+U, u_str)
         x = self.create_smt_var(IV+X, x_str)
         ci = self.create_smt_var(IV+I, ci_str)
-        concrete_si_, concrete_sf_ = split_concrete_controller_state(concrete_state)
+
+        #concrete_si_, concrete_sf_ = split_concrete_controller_state(concrete_state)
+        #C = self.solver.And(
+        #        self.solver.equal(si_, concrete_si_),
+        #        self.solver.equal(sf_, concrete_sf_))
+
+        concrete_si, concrete_sf = split_concrete_controller_state(concrete_state)
         C = self.solver.And(
-                self.solver.equal(si_, concrete_si_),
-                self.solver.equal(sf_, concrete_sf_))
-        x_ival_cons_list = []
+                self.solver.equal(si, concrete_si),
+                self.solver.equal(sf, concrete_sf))
         return ControllerSymbolicAbstractState(
             C,
             si,
@@ -391,14 +409,14 @@ class ControllerSymbolicAbstraction:
             cp,
             ci,
             hd,
-            x_ival_cons_list,
             )
 
-    def get_reachable_abs_states(
+    # discards model!
+    def get_reachable_abs_states_discards_model(
             self,
             abs_state,
             A,
-            system_params,
+            system_params
             ):
         reachable_state_list = []
 
@@ -407,60 +425,61 @@ class ControllerSymbolicAbstraction:
         PA = A.plant_abs
         hd = abs_state.cs.hd + 1
 
-        uid_str = str(self.gen_id())
-
-        x = self.get_new_plant_smt_var(str(abs_state.ps))
-        ci = self.get_input_smt_var(uid_str)
+        #x = self.get_new_plant_smt_var(str(abs_state.ps))
+        #ci = self.get_input_smt_var(uid_str)
 
         # construct ci smt constraints
-
-        #ci_ival_cons = system_params.ci.scaleNround(self.CONVERSION_FACTOR)
+        #ci = self.controller_sym_path_obj.ci
+        # TODO: sort this mess out...should not know its a list!
+        # Need to be made a class or something
+        ci = [self.path_var_dict['iv_input_arr__'+str(i)] for i in range(self.num_dims.ci)]
         ci_ival_cons = system_params.ci
         ci_smt = self.solver.ic2smt(ci_ival_cons, ci)
+        # print ci_smt
 
+        #x = self.controller_sym_path_obj.x
+        x = [self.path_var_dict['iv_x_arr__'+str(i)] for i in range(self.num_dims.x)]
         X_smt = PA.get_smt2_constraints(abs_state.ps, x)
-        x_ival_cons = PA.get_ival_constraints(abs_state.ps)
-        x_ival_cons_list = abs_state.cs.x_ival_cons_list + [(x, x_ival_cons)]
+        # print X_smt
 
-        for (p_id, pc) in self.path_dict.iteritems():
+        ## substitute the current vars with original program vars
 
-            # pid_str = abs_state.cs.pid + 'p' + str(p_id)
+        #print abs_state.cs.C
+        C_subs = self.substitute_curr_vars(abs_state.cs)
+        # print abs_state.cs.C
+
+        self.controller_sym_path_obj.set_global_cons(C_subs, ci_smt, X_smt)
+        ##self.controller_sym_path_obj.unset_global_cons()
+
+        uid_str = str(self.gen_id())
+        num_req_samples = A.num_samples
+        for p_id, pc_solver in self.controller_sym_path_obj.sat_path_gen():
+
+            # TODO: makes life simpler for now...easier to convert solver to
+            # constraints and use the existing functions instead of using the
+            # solver directly.
+            # This must be fixed and the solver should be directly handled to
+            # get any performance benefits!
+
+            pc_ = self.solver.And(*pc_solver.assertions())
 
             pid_str = 'p' + str(p_id)
             cumulitive_pid_str = abs_state.cs.cpid + pid_str
 
-            # print abs_state.cs
+            x = self.get_new_plant_smt_var(str(abs_state.ps))
+            ci = self.get_input_smt_var(uid_str)
 
+            # print abs_state.cs
             si = abs_state.cs.si_  # C'[s] = C[s']
             sf = abs_state.cs.sf_  # C'[s] = C[s']
             (si_, sf_, u) = self.get_new_cumulitive_smt_vars(abs_state.cs, uid_str, pid_str)
 
-            # print (s, s_, u, x)
-
-            pc_ = self.instantiate(
-                pc=pc,
-                si=si,
-                sf=sf,
-                x=x,
-                si_=si_,
-                sf_=sf_,
-                u=u,
-                ci=ci,
-                )
-
-            # print 'X_smt\n', X_smt
-            # print 'init', abs_state.cs.C
-            # print 'pc\n', self.solver.simplify(pc)
-
-            pc_ = self.solver.And(pc_, abs_state.cs.C, X_smt, ci_smt)
-            pc_ = self.solver.simplify(pc_)
-
-            # print 'simplified pc'
-            # print pc_
-            # print '='*80
-
-            # The below logging operation is very expensive. Commenting out!
-            # # ##!!##logger.debug('simplified pc:\n{}'.format(U.decorate(str(pc_))))
+            #print '='*10, 'pc', '='*10
+            #print pc_
+            #print '0'*20
+            pc_ = self.instantiate(pc_, si, sf, x, si_, sf_, u, ci)
+            #print pc_
+            #exit()
 
             reachable_controller_state = ControllerSymbolicAbstractState(
                 pc_,
@@ -474,15 +493,21 @@ class ControllerSymbolicAbstraction:
                 cumulitive_pid_str,
                 ci,
                 hd,
-                x_ival_cons_list,
                 )
-            reachable_controller_state.Cx = X_smt
-
-            # requested number of samples
-
-            num_req_samples = A.num_samples
 
             # n = actual number of samples
+
+            #(
+            #    x_array,
+            #    u_array,
+            #    si_array,
+            #    sf_array,
+            #    si__array,
+            #    sf__array,
+            #    ci_array,
+            #    num_actual_samples,
+            #)\
+            #    = self.get_concrete_states_from_abs_state(reachable_controller_state, num_req_samples)
 
             (
                 x_array,
@@ -493,71 +518,247 @@ class ControllerSymbolicAbstraction:
                 sf__array,
                 ci_array,
                 num_actual_samples,
-            )\
-                = self.get_concrete_states_from_abs_state(reachable_controller_state,
-                                                          num_req_samples)
-            if num_actual_samples != 0:
+            ) = self.sample_smt_cons(reachable_controller_state, num_req_samples)
 
-                # TODO: remove the below d and p arrays
-                # One strategy is to separate concrete states of plant and
-                # controller
+            # TODO: remove the below d and p arrays
+            # One strategy is to separate concrete states of plant and
+            # controller
 
-                d_array = np.tile(abs_state.ps.d, (num_actual_samples, 1))
-                p_array = np.tile(abs_state.ps.pvt, (num_actual_samples, 1))
-                pi_array = np.zeros((num_actual_samples, A.num_dims.pi))
-                t = abs_state.plant_state.n * A.delta_t
-                print 't:', t
-                t_array = np.tile(t, (num_actual_samples, 1))
+            d_array = np.tile(abs_state.ps.d, (num_actual_samples, 1))
+            p_array = np.tile(abs_state.ps.pvt, (num_actual_samples, 1))
+            pi_array = np.zeros((num_actual_samples, A.num_dims.pi))
+            t = abs_state.plant_state.n * A.delta_t
+            print 't:', t
+            t_array = np.tile(t, (num_actual_samples, 1))
 
-                s_array = np.concatenate((si_array, sf_array), axis=1)
-                print 's:', s_array
-                #s__array = np.concatenate((si__array, sf__array))
+            s_array = np.concatenate((si_array, sf_array), axis=1)
+            print 's:', s_array
+            #s__array = np.concatenate((si__array, sf__array))
 
-                state = st.StateArray(
-                    t=t_array,
-                    x=x_array,
-                    d=d_array,
-                    pvt=p_array,
-                    s=s_array,
-                    u=u_array,
-                    pi=pi_array,
-                    ci=ci_array,
-                    )
+            state = st.StateArray(
+                t=t_array,
+                x=x_array,
+                d=d_array,
+                pvt=p_array,
+                s=s_array,
+                u=u_array,
+                pi=pi_array,
+                ci=ci_array,
+                )
 
-                # plot
-                # plt.annotate('{},{}'.format(x, u), (x_array[0, 0], x_array[0, 1]))
+            # if history depth exceeded, concretize all states!
 
-                # if history depth exceeded, concretize all states!
+            if abs_state.cs.hd >= self.max_hd:
 
-                if abs_state.cs.hd >= self.max_hd:
+                # NOTE: when concretizing, need to pick only one sample
+                # Let's pick the first one
+                i = 0
+                # for i in range(num_actual_samples):
 
-                    # ##!!##logger.debug('max history depth reached, concretizing...')
+                #reachable_controller_state.C = self.solver.And(
+                #        self.solver.equal(si_, si__array[i, :]),
+                #        self.solver.equal(sf_, sf__array[i, :]))
+                reachable_controller_state.C = self.solver.And(
+                        self.solver.equal(si, si__array[i, :]),
+                        self.solver.equal(sf, sf__array[i, :]))
+                reachable_controller_state.hd = 0
+                reachable_state_list.append((reachable_controller_state, state))
 
-                    # NOTE: when concretizing, need to pick only one sample
-                    # Let's pick the first one
-                    i = 0
-                    # for i in range(num_actual_samples):
+                # clear cpid history as well
 
-                    reachable_controller_state.C = self.solver.And(
-                            self.solver.equal(si_, si__array[i, :]),
-                            self.solver.equal(sf_, sf__array[i, :]))
-                    reachable_controller_state.hd = 0
-                    reachable_controller_state.x_ival_cons_list = [(x, x_ival_cons)]
-                    reachable_state_list.append((reachable_controller_state, state))
-
-                    # clear cpid history as well
-
-                    reachable_controller_state.cpid = \
-                        reachable_controller_state.pid
-                else:
-                    reachable_state_list.append((reachable_controller_state, state))
+                reachable_controller_state.cpid = \
+                    reachable_controller_state.pid
+            else:
+                reachable_state_list.append((reachable_controller_state, state))
 
                 # print reachable_controller_state
 
         if not reachable_state_list:
             raise err.Fatal('no reachable state found!')
 
-        # print reachable_state_list
+        return reachable_state_list
+
+    # reuses model
+    def get_reachable_abs_states_reuses_model(
+            self,
+            abs_state,
+            A,
+            system_params
+            ):
+        reachable_state_list = []
+
+        # CA = A.controller_abs
+
+        PA = A.plant_abs
+        hd = abs_state.cs.hd + 1
+
+        #x = self.get_new_plant_smt_var(str(abs_state.ps))
+        #ci = self.get_input_smt_var(uid_str)
+
+        # construct ci smt constraints
+        #ci = self.controller_sym_path_obj.ci
+        # TODO: sort this mess out...should not know its a list!
+        # Need to be made a class or something
+        ci = [self.path_var_dict['iv_input_arr__'+str(i)] for i in range(self.num_dims.ci)]
+        ci_ival_cons = system_params.ci
+        ci_smt = self.solver.ic2smt(ci_ival_cons, ci)
+        # print ci_smt
+
+        #x = self.controller_sym_path_obj.x
+        x = [self.path_var_dict['iv_x_arr__'+str(i)] for i in range(self.num_dims.x)]
+        X_smt = PA.get_smt2_constraints(abs_state.ps, x)
+        # print X_smt
+
+        ## substitute the current vars with original program vars
+
+        #print abs_state.cs.C
+        C_subs = self.substitute_curr_vars(abs_state.cs)
+        # print abs_state.cs.C
+
+        self.controller_sym_path_obj.set_global_cons(C_subs, ci_smt, X_smt)
+        ##self.controller_sym_path_obj.unset_global_cons()
+
+        num_req_samples = A.num_samples
+
+        #print C_subs
+        #print ci_smt
+        #print X_smt
+
+        uid_str = str(self.gen_id())
+        for p_id, pc_solver in self.controller_sym_path_obj.sat_path_gen():
+
+            # TODO: makes life simpler for now...easier to convert solver to
+            # constraints and use the existing functions instead of using the
+            # solver directly.
+            # This must be fixed and the solver should be directly handled to
+            # get any performance benefits!
+            #
+            pid_str = 'p' + str(p_id)
+            cumulitive_pid_str = abs_state.cs.cpid + pid_str
+
+            reachable_controller_state = ControllerSymbolicAbstractState(
+                C=C_subs,
+                si=[self.path_var_dict['iv_int_state_arr__'+str(i)] for i in range(self.num_dims.si)],
+                sf=[self.path_var_dict['iv_float_state_arr__'+str(i)] for i in range(self.num_dims.sf)],
+                x=[self.path_var_dict['iv_x_arr__'+str(i)] for i in range(self.num_dims.x)],
+                si_=[self.path_var_dict['rv_int_state_arr__'+str(i)] for i in range(self.num_dims.si)],
+                sf_=[self.path_var_dict['rv_float_state_arr__'+str(i)] for i in range(self.num_dims.sf)],
+                u=[self.path_var_dict['rv_output_arr__'+str(i)] for i in range(self.num_dims.u)],
+                pid=pid_str,
+                cpid=cumulitive_pid_str,
+                ci=[self.path_var_dict['iv_input_arr__'+str(i)] for i in range(self.num_dims.ci)],
+                hd=hd,
+                )
+
+                #x=[self.path_var_dict['iv_x_arr__'+str(i)] for i in range(self.num_dims.x)],
+                #ci=[self.path_var_dict['iv_input_arr__'+str(i)] for i in range(self.num_dims.ci)],
+            # protect the solver from the changes the sampler() might make.
+            pc_solver.push()
+            (
+                x_array,
+                u_array,
+                si_array,
+                sf_array,
+                si__array,
+                sf__array,
+                ci_array,
+                num_actual_samples,
+            ) = self.sample_smt_solver(reachable_controller_state, num_req_samples, pc_solver)
+
+            #print 'solver', pc_solver
+            #print x_array
+
+            pc_solver.pop()
+
+            pc_ = self.solver.And(*pc_solver.assertions())
+
+            x = self.get_new_plant_smt_var(str(abs_state.ps))
+            ci = self.get_input_smt_var(uid_str)
+            # print abs_state.cs
+            si = abs_state.cs.si_  # C'[s] = C[s']
+            sf = abs_state.cs.sf_  # C'[s] = C[s']
+            (si_, sf_, u) = self.get_new_cumulitive_smt_vars(abs_state.cs, uid_str, pid_str)
+
+            pc_ = self.instantiate(pc_, si, sf, x, si_, sf_, u, ci)
+
+            reachable_controller_state.C = pc_
+            reachable_controller_state.si = si
+            reachable_controller_state.sf = sf
+            reachable_controller_state.x = x
+            reachable_controller_state.si_ = si_
+            reachable_controller_state.sf_ = sf_
+            reachable_controller_state.u = u
+            reachable_controller_state.ci = ci
+
+            # n = actual number of samples
+
+            #(
+            #    x_array,
+            #    u_array,
+            #    si_array,
+            #    sf_array,
+            #    si__array,
+            #    sf__array,
+            #    ci_array,
+            #    num_actual_samples,
+            #)\
+            #    = self.get_concrete_states_from_abs_state(reachable_controller_state, num_req_samples)
+
+            # TODO: remove the below d and p arrays
+            # One strategy is to separate concrete states of plant and
+            # controller
+
+            d_array = np.tile(abs_state.ps.d, (num_actual_samples, 1))
+            p_array = np.tile(abs_state.ps.pvt, (num_actual_samples, 1))
+            pi_array = np.zeros((num_actual_samples, A.num_dims.pi))
+            t = abs_state.plant_state.n * A.delta_t
+            print 't:', t
+            t_array = np.tile(t, (num_actual_samples, 1))
+
+            s_array = np.concatenate((si_array, sf_array), axis=1)
+            print 's:', s_array
+            #s__array = np.concatenate((si__array, sf__array))
+
+            state = st.StateArray(
+                t=t_array,
+                x=x_array,
+                d=d_array,
+                pvt=p_array,
+                s=s_array,
+                u=u_array,
+                pi=pi_array,
+                ci=ci_array,
+                )
+
+            # if history depth exceeded, concretize all states!
+
+            if abs_state.cs.hd >= self.max_hd:
+
+                # NOTE: when concretizing, need to pick only one sample
+                # Let's pick the first one
+                i = 0
+                # for i in range(num_actual_samples):
+
+                #reachable_controller_state.C = self.solver.And(
+                #        self.solver.equal(si_, si__array[i, :]),
+                #        self.solver.equal(sf_, sf__array[i, :]))
+                reachable_controller_state.C = self.solver.And(
+                        self.solver.equal(si, si__array[i, :]),
+                        self.solver.equal(sf, sf__array[i, :]))
+                reachable_controller_state.hd = 0
+                reachable_state_list.append((reachable_controller_state, state))
+
+                # clear cpid history as well
+
+                reachable_controller_state.cpid = \
+                    reachable_controller_state.pid
+            else:
+                reachable_state_list.append((reachable_controller_state, state))
+
+                # print reachable_controller_state
+
+        if not reachable_state_list:
+            raise err.Fatal('no reachable state found!')
 
         return reachable_state_list
 
@@ -578,62 +779,8 @@ class ControllerSymbolicAbstraction:
     def get_concrete_states_from_abs_state(self, abs_state, num_req_samples):
 
         # print 'req. samples = {}'.format(num_req_samples)
-
         return self.sample_smt(abs_state, num_req_samples)
-
         # print 'found samples = {}'.format(num_actual_samples)
-    # ####
-    # FIXME: below unused code needs to accomodate si and sf!
-
-        (
-            x_array,
-            u_array,
-            s_array,
-            s__array,
-            ci_array,
-            num_actual_samples,
-            ) = self.sample_smt(abs_state, 1)
-
-        if num_actual_samples > 0:
-            (
-                x_array_,
-                u_array_,
-                s_array_,
-                s__array_,
-                ci_array_,
-                num_actual_samples_,
-                ) = self.sample_random_smt(abs_state, num_req_samples)
-
-            if num_actual_samples_ == 0:
-                return (
-                    x_array,
-                    u_array,
-                    s_array,
-                    s__array,
-                    ci_array,
-                    num_actual_samples,
-                    )
-            else:
-                return (
-                    x_array_,
-                    u_array_,
-                    s_array_,
-                    s__array_,
-                    ci_array_,
-                    num_actual_samples_,
-                    )
-        else:
-            return (
-                x_array,
-                u_array,
-                s_array,
-                s__array,
-                ci_array,
-                num_actual_samples,
-                )
-
-    def get_ival_constraints(self, abs_state):
-        raise NotImplementedError
 
 
 class ControllerSymbolicAbstractState(object):
@@ -653,8 +800,6 @@ class ControllerSymbolicAbstractState(object):
             cpid,
             ci,
             hd,
-            x_ival_cons_list,
-            Cx=None,
             ):
 
         # time of creation
@@ -676,12 +821,10 @@ class ControllerSymbolicAbstractState(object):
 
         # constraint o nplant state
 
-        self.Cx = Cx
-
         # history depth
 
         self.hd = hd
-        self.x_ival_cons_list = x_ival_cons_list
+        # whats the purpose of this list? long forgotten?
 
         # print cpid
 

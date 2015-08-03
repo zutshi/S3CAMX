@@ -1,4 +1,4 @@
-Changes 0.5 -> 0.6
+Changes 0.6 -> 0.7
 
 - secam.py was refactored. System structures were stored in classes: System, Property and Options
 - Input parsing was separated into a new file. All benchmarks/input systems now need to be defined
@@ -25,6 +25,10 @@ Changes 0.5 -> 0.6
 - Added 10u benchmarks
 - Consolidated simulation functions
 - partially fixed plotting by supplying the plt module to the plant...
+- added tree/list/smt2 parsing
+- took care of a redundant smt check() by using an available model if present in smt_solver module
+- exposed minDist: the minimum distance between two samples can be now be specified [when using SMT
+  solver to sample]
 
 
 
@@ -60,15 +64,17 @@ TODO:
     rather than merging with constraints (as being done currently).
   - Create a slover isntance instead of representing constraints in controller_abstract_States as
     strings. Push and pop constraints as necessary
-  - Construct a Tree of constraints from pathcrawler's tree and use incremental constraint solving.
 - integrate a faster library for plotting and K-shortest paths
 - fix plotting in individual plant files....possibly by supplying a plotting function to sim()
-- autoload or remove mindist tunings!!!!
 - Broken KLEE support. Conversion factor has been removed. Integrate in plant model.
 - Separate Plant and Safety Property Monitor
 - Add plotting in psim. This can be done by the plant sim() always returning dense traces, but psim
   using delta_t to make them sparse. In this way, entire plotting burden can be shifted to it.
-
+- Check Property is always on????? Run vanderpol matlab and see... [must uncomment display(ERROR FOUND)]
+- find a way to fix the duplication of property checking in matlab systems
+- fix regression script
+    - Add error handling, in case secam crashes. Atleast save data
+    - Printing is not detailed enough, add error props, init set, params used, etc...
 
 Research TODO:
 - Add leak benchmarks

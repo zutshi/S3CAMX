@@ -2,8 +2,17 @@ function run_staliro(num_runs)
 
 init();
 
-filename = 'heater.tst';
-path = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/heater_float';
+filename = 'heat_tmp.tst';
+path = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/heat';
+
+% filename = 'dci.tst';
+% path = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/dc_motor_float';
+
+% filename = 'fuzzy_invp.tst';
+% path = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/fuzzy_invp_float';
+
+% filename = 'heater.tst';
+% path = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/heater_float';
 
 %filename = 'toy_model_10u.tst';
 %path = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/toy_model_10u';
@@ -31,10 +40,10 @@ for eg_ = eg_cell_array
     filename = char(eg.filename);
     % TODO: platform dependant file path construction!!
     file_path = [path '/' filename];
-
+    
     %     if any(strmatch(filename, systems_to_run, 'exact'))
     if any(strmatch(path, systems_to_run, 'exact'))
-      run_example(filename, path, num_runs);
+        run_example(filename, path, num_runs);
     end
 end
 end
@@ -66,7 +75,7 @@ function run(one_shot_sim, prop, num_runs, summary_fileID)
 % args:     S-Taliro sends X as a row vector
 % return:   S-Taliro expects XT and T as row vectors
     function [T, XT, YT, LT, CLG, GRD] = sim_wrapper_for_staliro(X, T, ~, U)
-        %U'
+%         U = zeros(10,1); HACK for fuzzy to go thru!
         % ignore TU for now.
         % Input is assumed to be parameterized as
         % a uniform random zoh signal at delta_t intervals
