@@ -1,0 +1,139 @@
+
+
+TEST CASE 1
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 0;
+input__controller[0].float_state_arr = 1;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 0;
+ret_val__controller[0].float_state_arr = 1;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = -371.000000;
+input__controller[0].float_state_arr[0] = -310.000000;
+input__controller[0].x_arr[0] = -496.000000;
+ret_val__controller[0].float_state_arr[0] = -323.000000;
+ret_val__controller[0].output_arr[0] = -2.000000;
+
+Result:
+unknown
+
+Path Covered :
+dc_motor_controller.c
++34
+
+
+Path Predicate for case 1:
+dc_motor_controller.c: +34 (((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))>20.000000
+
+Simplified Path Predicate for case 1:
+(((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))>20.000000
+
+Output Values for case 1: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].float_state_arr[0] = ((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]), 558.000000
+ret_val[0].output_arr[0] = 20.000000, 20.000000
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+dc_motor_controller.c: -34 (((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))=<20.000000
+Path Prefix to cover :
+dc_motor_controller.c
+-34
+
+
+TEST CASE 2
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 0;
+input__controller[0].float_state_arr = 1;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 0;
+ret_val__controller[0].float_state_arr = 1;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = -810.000000;
+input__controller[0].float_state_arr[0] = -16746.000000;
+input__controller[0].x_arr[0] = 410.000000;
+ret_val__controller[0].float_state_arr[0] = -323.000000;
+ret_val__controller[0].output_arr[0] = -2.000000;
+
+Result:
+unknown
+
+Path Covered :
+dc_motor_controller.c
+-34 +36
+
+
+Path Predicate for case 2:
+dc_motor_controller.c: -34 (((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))=<20.000000
+dc_motor_controller.c: +36 (((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))<-(20.000000)
+
+Simplified Path Predicate for case 2:
+(((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))=<20.000000 AND
+(((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))<-(20.000000)
+
+Output Values for case 2: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].float_state_arr[0] = ((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]), -16345.000000
+ret_val[0].output_arr[0] = -20.000000, -20.000000
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+dc_motor_controller.c: -34 (((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))=<20.000000
+dc_motor_controller.c: -36 (((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))>=-(20.000000)
+Path Prefix to cover :
+dc_motor_controller.c
+-34 -36
+
+
+TEST CASE 3
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 0;
+input__controller[0].float_state_arr = 1;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 0;
+ret_val__controller[0].float_state_arr = 1;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 53.000000;
+input__controller[0].float_state_arr[0] = 12855.000000;
+input__controller[0].x_arr[0] = 262.000000;
+ret_val__controller[0].float_state_arr[0] = -323.000000;
+ret_val__controller[0].output_arr[0] = -2.000000;
+
+Result:
+unknown
+
+Path Covered :
+dc_motor_controller.c
+-34 -36
+
+
+Path Predicate for case 3:
+dc_motor_controller.c: -34 (((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))=<20.000000
+dc_motor_controller.c: -36 (((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))>=-(20.000000)
+
+Simplified Path Predicate for case 3:
+(((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))=<20.000000 AND
+(((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]))>=-(20.000000)
+
+Output Values for case 3: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].float_state_arr[0] = ((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0]), 12541.000000
+ret_val[0].output_arr[0] = (((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))*40.000000)+((1.000000+-((input[0].x_arr[0]+input[0].input_arr[0])))+input[0].float_state_arr[0])), -19.000000
