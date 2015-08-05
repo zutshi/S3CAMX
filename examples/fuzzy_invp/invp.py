@@ -1,51 +1,55 @@
 import numpy as np
 from scipy.integrate import ode
 
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 
-def sim(TT, X0, D, P, U, I, property_checker, property_violated_flag):
-    # atol = 1e-10
-    rtol = 1e-5
+class SIM(object):
+    def __init__(self, plt, pvt_init_data):
+        pass
 
-    num_dim_x = len(X0)
-    plot_data = [np.empty(0, dtype=float), np.empty((0, num_dim_x), dtype=float)]
+    def sim(self, TT, X0, D, P, U, I, property_checker, property_violated_flag):
+        # atol = 1e-10
+        rtol = 1e-5
 
-    # tt,YY,dummy_D,dummy_P
-    solver = ode(dyn).set_integrator('dopri5', rtol=rtol)
+        num_dim_x = len(X0)
+        plot_data = [np.empty(0, dtype=float), np.empty((0, num_dim_x), dtype=float)]
 
-    Ti = TT[0]
-    Tf = TT[1]
-    T = Tf - Ti
+        # tt,YY,dummy_D,dummy_P
+        solver = ode(dyn).set_integrator('dopri5', rtol=rtol)
 
-    if property_checker:
-        violating_state = [()]
-        #solver.set_solout(solout_fun(property_checker, violating_state, plot_data))  # (2)
+        Ti = TT[0]
+        Tf = TT[1]
+        T = Tf - Ti
 
-    solver.set_initial_value(X0, t=0.0)
-    solver.set_f_params(U)
-    X_ = solver.integrate(T)
-    # Y = C*x + D*u
+        if property_checker:
+            violating_state = [()]
+            #solver.set_solout(solout_fun(property_checker, violating_state, plot_data))  # (2)
 
-    if property_checker is not None:
-        if property_checker(Tf, X_):
-            property_violated_flag[0] = True
+        solver.set_initial_value(X0, t=0.0)
+        solver.set_f_params(U)
+        X_ = solver.integrate(T)
+        # Y = C*x + D*u
 
-    dummy_D = np.zeros(D.shape)
-    dummy_P = np.zeros(P.shape)
-    ret_t = Tf
-    ret_X = X_
-    # ret_Y = Y
-    ret_D = dummy_D
-    ret_P = dummy_P
+        if property_checker is not None:
+            if property_checker(Tf, X_):
+                property_violated_flag[0] = True
 
-    #plt.plot(plot_data[0] + Ti, plot_data[1][:, 0])
+        dummy_D = np.zeros(D.shape)
+        dummy_P = np.zeros(P.shape)
+        ret_t = Tf
+        ret_X = X_
+        # ret_Y = Y
+        ret_D = dummy_D
+        ret_P = dummy_P
 
-    #plt.plot(plot_data[0] + Ti, plot_data[1][:, 1])
-    #plt.plot(plot_data[0] + Ti, plot_data[1][:, 2])
-    ##plt.plot(plot_data[1][:, 0], plot_data[1][:, 1])
+        #plt.plot(plot_data[0] + Ti, plot_data[1][:, 0])
 
-    return (ret_t, ret_X, ret_D, ret_P)
+        #plt.plot(plot_data[0] + Ti, plot_data[1][:, 1])
+        #plt.plot(plot_data[0] + Ti, plot_data[1][:, 2])
+        ##plt.plot(plot_data[1][:, 0], plot_data[1][:, 1])
+
+        return (ret_t, ret_X, ret_D, ret_P)
 
 
 #def dyn(double t, const double *y, double u, double *ydot):
