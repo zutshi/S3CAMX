@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import sh
+import time
 
 import fileOps as f
 
-NUM_TESTS = 20
+NUM_TESTS = 2
 prog_name = 'secam.py'
 filename_arg = '--filename'
 ss_symex_opt = '--ss-symex'
@@ -28,10 +29,10 @@ run_summary_log_ext = '.summary'
 
 
 heater_name = 'heater'
-heater_path = './examples/heater_float/heater.tst'
+heater_path = './examples/heater/heater.tst'
 
 dc_name = 'dc_motor'
-dc_motor_path = './examples/dc_motor_float/dci.tst'
+dc_motor_path = './examples/dc_motor/dci.tst'
 
 tenu1_name = 'tenu_1'
 tenu1_path = './examples/toy_model_10u/toy_model_10u_1.tst'
@@ -45,12 +46,13 @@ tenu3_path = './examples/toy_model_10u/toy_model_10u_3.tst'
 heat_name = 'heat'
 heat_path = './examples/heat/heat.tst'
 
-benchmark_list = [#(heater_name, heater_path),
+benchmark_list = [
+                  (heater_name, heater_path),
                   (dc_name, dc_motor_path),
-                  #(tenu1_name, tenu1_path),
-                  #(tenu2_name, tenu2_path),
-                  #(tenu3_name, tenu3_path),
-                  #(heat_name, heat_path)]
+                  (tenu1_name, tenu1_path),
+                  (tenu2_name, tenu2_path),
+                  (tenu3_name, tenu3_path),
+                  (heat_name, heat_path),
                   ]
 
 # (time ./secam.py ./examples/heater/heater.tst)>>./regression_results/heater.log 2>>./regression_results/heater.time
@@ -60,6 +62,8 @@ time_spent_list = ''
 SUCC_CTR = 0
 FAIL_CTR = 0
 STDOUT_DATA = ''
+
+TIME_STAMP = time.strftime("%c")
 
 
 def process_stdout(msg):
@@ -110,6 +114,9 @@ for benchmark in benchmark_list:
     SUCC_CTR = 0
     FAIL_CTR = 0
 
+    test_hdr = '{DECO}\n{deco} TEST DATE: {ts}\n{DECO}\n'.format(DECO='#'*40, deco='##', ts=TIME_STAMP)
+    f.append_data(run_summary_log, test_hdr)
+
     for i in range(NUM_TESTS):
         print 'RUN', i, ':',
         #sh.python(prog_name, benchmark_path, _out=output_log, _err=process_stderr)
@@ -123,7 +130,8 @@ for benchmark in benchmark_list:
     success_str = 'successfull runs = {}\n'.format(SUCC_CTR)
     fail_str = 'failures = {}\n'.format(FAIL_CTR)
     # time_summary = ''.join(time_spent_list) \
-    time_summary = 'total_time_taken = {}\n'.format(T) \
+    time_summary = \
+        'total_time_taken = {}\n'.format(T) \
         + avg_time_str \
         + success_str  \
         + fail_str     \

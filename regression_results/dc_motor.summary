@@ -50,3 +50,22 @@ failures = 0
 
 time spent(s) = 12.7813298702
 time spent(s) = 12.7943332195
+time spent(s) = 13.4790289402
+time spent(s) = 12.4960899353
+########################################
+##TEST DATE: Wed Aug  5 15:01:28 2015
+########################################total_time_taken = 25.9751188755
+average time = 12.9875594378
+successfull runs = 2
+failures = 0
+
+time spent(s) = 13.4286499023
+time spent(s) = 13.1548819542
+########################################
+## TEST DATE: Wed Aug  5 15:06:56 2015
+########################################
+total_time_taken = 26.5835318565
+average time = 13.2917659283
+successfull runs = 2
+failures = 0
+
