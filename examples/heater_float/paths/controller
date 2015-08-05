@@ -1,0 +1,2343 @@
+
+
+TEST CASE 1
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = -59461;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 2078;
+input__controller[0].x_arr[0] = -287.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
+-29 -31 +33 +38 +41 -44 -47
+
+
+Path Predicate for case 1:
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: +41 1<>input[0].int_state_arr[1]
+heater.c: -44 1=<2
+heater.c: -47 1<>0
+
+Simplified Path Predicate for case 1:
+input[0].x_arr[0]<66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]>=5 AND
+1<>input[0].int_state_arr[1]
+
+Output Values for case 1: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = 1, 1
+ret_val[0].int_state_arr[1] = 1, 1
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = 1.000000, 1.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: +41 1<>input[0].int_state_arr[1]
+heater.c: -44 1=<2
+heater.c: +47 1=0
+Path Prefix to cover :
+heater.c
+-29 -31 +33 +38 +41 -44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: +41 1<>input[0].int_state_arr[1]
+heater.c: +44 1>2
+Path Prefix to cover :
+heater.c
+-29 -31 +33 +38 +41 +44
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: -41 1=input[0].int_state_arr[1]
+Path Prefix to cover :
+heater.c
+-29 -31 +33 +38 -41
+
+
+TEST CASE 2
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = 1;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 2078;
+input__controller[0].x_arr[0] = -287.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
+-29 -31 +33 +38 -41 -44 -47
+
+
+Path Predicate for case 2:
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: -41 1=input[0].int_state_arr[1]
+heater.c: -44 0=<2
+heater.c: -47 1<>0
+
+Simplified Path Predicate for case 2:
+input[0].x_arr[0]<66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]>=5 AND
+1=input[0].int_state_arr[1]
+
+Output Values for case 2: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = 0, 0
+ret_val[0].int_state_arr[1] = 1, 1
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = 1.000000, 1.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: -41 1=input[0].int_state_arr[1]
+heater.c: -44 0=<2
+heater.c: +47 1=0
+Path Prefix to cover :
+heater.c
+-29 -31 +33 +38 -41 -44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: -41 1=input[0].int_state_arr[1]
+heater.c: +44 0>2
+Path Prefix to cover :
+heater.c
+-29 -31 +33 +38 -41 +44
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38
+
+
+TEST CASE 3
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = -59461;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = -287.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
+-29 -31 +33 -38 -38b +41 -44 -47
+
+
+Path Predicate for case 3:
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 1<>input[0].int_state_arr[1]
+heater.c: -44 (input[0].int_state_arr[0]+1)=<2
+heater.c: -47 1<>0
+
+Simplified Path Predicate for case 3:
+input[0].x_arr[0]<66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+1<>input[0].int_state_arr[1] AND
+(input[0].int_state_arr[0]+1)=<2
+
+Output Values for case 3: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = (input[0].int_state_arr[0]+1), -70730
+ret_val[0].int_state_arr[1] = 1, 1
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = 1.000000, 1.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 1<>input[0].int_state_arr[1]
+heater.c: -44 (input[0].int_state_arr[0]+1)=<2
+heater.c: +47 1=0
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 -38b +41 -44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 1<>input[0].int_state_arr[1]
+heater.c: +44 (input[0].int_state_arr[0]+1)>2
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 -38b +41 +44
+
+
+TEST CASE 4
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = 223843587;
+input__controller[0].int_state_arr[1] = -59461;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = -287.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
+-29 -31 +33 -38 -38b +41 +44 -47
+
+
+Path Predicate for case 4:
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 1<>input[0].int_state_arr[1]
+heater.c: +44 (input[0].int_state_arr[0]+1)>2
+heater.c: -47 input[0].int_state_arr[1]<>0
+
+Simplified Path Predicate for case 4:
+input[0].x_arr[0]<66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+1<>input[0].int_state_arr[1] AND
+(input[0].int_state_arr[0]+1)>2 AND
+input[0].int_state_arr[1]<>0
+
+Output Values for case 4: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = (input[0].int_state_arr[0]+1), 223843588
+ret_val[0].int_state_arr[1] = input[0].int_state_arr[1], -59461
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = ((double)input[0].int_state_arr[1]), -59461.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 1<>input[0].int_state_arr[1]
+heater.c: +44 (input[0].int_state_arr[0]+1)>2
+heater.c: +47 input[0].int_state_arr[1]=0
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 -38b +41 +44 +47
+
+
+TEST CASE 5
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = 223843587;
+input__controller[0].int_state_arr[1] = 0;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = -287.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
+-29 -31 +33 -38 -38b +41 +44 +47
+
+
+Path Predicate for case 5:
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 1<>input[0].int_state_arr[1]
+heater.c: +44 (input[0].int_state_arr[0]+1)>2
+heater.c: +47 input[0].int_state_arr[1]=0
+
+Simplified Path Predicate for case 5:
+input[0].x_arr[0]<66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+1<>input[0].int_state_arr[1] AND
+(input[0].int_state_arr[0]+1)>2 AND
+input[0].int_state_arr[1]=0
+
+Output Values for case 5: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = (input[0].int_state_arr[0]+1), 223843588
+ret_val[0].int_state_arr[1] = 0, 0
+ret_val[0].int_state_arr[2] = 0, 0
+ret_val[0].output_arr[0] = 0.000000, 0.000000
+ret_val[0].int_state_arr[3] = (input[0].int_state_arr[3]+1), 1
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 1=input[0].int_state_arr[1]
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 -38b -41
+
+
+TEST CASE 6
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = 1;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = -287.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
+-29 -31 +33 -38 -38b -41 -44 -47
+
+
+Path Predicate for case 6:
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 1=input[0].int_state_arr[1]
+heater.c: -44 input[0].int_state_arr[0]=<2
+heater.c: -47 1<>0
+
+Simplified Path Predicate for case 6:
+input[0].x_arr[0]<66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+1=input[0].int_state_arr[1] AND
+input[0].int_state_arr[0]=<2
+
+Output Values for case 6: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = input[0].int_state_arr[0], -70731
+ret_val[0].int_state_arr[1] = 1, 1
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = 1.000000, 1.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 1=input[0].int_state_arr[1]
+heater.c: -44 input[0].int_state_arr[0]=<2
+heater.c: +47 1=0
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 -38b -41 -44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 1=input[0].int_state_arr[1]
+heater.c: +44 input[0].int_state_arr[0]>2
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 -38b -41 +44
+
+
+TEST CASE 7
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = 1163511750;
+input__controller[0].int_state_arr[1] = 1;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = -287.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
+-29 -31 +33 -38 -38b -41 +44 -47
+
+
+Path Predicate for case 7:
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 1=input[0].int_state_arr[1]
+heater.c: +44 input[0].int_state_arr[0]>2
+heater.c: -47 1<>0
+
+Simplified Path Predicate for case 7:
+input[0].x_arr[0]<66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+1=input[0].int_state_arr[1] AND
+input[0].int_state_arr[0]>2
+
+Output Values for case 7: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = input[0].int_state_arr[0], 1163511750
+ret_val[0].int_state_arr[1] = 1, 1
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = 1.000000, 1.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 1=input[0].int_state_arr[1]
+heater.c: +44 input[0].int_state_arr[0]>2
+heater.c: +47 1=0
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 -38b -41 +44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 +38b
+
+
+TEST CASE 8
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = -59461;
+input__controller[0].int_state_arr[2] = 735815991;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = -287.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
+-29 -31 +33 -38 +38b +41 -44 -47
+
+
+Path Predicate for case 8:
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: +41 1<>input[0].int_state_arr[1]
+heater.c: -44 1=<2
+heater.c: -47 1<>0
+
+Simplified Path Predicate for case 8:
+input[0].x_arr[0]<66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]>=5 AND
+1<>input[0].int_state_arr[1]
+
+Output Values for case 8: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = 1, 1
+ret_val[0].int_state_arr[1] = 1, 1
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), 735815992
+ret_val[0].output_arr[0] = 1.000000, 1.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: +41 1<>input[0].int_state_arr[1]
+heater.c: -44 1=<2
+heater.c: +47 1=0
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 +38b +41 -44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: +41 1<>input[0].int_state_arr[1]
+heater.c: +44 1>2
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 +38b +41 +44
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: -41 1=input[0].int_state_arr[1]
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 +38b -41
+
+
+TEST CASE 9
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = 1;
+input__controller[0].int_state_arr[2] = 735815991;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = -287.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
+-29 -31 +33 -38 +38b -41 -44 -47
+
+
+Path Predicate for case 9:
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: -41 1=input[0].int_state_arr[1]
+heater.c: -44 0=<2
+heater.c: -47 1<>0
+
+Simplified Path Predicate for case 9:
+input[0].x_arr[0]<66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]>=5 AND
+1=input[0].int_state_arr[1]
+
+Output Values for case 9: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = 0, 0
+ret_val[0].int_state_arr[1] = 1, 1
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), 735815992
+ret_val[0].output_arr[0] = 1.000000, 1.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: -41 1=input[0].int_state_arr[1]
+heater.c: -44 0=<2
+heater.c: +47 1=0
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 +38b -41 -44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: +33 input[0].x_arr[0]<66.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: -41 1=input[0].int_state_arr[1]
+heater.c: +44 0>2
+Path Prefix to cover :
+heater.c
+-29 -31 +33 -38 +38b -41 +44
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+heater.c: -33 input[0].x_arr[0]>=66.000000
+Path Prefix to cover :
+heater.c
+-29 -31 -33
+infeasible (conjunction of constraint and its negation)
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: -29 input[0].x_arr[0]<66.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+Path Prefix to cover :
+heater.c
+-29 +31
+infeasible (with the given preconditions) (detected by constraint propagation)
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+Path Prefix to cover :
+heater.c
++29
+
+
+TEST CASE 10
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = -59461;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 2078;
+input__controller[0].x_arr[0] = 690.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 -29_2 +31 +38 +41 -44 +47
+
+
+Path Predicate for case 10:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: +41 0<>input[0].int_state_arr[1]
+heater.c: -44 1=<2
+heater.c: +47 0=0
+
+Simplified Path Predicate for case 10:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]>=70.000000 AND
+input[0].int_state_arr[3]>=5 AND
+0<>input[0].int_state_arr[1]
+
+Output Values for case 10: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = 1, 1
+ret_val[0].int_state_arr[1] = 0, 0
+ret_val[0].int_state_arr[2] = 0, 0
+ret_val[0].output_arr[0] = 0.000000, 0.000000
+ret_val[0].int_state_arr[3] = (input[0].int_state_arr[3]+1), 2079
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: +41 0<>input[0].int_state_arr[1]
+heater.c: -44 1=<2
+heater.c: -47 0<>0
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 +38 +41 -44 -47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: +41 0<>input[0].int_state_arr[1]
+heater.c: +44 1>2
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 +38 +41 +44
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: -41 0=input[0].int_state_arr[1]
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 +38 -41
+
+
+TEST CASE 11
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = 0;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 2078;
+input__controller[0].x_arr[0] = 690.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 -29_2 +31 +38 -41 -44 +47
+
+
+Path Predicate for case 11:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: -41 0=input[0].int_state_arr[1]
+heater.c: -44 0=<2
+heater.c: +47 0=0
+
+Simplified Path Predicate for case 11:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]>=70.000000 AND
+input[0].int_state_arr[3]>=5 AND
+0=input[0].int_state_arr[1]
+
+Output Values for case 11: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = 0, 0
+ret_val[0].int_state_arr[1] = 0, 0
+ret_val[0].int_state_arr[2] = 0, 0
+ret_val[0].output_arr[0] = 0.000000, 0.000000
+ret_val[0].int_state_arr[3] = (input[0].int_state_arr[3]+1), 2079
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: -41 0=input[0].int_state_arr[1]
+heater.c: -44 0=<2
+heater.c: -47 0<>0
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 +38 -41 -44 -47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: -41 0=input[0].int_state_arr[1]
+heater.c: +44 0>2
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 +38 -41 +44
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38
+
+
+TEST CASE 12
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = -59461;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 690.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 -29_2 +31 -38 -38b +41 -44 +47
+
+
+Path Predicate for case 12:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 0<>input[0].int_state_arr[1]
+heater.c: -44 (input[0].int_state_arr[0]+1)=<2
+heater.c: +47 0=0
+
+Simplified Path Predicate for case 12:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]>=70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+0<>input[0].int_state_arr[1] AND
+(input[0].int_state_arr[0]+1)=<2
+
+Output Values for case 12: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = (input[0].int_state_arr[0]+1), -70730
+ret_val[0].int_state_arr[1] = 0, 0
+ret_val[0].int_state_arr[2] = 0, 0
+ret_val[0].output_arr[0] = 0.000000, 0.000000
+ret_val[0].int_state_arr[3] = (input[0].int_state_arr[3]+1), 1
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 0<>input[0].int_state_arr[1]
+heater.c: -44 (input[0].int_state_arr[0]+1)=<2
+heater.c: -47 0<>0
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 -38b +41 -44 -47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 0<>input[0].int_state_arr[1]
+heater.c: +44 (input[0].int_state_arr[0]+1)>2
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 -38b +41 +44
+
+
+TEST CASE 13
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = 897669302;
+input__controller[0].int_state_arr[1] = -59461;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 690.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 -29_2 +31 -38 -38b +41 +44 -47
+
+
+Path Predicate for case 13:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 0<>input[0].int_state_arr[1]
+heater.c: +44 (input[0].int_state_arr[0]+1)>2
+heater.c: -47 input[0].int_state_arr[1]<>0
+
+Simplified Path Predicate for case 13:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]>=70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+0<>input[0].int_state_arr[1] AND
+(input[0].int_state_arr[0]+1)>2 AND
+input[0].int_state_arr[1]<>0
+
+Output Values for case 13: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = (input[0].int_state_arr[0]+1), 897669303
+ret_val[0].int_state_arr[1] = input[0].int_state_arr[1], -59461
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = ((double)input[0].int_state_arr[1]), -59461.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 0<>input[0].int_state_arr[1]
+heater.c: +44 (input[0].int_state_arr[0]+1)>2
+heater.c: +47 input[0].int_state_arr[1]=0
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 -38b +41 +44 +47
+infeasible (with the given preconditions) (detected by constraint propagation)
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 0=input[0].int_state_arr[1]
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 -38b -41
+
+
+TEST CASE 14
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = 0;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 690.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 -29_2 +31 -38 -38b -41 -44 +47
+
+
+Path Predicate for case 14:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 0=input[0].int_state_arr[1]
+heater.c: -44 input[0].int_state_arr[0]=<2
+heater.c: +47 0=0
+
+Simplified Path Predicate for case 14:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]>=70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+0=input[0].int_state_arr[1] AND
+input[0].int_state_arr[0]=<2
+
+Output Values for case 14: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = input[0].int_state_arr[0], -70731
+ret_val[0].int_state_arr[1] = 0, 0
+ret_val[0].int_state_arr[2] = 0, 0
+ret_val[0].output_arr[0] = 0.000000, 0.000000
+ret_val[0].int_state_arr[3] = (input[0].int_state_arr[3]+1), 1
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 0=input[0].int_state_arr[1]
+heater.c: -44 input[0].int_state_arr[0]=<2
+heater.c: -47 0<>0
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 -38b -41 -44 -47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 0=input[0].int_state_arr[1]
+heater.c: +44 input[0].int_state_arr[0]>2
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 -38b -41 +44
+
+
+TEST CASE 15
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = 1617283053;
+input__controller[0].int_state_arr[1] = 0;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 690.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 -29_2 +31 -38 -38b -41 +44 +47
+
+
+Path Predicate for case 15:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 0=input[0].int_state_arr[1]
+heater.c: +44 input[0].int_state_arr[0]>2
+heater.c: +47 0=0
+
+Simplified Path Predicate for case 15:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]>=70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+0=input[0].int_state_arr[1] AND
+input[0].int_state_arr[0]>2
+
+Output Values for case 15: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = input[0].int_state_arr[0], 1617283053
+ret_val[0].int_state_arr[1] = 0, 0
+ret_val[0].int_state_arr[2] = 0, 0
+ret_val[0].output_arr[0] = 0.000000, 0.000000
+ret_val[0].int_state_arr[3] = (input[0].int_state_arr[3]+1), 1
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 0=input[0].int_state_arr[1]
+heater.c: +44 input[0].int_state_arr[0]>2
+heater.c: -47 0<>0
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 -38b -41 +44 -47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 +38b
+
+
+TEST CASE 16
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = -59461;
+input__controller[0].int_state_arr[2] = 397183705;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 690.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 -29_2 +31 -38 +38b +41 -44 +47
+
+
+Path Predicate for case 16:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: +41 0<>input[0].int_state_arr[1]
+heater.c: -44 1=<2
+heater.c: +47 0=0
+
+Simplified Path Predicate for case 16:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]>=70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]>=5 AND
+0<>input[0].int_state_arr[1]
+
+Output Values for case 16: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = 1, 1
+ret_val[0].int_state_arr[1] = 0, 0
+ret_val[0].int_state_arr[2] = 0, 0
+ret_val[0].output_arr[0] = 0.000000, 0.000000
+ret_val[0].int_state_arr[3] = (input[0].int_state_arr[3]+1), 1
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: +41 0<>input[0].int_state_arr[1]
+heater.c: -44 1=<2
+heater.c: -47 0<>0
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 +38b +41 -44 -47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: +41 0<>input[0].int_state_arr[1]
+heater.c: +44 1>2
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 +38b +41 +44
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: -41 0=input[0].int_state_arr[1]
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 +38b -41
+
+
+TEST CASE 17
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = 0;
+input__controller[0].int_state_arr[2] = 397183705;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 690.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 -29_2 +31 -38 +38b -41 -44 +47
+
+
+Path Predicate for case 17:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: -41 0=input[0].int_state_arr[1]
+heater.c: -44 0=<2
+heater.c: +47 0=0
+
+Simplified Path Predicate for case 17:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]>=70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]>=5 AND
+0=input[0].int_state_arr[1]
+
+Output Values for case 17: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = 0, 0
+ret_val[0].int_state_arr[1] = 0, 0
+ret_val[0].int_state_arr[2] = 0, 0
+ret_val[0].output_arr[0] = 0.000000, 0.000000
+ret_val[0].int_state_arr[3] = (input[0].int_state_arr[3]+1), 1
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: -41 0=input[0].int_state_arr[1]
+heater.c: -44 0=<2
+heater.c: -47 0<>0
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 +38b -41 -44 -47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: +31 input[0].x_arr[0]>=70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: -41 0=input[0].int_state_arr[1]
+heater.c: +44 0>2
+Path Prefix to cover :
+heater.c
++29 -29_2 +31 -38 +38b -41 +44
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: -29_2 input[0].x_arr[0]>=70.000000
+heater.c: -31 input[0].x_arr[0]<70.000000
+Path Prefix to cover :
+heater.c
++29 -29_2 -31
+infeasible (conjunction of constraint and its negation)
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+Path Prefix to cover :
+heater.c
++29 +29_2
+
+
+TEST CASE 18
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = -59461;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 2078;
+input__controller[0].x_arr[0] = 69.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 +29_2 +38 +41 -44 -47
+
+
+Path Predicate for case 18:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: +41 2<>input[0].int_state_arr[1]
+heater.c: -44 1=<2
+heater.c: -47 2<>0
+
+Simplified Path Predicate for case 18:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]>=5 AND
+2<>input[0].int_state_arr[1]
+
+Output Values for case 18: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = 1, 1
+ret_val[0].int_state_arr[1] = 2, 2
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = 2.000000, 2.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: +41 2<>input[0].int_state_arr[1]
+heater.c: -44 1=<2
+heater.c: +47 2=0
+Path Prefix to cover :
+heater.c
++29 +29_2 +38 +41 -44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: +41 2<>input[0].int_state_arr[1]
+heater.c: +44 1>2
+Path Prefix to cover :
+heater.c
++29 +29_2 +38 +41 +44
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: -41 2=input[0].int_state_arr[1]
+Path Prefix to cover :
+heater.c
++29 +29_2 +38 -41
+
+
+TEST CASE 19
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = 2;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 2078;
+input__controller[0].x_arr[0] = 69.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 +29_2 +38 -41 -44 -47
+
+
+Path Predicate for case 19:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: -41 2=input[0].int_state_arr[1]
+heater.c: -44 0=<2
+heater.c: -47 2<>0
+
+Simplified Path Predicate for case 19:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]>=5 AND
+2=input[0].int_state_arr[1]
+
+Output Values for case 19: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = 0, 0
+ret_val[0].int_state_arr[1] = 2, 2
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = 2.000000, 2.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: -41 2=input[0].int_state_arr[1]
+heater.c: -44 0=<2
+heater.c: +47 2=0
+Path Prefix to cover :
+heater.c
++29 +29_2 +38 -41 -44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: +38 input[0].int_state_arr[3]>=5
+heater.c: -41 2=input[0].int_state_arr[1]
+heater.c: +44 0>2
+Path Prefix to cover :
+heater.c
++29 +29_2 +38 -41 +44
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+Path Prefix to cover :
+heater.c
++29 +29_2 -38
+
+
+TEST CASE 20
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = -59461;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 69.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 +29_2 -38 -38b +41 -44 -47
+
+
+Path Predicate for case 20:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 2<>input[0].int_state_arr[1]
+heater.c: -44 (input[0].int_state_arr[0]+1)=<2
+heater.c: -47 2<>0
+
+Simplified Path Predicate for case 20:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+2<>input[0].int_state_arr[1] AND
+(input[0].int_state_arr[0]+1)=<2
+
+Output Values for case 20: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = (input[0].int_state_arr[0]+1), -70730
+ret_val[0].int_state_arr[1] = 2, 2
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = 2.000000, 2.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 2<>input[0].int_state_arr[1]
+heater.c: -44 (input[0].int_state_arr[0]+1)=<2
+heater.c: +47 2=0
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 -38b +41 -44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 2<>input[0].int_state_arr[1]
+heater.c: +44 (input[0].int_state_arr[0]+1)>2
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 -38b +41 +44
+
+
+TEST CASE 21
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = 828851996;
+input__controller[0].int_state_arr[1] = -59461;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 69.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 +29_2 -38 -38b +41 +44 -47
+
+
+Path Predicate for case 21:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 2<>input[0].int_state_arr[1]
+heater.c: +44 (input[0].int_state_arr[0]+1)>2
+heater.c: -47 input[0].int_state_arr[1]<>0
+
+Simplified Path Predicate for case 21:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+2<>input[0].int_state_arr[1] AND
+(input[0].int_state_arr[0]+1)>2 AND
+input[0].int_state_arr[1]<>0
+
+Output Values for case 21: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = (input[0].int_state_arr[0]+1), 828851997
+ret_val[0].int_state_arr[1] = input[0].int_state_arr[1], -59461
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = ((double)input[0].int_state_arr[1]), -59461.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 2<>input[0].int_state_arr[1]
+heater.c: +44 (input[0].int_state_arr[0]+1)>2
+heater.c: +47 input[0].int_state_arr[1]=0
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 -38b +41 +44 +47
+
+
+TEST CASE 22
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = 828851996;
+input__controller[0].int_state_arr[1] = 0;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 69.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 +29_2 -38 -38b +41 +44 +47
+
+
+Path Predicate for case 22:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: +41 2<>input[0].int_state_arr[1]
+heater.c: +44 (input[0].int_state_arr[0]+1)>2
+heater.c: +47 input[0].int_state_arr[1]=0
+
+Simplified Path Predicate for case 22:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+2<>input[0].int_state_arr[1] AND
+(input[0].int_state_arr[0]+1)>2 AND
+input[0].int_state_arr[1]=0
+
+Output Values for case 22: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = (input[0].int_state_arr[0]+1), 828851997
+ret_val[0].int_state_arr[1] = 0, 0
+ret_val[0].int_state_arr[2] = 0, 0
+ret_val[0].output_arr[0] = 0.000000, 0.000000
+ret_val[0].int_state_arr[3] = (input[0].int_state_arr[3]+1), 1
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 2=input[0].int_state_arr[1]
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 -38b -41
+
+
+TEST CASE 23
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = 2;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 69.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 +29_2 -38 -38b -41 -44 -47
+
+
+Path Predicate for case 23:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 2=input[0].int_state_arr[1]
+heater.c: -44 input[0].int_state_arr[0]=<2
+heater.c: -47 2<>0
+
+Simplified Path Predicate for case 23:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+2=input[0].int_state_arr[1] AND
+input[0].int_state_arr[0]=<2
+
+Output Values for case 23: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = input[0].int_state_arr[0], -70731
+ret_val[0].int_state_arr[1] = 2, 2
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = 2.000000, 2.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 2=input[0].int_state_arr[1]
+heater.c: -44 input[0].int_state_arr[0]=<2
+heater.c: +47 2=0
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 -38b -41 -44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 2=input[0].int_state_arr[1]
+heater.c: +44 input[0].int_state_arr[0]>2
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 -38b -41 +44
+
+
+TEST CASE 24
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = 1894307036;
+input__controller[0].int_state_arr[1] = 2;
+input__controller[0].int_state_arr[2] = -16757;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 69.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 +29_2 -38 -38b -41 +44 -47
+
+
+Path Predicate for case 24:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 2=input[0].int_state_arr[1]
+heater.c: +44 input[0].int_state_arr[0]>2
+heater.c: -47 2<>0
+
+Simplified Path Predicate for case 24:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]<5 AND
+2=input[0].int_state_arr[1] AND
+input[0].int_state_arr[0]>2
+
+Output Values for case 24: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = input[0].int_state_arr[0], 1894307036
+ret_val[0].int_state_arr[1] = 2, 2
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), -16756
+ret_val[0].output_arr[0] = 2.000000, 2.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: -38b input[0].int_state_arr[2]<5
+heater.c: -41 2=input[0].int_state_arr[1]
+heater.c: +44 input[0].int_state_arr[0]>2
+heater.c: +47 2=0
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 -38b -41 +44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 +38b
+
+
+TEST CASE 25
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = -59461;
+input__controller[0].int_state_arr[2] = 241197229;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 69.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 +29_2 -38 +38b +41 -44 -47
+
+
+Path Predicate for case 25:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: +41 2<>input[0].int_state_arr[1]
+heater.c: -44 1=<2
+heater.c: -47 2<>0
+
+Simplified Path Predicate for case 25:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]>=5 AND
+2<>input[0].int_state_arr[1]
+
+Output Values for case 25: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = 1, 1
+ret_val[0].int_state_arr[1] = 2, 2
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), 241197230
+ret_val[0].output_arr[0] = 2.000000, 2.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: +41 2<>input[0].int_state_arr[1]
+heater.c: -44 1=<2
+heater.c: +47 2=0
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 +38b +41 -44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: +41 2<>input[0].int_state_arr[1]
+heater.c: +44 1>2
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 +38b +41 +44
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: -41 2=input[0].int_state_arr[1]
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 +38b -41
+
+
+TEST CASE 26
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 4;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 4;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 190.000000;
+input__controller[0].int_state_arr[0] = -70731;
+input__controller[0].int_state_arr[1] = 2;
+input__controller[0].int_state_arr[2] = 241197229;
+input__controller[0].int_state_arr[3] = 0;
+input__controller[0].x_arr[0] = 69.000000;
+ret_val__controller[0].int_state_arr[0] = -163221;
+ret_val__controller[0].int_state_arr[1] = 83548;
+ret_val__controller[0].int_state_arr[2] = 166337;
+ret_val__controller[0].int_state_arr[3] = -194735;
+ret_val__controller[0].output_arr[0] = -471.000000;
+
+Result:
+unknown
+
+Path Covered :
+heater.c
++29 +29_2 -38 +38b -41 -44 -47
+
+
+Path Predicate for case 26:
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: -41 2=input[0].int_state_arr[1]
+heater.c: -44 0=<2
+heater.c: -47 2<>0
+
+Simplified Path Predicate for case 26:
+input[0].x_arr[0]>=66.000000 AND
+input[0].x_arr[0]<70.000000 AND
+input[0].int_state_arr[3]<5 AND
+input[0].int_state_arr[2]>=5 AND
+2=input[0].int_state_arr[1]
+
+Output Values for case 26: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].int_state_arr[0] = 0, 0
+ret_val[0].int_state_arr[1] = 2, 2
+ret_val[0].int_state_arr[2] = (input[0].int_state_arr[2]+1), 241197230
+ret_val[0].output_arr[0] = 2.000000, 2.000000
+ret_val[0].int_state_arr[3] = 0, 0
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: -41 2=input[0].int_state_arr[1]
+heater.c: -44 0=<2
+heater.c: +47 2=0
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 +38b -41 -44 +47
+trivially infeasible
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+heater.c: +29 input[0].x_arr[0]>=66.000000
+heater.c: +29_2 input[0].x_arr[0]<70.000000
+heater.c: -38 input[0].int_state_arr[3]<5
+heater.c: +38b input[0].int_state_arr[2]>=5
+heater.c: -41 2=input[0].int_state_arr[1]
+heater.c: +44 0>2
+Path Prefix to cover :
+heater.c
++29 +29_2 -38 +38b -41 +44
+trivially infeasible
