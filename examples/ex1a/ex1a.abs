@@ -1,4 +1,0 @@
-grid_eps = 0.1
-refinement_factor = 2.0
-num_samples = 10
-delta_t = 1.0

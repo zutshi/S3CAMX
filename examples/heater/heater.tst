@@ -1,15 +1,8 @@
 # minDist=10
-MODE = 'falsify'
-METHOD = 'symbolic'
-#symbolic_analyzer = 'klee'
-symbolic_analyzer = 'pathcrawler'
-#METHOD = 'concrete'
-
-#MODE = 'simulate'
-num_sim_samples = 100
 
 delta_t = 0.2
-plot = False
+
+plant_pvt_init_data = None
 
 ##### NOTES
 #initial_set = [[69.0], [71.0]] #actually its 69.9 to 70?
@@ -24,12 +17,12 @@ plot = False
 # num vio = 120/100k in 4m
 # grid_eps = 5
 # num_samples = 5
-# midist = 1
+min_smt_sample_dist  = 1
 initial_set = [[55.0], [75.0]]
 error_set = [[0.0], [52.0]]
 T = 2
 # SS + SymEx takes 30s
-P1 = (initial_set, error_set, T)
+#P1 = (initial_set, error_set, T)
 
 ## Used for SS + SymEx
 grid_eps = [5.0]
@@ -61,7 +54,7 @@ num_samples = 5
 # num_samples = 2
 
 
-P2 = (initial_set, error_set, T)
+#P2 = (initial_set, error_set, T)
 
 #properties = {'P0':P0,
 #              'P1':P1,
@@ -78,17 +71,19 @@ P2 = (initial_set, error_set, T)
 initial_discrete_state = [0]
 
 # chatter_detect, previous_command_to_heater, on_counter, off_counter
-initial_controller_state = [0, 0, 0, 0]
+initial_controller_integer_state = [0, 0, 0, 0]
+initial_controller_float_state = []
 
-
-num_controller_states = 4
-num_plant_states = 1
 num_control_inputs = 1
-num_conrtoller_disturbances = 1
-num_plant_disturbances = 0
-num_plant_discrete_states = 1
-num_reference_signals = 1
-num_pvt_sim_states = 1
+
+#num_controller_integer_states = 4
+#num_controller_float_states = 0
+#num_plant_states = 1
+#num_conrtoller_disturbances = 1
+#num_plant_disturbances = 0
+#num_plant_discrete_states = 1
+#num_reference_signals = 1
+#num_pvt_sim_states = 1
 
 # Reference signal \in [0.0, 4.0]
 # Disturbances ... add later
@@ -104,13 +99,11 @@ MAX_ITER = 10
 # Simulators
 ################
 # Plant
-plant_description = 'native'
+plant_description = 'python'
 plant_path = 'heater.py'
 # Controller
-controller = './heater'
+controller_path = './heater.so'
 controller_path_dir_path = './paths'
-# Conversion
-CONVERSION_FACTOR = 10.0
 
 ################
 # Abstraction
@@ -125,3 +118,5 @@ CONVERSION_FACTOR = 10.0
 #grid_eps = 5
 #num_samples = 5
 refinement_factor = 2.0
+
+CONVERSION_FACTOR = 1.0

@@ -9,15 +9,29 @@
 # include "controller.h"
 //#include <math.h>
 //#include <stdlib.h>
-//#include <stdio.h>
 
-#define FIX_POINT
+//#define ENABLE_PRINTS
 
-#ifdef FIX_POINT
-  #define double int
+#ifdef ENABLE_PRINTS
+  #include <stdio.h>
 #endif
 
-#define ENABLE_PRINTS 0
+//#define FIX_POINT
+
+/*
+ * Warning: Overflow happens with CONVERSION_FACTOR = 1k and higher
+ * This also leads to plant unstability.
+ *
+ * Corner cases can be seen with CONVERSION_FACTOR = 300 and seed48(0)
+ * by plotting the control input
+ */
+
+#ifdef FIX_POINT
+  #define CONVERSION_FACTOR (100)
+#else
+  #define CONVERSION_FACTOR (1.0)
+#endif
+
 
 #define MAX(A,B)  ((A) > (B) ? (A) : (B))
 #define MIN(A,B)  ((A) < (B) ? (A) : (B))
@@ -92,7 +106,7 @@ void fuzzyify(double u, IN_MEM *mem) {
     mem->dom[i] = triangle(u, mem->width, mem->center[i]);
   mem->dom[4] = rightall(u, mem->width, mem->center[4]);
 
-#if ENABLE_PRINTS
+#ifdef ENABLE_PRINTS
   printf("======Fuzzify=====\n");
   for(i=0; i<5; i++)
   {
@@ -221,7 +235,7 @@ double inf_defuzz(IN_MEM *emem, IN_MEM *edotmem, OUT_MEM *outmem, int *pos) {
      pendulum system!  Note that this minus sign actually ensures that the table of
      indices works out as shown in class. */
 
-#if ENABLE_PRINTS
+#ifdef ENABLE_PRINTS
 #ifdef FIX_POINT
   printf("WAtot=%d, Atot=%d\n", WAtot, Atot);
 #else
@@ -267,7 +281,7 @@ int main(void) {
   fuzzy_init(&fuzzy_system, &em, &edotm, &outm);
   u = fuzzy_control(e,edot,&fuzzy_system);
 
-#if ENABLE_PRINTS
+#ifdef ENABLE_PRINTS
 #ifdef FIX_POINT
   printf("e = %d, edot = %d, u = %d\n",e,edot,u);
 #else
@@ -281,7 +295,7 @@ void controller_init(){
   //empty initializer
 }
 
-void* controller(INPUT_VAL* iv, RETURN_VAL* rv)
+void* controller(INPUT_VAL* input, RETURN_VAL* ret_val)
 {
   double e, edot, u;
   FUZ_SYS fuzzy_system;
@@ -296,18 +310,18 @@ void* controller(INPUT_VAL* iv, RETURN_VAL* rv)
 
 #ifdef KLEE_ASSUMES
   /*
-  klee_assume((iv->x_arr[0] >= -100)&(iv->x_arr[0] <= 100));
-  klee_assume((iv->x_arr[1] >= -60)&(iv->x_arr[1] <= 60));
-  klee_assume((iv->x_arr[2] >= -100)&(iv->x_arr[2] <= 150));
+  klee_assume((input->x_arr[0] >= -100)&(input->x_arr[0] <= 100));
+  klee_assume((input->x_arr[1] >= -60)&(input->x_arr[1] <= 60));
+  klee_assume((input->x_arr[2] >= -100)&(input->x_arr[2] <= 150));
   */
-  klee_assume((iv->x_arr[0] >= 0)&(iv->x_arr[0] <= 100));
-  klee_assume((iv->x_arr[1] >= -20)&(iv->x_arr[1] <= 160));
-  klee_assume((iv->x_arr[2] >= -500)&(iv->x_arr[2] <= 2000));
+  klee_assume((input->x_arr[0] >= 0)&(input->x_arr[0] <= 100));
+  klee_assume((input->x_arr[1] >= -20)&(input->x_arr[1] <= 160));
+  klee_assume((input->x_arr[2] >= -500)&(input->x_arr[2] <= 2000));
 #endif
 
-  /* Crips inputs. */
-  e = -iv->x_arr[0];
-  edot = -iv->x_arr[1];
+  /* Crisp inputs. */
+  e = -input->x_arr[0];
+  edot = -input->x_arr[1];
   //printf("e = %d, edot = %d\n", e, edot);
 
   em.center = e_center;
@@ -320,9 +334,9 @@ void* controller(INPUT_VAL* iv, RETURN_VAL* rv)
   // call the actual controller
   u = fuzzy_control(e,edot,&fuzzy_system);
 
-  rv->output_arr[0] = u;
+  ret_val->output_arr[0] = u;
 
-#if ENABLE_PRINTS
+#ifdef ENABLE_PRINTS
 #ifdef FIX_POINT
   printf("e = %d, edot = %d, u = %d\n",e,edot,u);
 #else
@@ -331,7 +345,7 @@ void* controller(INPUT_VAL* iv, RETURN_VAL* rv)
 #endif
 
 
-  // ignore third state iv->x_arr[2]
+  // ignore third state input->x_arr[2]
 
   /* Below assumes are valid for 
    * e0     \in [-0.5, 0.5]
@@ -381,7 +395,7 @@ void fuzzy_init(FUZ_SYS *fuzzy_system, IN_MEM *em, IN_MEM *edotm, OUT_MEM *outm)
     fuzzy_system->emem->center[i] = (-(PI)/2.0 + i*(PI)/4.0);
     fuzzy_system->edotmem->center[i] = (-(PI)/4.0 + i*(PI)/8.0);
     fuzzy_system->outmem->center[i] = (-20.0 + i*10.0)*CONVERSION_FACTOR;
-#if ENABLE_PRINTS
+#ifdef ENABLE_PRINTS
 #ifdef FIX_POINT
     printf("%d %d %d\n", fuzzy_system->emem->center[i],fuzzy_system->edotmem->center[i],fuzzy_system->outmem->center[i]);
 #else
