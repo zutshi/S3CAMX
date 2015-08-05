@@ -301,7 +301,15 @@ class ConsTree(cm.Tree, PathObj):
                     if type(z3_cons) is bool:
                         # can not be False!! Pathcrawler only outputs trivially
                         # true constraints and never trivially false ones.
-                        assert(z3_cons)
+                        try:
+                            assert(z3_cons)
+                        except AssertionError:
+                            print 'path constraints for TEST CASE:{} reduces to {}'.format(path.test_case_id, z3_cons)
+                            print z3_cons
+                            print parsed_ID
+                            print pred_str
+                            err.warn_severe('Pathcrawler constaint is FALSE! Unexpected results will follow')
+                            #raise AssertionError
                         continue
                     #print parsed_ID, pred_str, type(z3_cons[0]), z3_cons[0].sexpr()
                     child_node = cm.Node(ID=hash_ID, data=NodeData(parsed_ID, pred_str, z3_cons))
@@ -420,7 +428,7 @@ class ConsList(PathObj):
                     raise e
         return
 
-    def sat_path_gen(self, dbg=False):
+    def sat_path_gen(self, dbg=False, incr=True):
         #S = z3.Solver()
         #S.add(self.global_z3_cons)
         S = self.solver
@@ -428,13 +436,28 @@ class ConsList(PathObj):
         for idx, c in enumerate(self.cons_list):
             S.push()
             S.add(c)
+            if not incr:
+                S_ = z3.Solver()
+                S_.add(S.assertions())
 
-            res = S.check()
+            
+            #print >> sys.stderr, '[solver]'
+            #print >> sys.stderr, S
+            #sys.stderr.flush()
+            #print 'check'
+            
+            if incr:
+                res = S.check()
+            else:
+                res = S_.check()
 
             if res == z3.sat:
                 if dbg:
                     print 'cons is SAT'
-                yield (idx, S)
+                if incr:
+                    yield (idx, S)
+                else:
+                    yield (idx, S_)
             elif res == z3.unsat:
                 if dbg:
                     print 'cons is UNSAT'

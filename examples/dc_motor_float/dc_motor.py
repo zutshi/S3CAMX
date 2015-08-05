@@ -23,9 +23,46 @@ D = np.matrix([0.0, 0.0])
 
 class SIM(object):
     def __init__(self, plt, pvt_init_data):
-        pass
+        self.sim = self.sim_sparse
 
-    def sim(self, TT, X0, D, P, U, I, property_checker, property_violated_flag):
+    def sim_dense(self, TT, X0, D, P, U, I, property_checker, property_violated_flag):
+        # atol = 1e-10
+        rtol = 1e-5
+
+        num_dim_x = len(X0)
+        plot_data = [np.empty(0, dtype=float), np.empty((0, num_dim_x), dtype=float)]
+
+        # tt,YY,dummy_D,dummy_P
+        solver = ode(dyn).set_integrator('dopri5', rtol=rtol)
+
+        Ti = TT[0]
+        Tf = TT[1]
+        T = Tf - Ti
+
+        if property_checker:
+            violating_state = [()]
+            solver.set_solout(solout_fun(property_checker, violating_state, plot_data))  # (2)
+
+        solver.set_initial_value(X0, t=0.0)
+        solver.set_f_params(U)
+        X_ = solver.integrate(T)
+        # Y = C*x + D*u
+
+        if property_checker is not None:
+            if property_checker(Tf, X_):
+                property_violated_flag[0] = True
+
+        dummy_D = np.zeros(D.shape)
+        dummy_P = np.zeros(P.shape)
+        ret_t = Tf
+        ret_X = X_
+        # ret_Y = Y
+        ret_D = dummy_D
+        ret_P = dummy_P
+
+        return (ret_t, ret_X, ret_D, ret_P)
+
+    def sim_sparse(self, TT, X0, D, P, U, I, property_checker, property_violated_flag):
         # atol = 1e-10
         rtol = 1e-5
 

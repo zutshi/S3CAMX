@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 
 
+import blessings
+
+term = blessings.Terminal()
+
+
 class Fatal(Exception):
 
     pass
@@ -18,15 +23,15 @@ def error(msg):
 
 
 def warn(msg):
-    print 'WARNING: ' + msg
+    print term.red('WARNING: ' + msg)
 
+
+def warn_severe(msg):
+    print term.red('WARNING: ' + msg)
     # forces the user to take heed!
-
     raw_input('please acknowledge by pressing enter')
 
 
 def int_error(msg):
     print 'INTERNAL ERROR: ' + msg
     exit(-1)
-
-

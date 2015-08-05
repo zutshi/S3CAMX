@@ -107,9 +107,11 @@ class IntervalSampler(Sampler):
             * (plant_state_ival_cons.h - plant_state_ival_cons.l)
         t_array = np.tile(abstract_state.plant_state.n * A.delta_t, (n, 1))
 
-        random_arr = np.random.rand(n, A.num_dims.ci)  # np.zeros((n, A.num_dims.ci))
-        ci_array = system_params.ci.l + random_arr * (system_params.ci.h
-                - system_params.ci.l)
+        if A.num_dims.ci != 0:
+            random_arr = np.random.rand(n, A.num_dims.ci)  # np.zeros((n, A.num_dims.ci))
+            ci_array = system_params.ci.l + random_arr * (system_params.ci.h - system_params.ci.l)
+        else:
+            ci_array = np.empty((n, A.num_dims.ci))
 
         # ci_array = np.zeros((n, A.num_dims.ci))
 

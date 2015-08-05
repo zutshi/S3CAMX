@@ -590,6 +590,9 @@ class NativeSim(Simulator):
             ci=sim_states.controller_extraneous_inputs,
             )
 
+    def check_property(self, trace):
+        pass
+
     def simulate_entire_trajectories(self, sim_states, T):
         raise NotImplementedError
 

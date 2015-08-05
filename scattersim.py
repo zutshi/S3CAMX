@@ -600,7 +600,7 @@ def random_test(
     while sim_num < A.N:
 
         if A.num_dims.ci == 0:
-            ci_array = np.zeros((num_samples, 1))
+            ci_array = np.zeros((num_samples, 0))
         else:
             ci_array = ci_seq_array[:, i, :]
             ci_array = np.repeat(ci_array, A.num_samples, axis=0)
