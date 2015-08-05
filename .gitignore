@@ -1,0 +1,5 @@
+*.pyc
+*.tstc
+*.so
+*.pickled
+log.secam
