@@ -3,7 +3,7 @@
 set -o verbose
 
 soname=toy_model_10u_controller.so
-SOURCE=toy_model_1ou_controller.c
+SOURCE=toy_model_10u_controller.c
 
 # gcc -c -Wall ./$SOURCE
 # Create SO
