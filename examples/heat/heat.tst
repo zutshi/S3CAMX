@@ -34,7 +34,7 @@ error_set = [[-np.inf, -np.inf, -np.inf], [17.5, np.inf, np.inf]]
 grid_eps = [1.0, 1.0, 1.0]
 min_smt_sample_dist = 0.5
 
-num_samples = 1
+#num_samples = 1
 
 # hard prop
 
@@ -47,7 +47,9 @@ error_set = [[-np.inf, -np.inf, -np.inf], [17.23, np.inf, np.inf]]
 #
 grid_eps = [1.0, 1.0, 1.0]
 min_smt_sample_dist = 0.5
-num_samples = 3
+#num_samples = 3
+# 1 works!! ?? need to run regression
+num_samples = 1
 
 
 #TODO : add OR operator for error set!

@@ -45,18 +45,19 @@ def remove_typecasts(s):
 
 class TestCase(object):
     def __init__(self, s):
-        self.dimensions = s[0]
-        self.input_vals = s[1]
-        self.path_pred = s[2]
-        self.simplified_path_pred = s[3]
-        self.output_vals = s[4]
+        self.test_case_id = s[0]
+        self.dimensions = s[1]
+        self.input_vals = s[2]
+        self.path_pred = s[3]
+        self.simplified_path_pred = s[4]
+        self.output_vals = s[5]
         return
 
 
 def print_test_case(s):
     with term.location():
         print 'parsing test case:', s[0]
-    return
+    return s
 
 
 # format:
@@ -402,7 +403,7 @@ def parse_trace(data):
 
     #TC + integer.suppress()            \
     test_case = \
-        TC.suppress()                                 \
+        TC                                 \
         + dimension                        \
         + input_val                        \
         + result.suppress()                \

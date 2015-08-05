@@ -613,6 +613,8 @@ class ControllerSymbolicAbstraction:
 
         #print abs_state.cs.C
         C_subs = self.substitute_curr_vars(abs_state.cs)
+        #print abs_state.cs.C
+        #exit()
         # print abs_state.cs.C
 
         self.controller_sym_path_obj.set_global_cons(C_subs, ci_smt, X_smt)
@@ -653,7 +655,7 @@ class ControllerSymbolicAbstraction:
                 #x=[self.path_var_dict['iv_x_arr__'+str(i)] for i in range(self.num_dims.x)],
                 #ci=[self.path_var_dict['iv_input_arr__'+str(i)] for i in range(self.num_dims.ci)],
             # protect the solver from the changes the sampler() might make.
-            pc_solver.push()
+            #pc_solver.push()
             (
                 x_array,
                 u_array,
@@ -668,7 +670,7 @@ class ControllerSymbolicAbstraction:
             #print 'solver', pc_solver
             #print x_array
 
-            pc_solver.pop()
+            #pc_solver.pop()
 
             pc_ = self.solver.And(*pc_solver.assertions())
 

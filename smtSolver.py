@@ -1,13 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import fractions as fr
 import logging
 import z3
 
 import c_info
 import err
-import utils as U
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +15,7 @@ INT_SIZE_BITS = INT_SIZE * BYTE
 HEX_BASE = 16
 BIN_BASE = 2
 REAL2FLOAT_PRECISION = 6
+
 
 def smt_solver_factory(solver_name):
     if solver_name == 'z3':
@@ -82,6 +81,9 @@ class Z(Solver):
             cons_list = map((lambda x, c: x == c), x, val)
         else:
             raise err.Fatal('unhandled type: {}'.format(type(x)))
+        # loop sentinel
+        if cons_list == []:
+            cons_list = True
         return z3.And(cons_list)
 
     def RealVector(self, s_str, length):
@@ -226,6 +228,7 @@ class Z(Solver):
             # option?
             if str(e) == 'model is not available':
                 check_res = s.check()
+                raise err.Fatal('is model reuse not enabled??')
                 if check_res == z3.sat:
                     model = s.model()
                 elif check_res == z3.unsat:
@@ -251,6 +254,12 @@ class Z(Solver):
         var_val2sample_list = [(k, sample_dict[k.hash()]) for k in var2sample_list]
         normCons = get_norm_cons_scalar(var_val2sample_list, minDist)
 
+        loop_will_exeute = num_points - 1 > 0
+        # if the below loop is going to execute...
+        # create a checkpoint.
+        # NOTE: can just push() without checking, but maybe this is more efficient?
+        if loop_will_exeute:
+            s.push()
         for i in range(num_points - 1):
             s.add(normCons)
             check_res = s.check()
@@ -282,6 +291,8 @@ class Z(Solver):
             else:
                 print s.reason_unknown()
                 raise err.Fatal('unhandled: z3 unkown!')
+        if loop_will_exeute:
+            s.pop()
         return samplesDict, num_actual_samples
 
     def sample_realVec(

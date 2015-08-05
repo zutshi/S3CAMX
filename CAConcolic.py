@@ -73,10 +73,11 @@ class ControllerCollectionAbstraction:
 
         t_array = samples.t_array
         pi_array = samples.pi_array
-        if ci_ival_cons is None:
-            ci_array = np.zeros((total_num_samples, 1))
-        else:
-            ci_array = samples.ci_array
+        #if ci_ival_cons is None:
+            #ci_array = np.zeros((total_num_samples, 1))
+        #else:
+        #    ci_array = samples.ci_array
+        ci_array = samples.ci_array
 
             # ci_array = S.sample_ival_constraints(ci_ival_cons, total_num_samples)
 

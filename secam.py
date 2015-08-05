@@ -30,6 +30,15 @@ import traces
 import example_list as egl
 import CSymLoader as CSL
 
+###############################
+## terminal color printing compatibility for windows
+## https://pypi.python.org/pypi/colorama/0.2.4
+
+## from colorama import init
+## init()
+
+## use this when we add windows portability
+###############################
 
 # start logger
 
