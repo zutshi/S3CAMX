@@ -1,11 +1,5 @@
-MODE = 'falsify'
-#METHOD = 'concrete'
-METHOD = 'symbolic'
-
-#MODE = 'simulate'
-#num_sim_samples = 100000
-
 delta_t = 0.01
+plant_pvt_init_data = None
 
 # ideal X0
 # initial_set = [[-0.1, -0.1, 0.0], [0.1, 0.1, 0.0]]
@@ -26,33 +20,38 @@ delta_t = 0.01
 T = 0.1
 initial_set = [[-0., -0., 0.0], [1.00, 1.0, 0.0]]
 error_set = [[-4, 1.5, -20], [4., 10, 20]]
+MAX_ITER = 10
+#grid_eps = [1., 1., 2.0]
+grid_eps = 0.02, 0.02, 0.2
+min_smt_sample_dist = 0.5
+refinement_factor = 2.0
+#num_samples = 5
+num_samples = 1 # for testing
 
+######################################
 
 initial_discrete_state = [0]
 
-initial_controller_state = [0]
+initial_controller_integer_state = []
+initial_controller_float_state = []
 
-num_controller_states = 1
-num_plant_states = 3
 num_control_inputs = 1
-num_conrtoller_disturbances = 1
-num_plant_disturbances = 0
-num_plant_discrete_states = 1
-num_reference_signals = 1
-num_pvt_sim_states = 1
 
 # Reference signal \in [0.0, 4.0]
 # Disturbances ... add later
-ci = [[0.], [0.]]
-#.65
-#.6
+#ci = [[0.], [0.]]
+ci = [[]]
 pi = []
 
-MAX_ITER = 4
-
-controller = 'fuzzy_controller'
-
+delta_t = 0.01
+################
+# Simulators
+################
+# Plant
+plant_description = 'python'
+plant_path = 'invp.py'
+#Controller
+controller_path = 'fuzzy_controller.so'
 controller_path_dir_path = './paths'
-CONVERSION_FACTOR = 100.0
 
-MAX_ITER = 10
+CONVERSION_FACTOR = 1.0

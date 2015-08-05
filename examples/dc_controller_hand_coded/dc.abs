@@ -1,5 +1,0 @@
-grid_eps = 0.1, 0.1
-refinement_factor = 2.0
-#FIX NUM SAMPLES!! its currently being ignored
-num_samples = 5
-delta_t = 0.02
