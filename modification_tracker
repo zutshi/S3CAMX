@@ -1,0 +1,10 @@
+Changes made in this branch which should be merged to Master:
+
+  (1) Fixed pathcrawler's seemingly false constraints in traces
+  - DESCRIPTION: The trace output from pathcrawler can have constraints in the `Path Predicate'
+    section which are false. This is due to the floating point numbers not being printed to the
+    precision equivalent to eclipse's internal representation.
+  - SOLUTION: Assume any trivially False constraint to be True.
+    FILE: ./path_crawler_helpers/prep_trace.py
+    TAG: FP_TRUE
+

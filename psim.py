@@ -753,7 +753,7 @@ class MEngPy(Simulator):
         if m_file_name_split[1].strip() != 'm':
             raise err.Fatal('internal error!')
 
-        self.m_fun = m_file_name_split[0].strip()
+        self.m_fun_str = m_file_name_split[0].strip()
 
         # self.sim_fun = self.eng.simulate_m_file(1)
 
@@ -761,6 +761,22 @@ class MEngPy(Simulator):
         # comm.call_function([], 'addpath', [SQ + benchmark_os_path + SQ])
 
         self.eng.addpath(benchmark_os_path)
+
+        # TODO: Remove this hack. Added for backwards compatibility
+        # detect if the simulator file is a function or a class
+        # source: http://blogs.mathworks.com/loren/2013/08/26/what-kind-of-matlab-file-is-this/
+        # classy = 8 if class else is 0 (function or a script)
+        classy = self.eng.exist(self.m_fun_str, 'class')
+        if classy == 0.0:
+            print 'maltab file is a function'
+            self.sim_is_class = False
+        elif classy == 8.0:
+            print 'maltab file is a class'
+            self.sim_is_class = True
+            self.sim_obj = self.eng.init_plant(self.m_fun_str)
+        else:
+            raise err.Fatal('''Supplied matlab simulator is neither a class or a function:
+                possible floating point error?. exist() returned: {}'''.format(classy))
 
     # Assumptions
     # For Each state a valid state is provided:
@@ -795,17 +811,30 @@ class MEngPy(Simulator):
         #m_pc = matlab.double([property_check])
         m_pc = property_check
 
-        [T__, X__, D__, P__, pvf_] = self.eng.simulate_plant(
-            self.m_fun,
-            m_t,
-            m_T,
-            m_c,
-            m_d,
-            m_p,
-            m_u,
-            m_p,
-            m_pc,
-            )
+        if self.sim_is_class:
+            [T__, X__, D__, P__, pvf_] = self.eng.simulate_plant(
+                self.sim_obj,
+                m_t,
+                m_T,
+                m_c,
+                m_d,
+                m_p,
+                m_u,
+                m_p,
+                m_pc,
+                )
+        else:
+            [T__, X__, D__, P__, pvf_] = self.eng.simulate_plant_fun(
+                self.m_fun_str,
+                m_t,
+                m_T,
+                m_c,
+                m_d,
+                m_p,
+                m_u,
+                m_p,
+                m_pc,
+                )
 
         T_ = np.array(T__)
         X_ = np.array(X__)
