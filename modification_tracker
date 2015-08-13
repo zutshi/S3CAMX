@@ -5,6 +5,18 @@ Changes made in this branch which should be merged to Master:
     section which are false. This is due to the floating point numbers not being printed to the
     precision equivalent to eclipse's internal representation.
   - SOLUTION: Assume any trivially False constraint to be True.
-    FILE: ./path_crawler_helpers/prep_trace.py
-    TAG: FP_TRUE
+  - FILE: ./path_crawler_helpers/prep_trace.py
+  - TAG: FP_TRUE
 
+  (2) Added the support to initialize the matlab plant using Matlab's classes
+  - DESCRIPTION: Matlab plant simulators had to call init() inside the sim() call to load_system().
+    This is now supported by using classes, similar to Python simulators. Moreover, 
+    the modifications are backwards compatible. psim.py uses internal logic to detect if the
+    supplied matlab simulator file is a class or a function and takes appropriate actions. This is
+    planned to be removed in the future. Should probably not merged with the main branch?
+  - SOLUTION:
+      -Added init_plant.m
+      -Copied simulate_plant.m to simulate_plant_fun.m
+      -simulate_plant.m was modified to work with classes. This adds the feature to call init()
+  - FILE modified: ./psim.py, ./simulate_plant.m
+  - TAG: CLSS
