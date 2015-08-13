@@ -198,7 +198,7 @@ typedef struct{
     double* x_arr;
 }INPUT_VAL;
 
-void* controller(INPUT_VAL* iv, RETURN_VAL* rv);
+void* controller(INPUT_VAL* input, RETURN_VAL* ret_val)
 void controller_init();
 '''
 

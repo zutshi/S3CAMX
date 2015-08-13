@@ -301,15 +301,13 @@ class ConsTree(cm.Tree, PathObj):
                     if type(z3_cons) is bool:
                         # can not be False!! Pathcrawler only outputs trivially
                         # true constraints and never trivially false ones.
-                        try:
-                            assert(z3_cons)
-                        except AssertionError:
+                        # TAG:FP_TRUE
+                        if z3_cons is False:
                             print 'path constraints for TEST CASE:{} reduces to {}'.format(path.test_case_id, z3_cons)
                             print z3_cons
                             print parsed_ID
                             print pred_str
-                            err.warn_severe('Pathcrawler constaint is FALSE! Unexpected results will follow')
-                            #raise AssertionError
+                            err.warn('Pathcrawler constaint is trivially FALSE (fp precision errors). Treating it as trivially True.')
                         continue
                     #print parsed_ID, pred_str, type(z3_cons[0]), z3_cons[0].sexpr()
                     child_node = cm.Node(ID=hash_ID, data=NodeData(parsed_ID, pred_str, z3_cons))

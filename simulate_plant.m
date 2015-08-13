@@ -1,9 +1,9 @@
 %function [ret_t, ret_X, ret_D, ret_P, pvf] = simulate_system(sim_function, t, T, initial_continuous_states, initial_discrete_states, initial_pvt_states, control_inputs, inputs, property_check)
-function ret_cell = simulate_plant(sim_function, t, T, initial_continuous_states, initial_discrete_states, initial_pvt_states, control_inputs, inputs, property_check)
+function ret_cell = simulate_plant(obj, t, T, initial_continuous_states, initial_discrete_states, initial_pvt_states, control_inputs, inputs, property_check)
 delete 'log_matlab'
 diary log_matlab
 
-sim_function = str2func(sim_function);
+%sim_function = str2func(sim_function);
 
 plot_to_debug = 0;
 
@@ -78,7 +78,7 @@ for i = 1:num_initial_conditions
     %TODO: SIM function can give back arrays describing multiple points on
     %the simulation traces, but need NOT.
     %Is this OK?
-    [t_arr,X_arr,D_arr,P_arr,prop_violated_flag] = sim_function(t0,t0+T,X0,D0,P0,U0,I0,property_check);
+    [t_arr,X_arr,D_arr,P_arr,prop_violated_flag] = obj.sim(t0,t0+T,X0,D0,P0,U0,I0,property_check);
 
     if property_check == 1
         pvf_array(i) = prop_violated_flag;
