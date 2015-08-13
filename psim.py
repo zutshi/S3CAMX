@@ -762,6 +762,7 @@ class MEngPy(Simulator):
 
         self.eng.addpath(benchmark_os_path)
 
+        #TAG:CLSS
         # TODO: Remove this hack. Added for backwards compatibility
         # detect if the simulator file is a function or a class
         # source: http://blogs.mathworks.com/loren/2013/08/26/what-kind-of-matlab-file-is-this/
@@ -811,6 +812,7 @@ class MEngPy(Simulator):
         #m_pc = matlab.double([property_check])
         m_pc = property_check
 
+        #TAG:CLSS
         if self.sim_is_class:
             [T__, X__, D__, P__, pvf_] = self.eng.simulate_plant(
                 self.sim_obj,
