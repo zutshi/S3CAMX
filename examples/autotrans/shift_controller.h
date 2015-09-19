@@ -7,12 +7,14 @@
  *
  * Code generated for Simulink model 'shift_controller'.
  *
- * Model version                  : 1.346
+ * Model version                  : 1.351
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Wed Aug 12 15:25:17 2015
+ * C/C++ source code generated on : Mon Aug 17 11:57:04 2015
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: 32-bit Generic
+ * Emulation hardware selection:
+ *    Differs from embedded hardware (MATLAB Host)
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */
@@ -26,6 +28,7 @@
 #endif                                 /* shift_controller_COMMON_INCLUDES_ */
 
 #include "shift_controller_types.h"
+#include "rt_defines.h"
 
 /* Macros for accessing real-time model data structure */
 #ifndef rtmGetErrorStatus
@@ -108,18 +111,20 @@ struct tag_RTM_shift_controller_T {
    * the data used in the model.
    */
   struct {
-    P_shift_controller_T *defaultParam;
+    const P_shift_controller_T *defaultParam;
+    ExtU_shift_controller_T *inputs;
+    ExtY_shift_controller_T *outputs;
     DW_shift_controller_T *dwork;
   } ModelData;
 };
 
 /* Model entry point functions */
 extern void shift_controller_initialize(RT_MODEL_shift_controller_T *const
-  shift_controller_M, ExtU_shift_controller_T *shift_controller_U,
-  ExtY_shift_controller_T *shift_controller_Y);
+  shift_controller_M);
 extern void shift_controller_step(RT_MODEL_shift_controller_T *const
-  shift_controller_M, ExtU_shift_controller_T *shift_controller_U,
-  ExtY_shift_controller_T *shift_controller_Y);
+  shift_controller_M);
+extern void shift_controller_terminate(RT_MODEL_shift_controller_T *const
+  shift_controller_M);
 
 /*-
  * The generated code includes comments that allow you to trace directly

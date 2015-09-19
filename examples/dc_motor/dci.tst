@@ -53,7 +53,8 @@ error_set = [[1.0, 10.0], [1.2, 11.0]]
 #   needs 2 samples! takes around 92s with and 51s w/o plotting and logging
 grid_eps = [0.1, 0.1]
 min_smt_sample_dist = 0.05
-num_samples = 2
+#num_samples = 2 #symex
+num_samples = 2 #concrete
 # ss: pending...
 
 # error_set = [[1.2, 10], [1.3, 11]] #nahi ho raha! BUT random testing results havent
@@ -72,7 +73,7 @@ num_control_inputs = 1
 #ci = [[-0.5], [-0.0]]
 #.65
 #.6
-pi = []
+pi = [[],[]]
 
 MAX_ITER = 6
 ################

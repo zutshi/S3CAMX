@@ -24,11 +24,11 @@ import traces
 # TODO: test all examples using the examplel isting
 def main():
     example_list = []
-    one_shot_sim, prop = exifc.load_system('./examples/fuzzy_invp_float/fuzzy_invp.tst')
+    one_shot_sim, prop = exifc.load_system('./examples/fuzzy_invp/fuzzy_invp.tst')
     example_list.append((one_shot_sim, prop))
-    one_shot_sim, prop = exifc.load_system('./examples/heater_float/heater.tst')
+    one_shot_sim, prop = exifc.load_system('./examples/heater/heater.tst')
     example_list.append((one_shot_sim, prop))
-    one_shot_sim, prop = exifc.load_system('./examples/dc_motor_float/dci.tst')
+    one_shot_sim, prop = exifc.load_system('./examples/dc_motor/dci.tst')
     example_list.append((one_shot_sim, prop))
     one_shot_sim, prop = exifc.load_system('./examples/toy_model_10u/toy_model_10u.tst')
     example_list.append((one_shot_sim, prop))

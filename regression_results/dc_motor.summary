@@ -69,3 +69,24 @@ average time = 13.2917659283
 successfull runs = 2
 failures = 0
 
+########################################
+## TEST DATE: Wed Sep 16 19:23:48 2015
+########################################
+-- running ss-concrete --########################################
+## TEST DATE: Wed Sep 16 19:24:10 2015
+########################################
+-- ss-symex -- ✓ time spent(s) = 14.8500819206
+ ✓ time spent(s) = 45.5809381008
+ ✓ time spent(s) = 32.1292910576
+ ✓ time spent(s) = 25.066847086
+ ✓ time spent(s) = 44.9204111099
+ ✓ time spent(s) = 48.9893109798
+ ✓ time spent(s) = 41.2853958607
+ ✓ time spent(s) = 39.3751969337
+ ✓ time spent(s) = 43.7160429955
+ ✓ time spent(s) = 45.2574419975
+total_time_taken = 381.170958042
+average time = 38.1170958042
+successfull runs = 10
+failures = 0
+

@@ -26,6 +26,7 @@ mySimOut = sim(model_name, 'StartTime', num2str(t),'StopTime', num2str(T), 'Save
 %assignin('base', 'mySimOut', mySimOut);
 YY = get_states(mySimOut);
 YY(13) = XX(13);  % engine speed
+YY(14) = XX(14);  % engine speed
 
 %figure(1)
 %plot(mySimOut.get('verification_measurement_wk').Time, mySimOut.get('verification_measurement_wk').Data);
@@ -109,6 +110,7 @@ for i = 1:7
 end
 
 assignin('base', 'en_speed', X(13));
+assignin('base', 'AF_sensor_tol', X(14));
 end
 
 function Y = get_states(mySimOut)
@@ -158,6 +160,7 @@ Y(11) = mySimOut.get('airbyfuel_meas_wk').Data;
 % are stored
 Y(12) = mySimOut.get('verification_measurement_wk').Data(end);
 Y(13) = 0; % set it in the main func
+Y(14) = 0; % set it in the main func
 end
 
 function y = NUM_STATES()
@@ -179,7 +182,7 @@ y = 'AbstractFuelControl_M1';
 end
 
 function y = mdl_path()
-y = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/abstractFuelControl/AbstractFuelControl_M1.slx';
+y = './examples/abstractFuelControl/AbstractFuelControl_M1.slx';
 end
 function y = M1()
 y = '/Model 1';
@@ -199,7 +202,7 @@ disp('done...')
 
 % TODO: fix simtime using pvt data!
 % simulation time (sec)
-simTime = 20;
+simTime = 12;
 assignin('base', 'simTime', simTime);
 % engine speed (rpm)
 %en_speed = 1000;

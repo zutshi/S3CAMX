@@ -7,12 +7,14 @@
  *
  * Code generated for Simulink model 'shift_controller'.
  *
- * Model version                  : 1.346
+ * Model version                  : 1.351
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Wed Aug 12 15:25:17 2015
+ * C/C++ source code generated on : Mon Aug 17 11:57:04 2015
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: 32-bit Generic
+ * Emulation hardware selection:
+ *    Differs from embedded hardware (MATLAB Host)
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */

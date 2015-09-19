@@ -18,13 +18,12 @@ plant_pvt_init_data = None
 # falsification times with SS = 0.1 min!! [no plotting]
 #midist=X, used random smt coupled with smt
 T = 0.1
-initial_set = [[-0., -0., 0.0], [1.00, 1.0, 0.0]]
-error_set = [[-4, 1.5, -20], [4., 10, 20]]
+initial_set = [[-0.0, -0.0, 0.0], [1.00, 1.0, 0.0]]
+error_set = [[-4, 1.5, -20], [4.0, 10, 20]]
 MAX_ITER = 10
-grid_eps = [1., 1., 2.0]
+grid_eps = [1.0, 1.0, 2.0]
 #grid_eps = 0.02, 0.02, 0.2
 min_smt_sample_dist = 0.5
-refinement_factor = 2.0
 num_samples = 5
 #num_samples = 1 # for testing
 
@@ -40,10 +39,9 @@ num_control_inputs = 1
 # Reference signal \in [0.0, 4.0]
 # Disturbances ... add later
 #ci = [[0.], [0.]]
-ci = [[0],[0]]
-pi = []
+ci = [[0.0],[1.0]]
+pi = [[],[]]
 
-delta_t = 0.01
 ################
 # Simulators
 ################
@@ -55,3 +53,4 @@ controller_path = 'fuzzy_controller.so'
 controller_path_dir_path = './paths'
 
 CONVERSION_FACTOR = 1.0
+refinement_factor = 2.0

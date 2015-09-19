@@ -40,6 +40,7 @@ def remove_typecasts(s):
     s = s.replace('(double)', '')
     s = s.replace('(int)', '')
     s = s.replace('(unsigned char)', '')
+    s = s.replace('(unsigned int)', '')
     return s
 
 

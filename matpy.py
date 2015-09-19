@@ -21,30 +21,40 @@ import external_interface as exifc
 
 # Reachabillity Property structure translated to matlab
 class MatProp(object):
-    def __init__(self, T, init_cons, final_cons, ci, num_segments):
+    def __init__(self, T, init_cons, final_cons, ci, num_segments, delta_t):
         self.T = T
         self.init_cons = init_cons
         self.final_cons = final_cons
         self.w = ci
         # self.pi = pi
         self.num_segments = num_segments
+        self.delta_t = delta_t
 
 
 # TODO: init_cons_list is not handled!
 def load_system(file_path):
     one_shot_sim, prop = exifc.load_system(file_path)
-    T = prop.T
+    #T = prop.T
     init_cons = serialize_array(prop.init_cons.to_numpy_array())
     final_cons = serialize_array(prop.final_cons.to_numpy_array())
     ci = serialize_array(prop.ci.to_numpy_array())
     print init_cons, final_cons, ci
-    num_segments = prop.num_segments
-    mat_prop = MatProp(T, init_cons, final_cons, ci, num_segments)
+    #num_segments = prop.num_segments
+    mat_prop = MatProp(prop.T,
+                       init_cons,
+                       final_cons,
+                       ci,
+                       prop.num_segments,
+                       prop.delta_t)
 
     def mat_one_shot_sim(x, t0, tf, w):
         x = deserialize_array(x)
         w = deserialize_array(w)
+        #print '#'*20
+        #print x
+        #print w
         trace = one_shot_sim(x, t0, tf, w)
+        #print trace
 
         T_ser = serialize_array(trace.t_array)
         X_ser = serialize_array(trace.x_array)

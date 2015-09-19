@@ -1,9 +1,6 @@
 function run_staliro(num_runs)
-
-init();
-
-filename = 'heat_tmp.tst';
-path = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/heat';
+% filename = 'heat.tst';
+% path = '/examples/heat';
 
 % filename = 'dci.tst';
 % path = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/dc_motor_float';
@@ -15,7 +12,25 @@ path = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples
 % path = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/heater_float';
 
 %filename = 'toy_model_10u.tst';
-%path = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/toy_model_10u';
+%path = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/examples/toy_model_10u';}
+
+
+init();
+
+system_details = {
+'heat.tst', './examples/heat';
+'dci.tst', './examples/dc_motor';
+'fuzzy_invp.tst', './examples/fuzzy_invp';
+'heater.tst', './examples/heater';
+'toy_model_10u.tst', './examples/toy_model_10u';};
+
+display 'Enter a system to test...'
+for i = 1:size(system_details, 1)
+    fprintf('%d: %s\n', i, [system_details{i,2} '/' system_details{i,1}])
+end
+system_num = input('system number: ');
+filename = system_details{system_num, 1};
+path = system_details{system_num, 2};
 run_example(filename, path,num_runs);
 
 end
@@ -113,7 +128,9 @@ preds(1).A = poly.A;
 preds(1).b = poly.b+0;
 
 % SampTime = prop.ci_zoh_time;
-SampTime = 0.02;
+SampTime = prop.delta_t;
+% SampTime = 0.03;
+
 % ci_bounds
 % x0_bounds
 % poly.A
