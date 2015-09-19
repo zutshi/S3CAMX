@@ -3,9 +3,8 @@
 set -o verbose
 
 soname=autotrans_controller.so
-SOURCE=autotrans_controller.c
+SOURCE='shift_controller.c autotrans_controller.c'
 
 # gcc -c -Wall ./$SOURCE
 # Create SO
-gcc -c shift_controller.c -fPIC
-gcc -shared -Wl,-soname,$soname -o ./$soname -fPIC ./shift_controller.c ./$SOURCE 
+gcc -Wall -shared -Wl,-soname,$soname -o ./$soname -fPIC $SOURCE 

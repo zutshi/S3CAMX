@@ -1,5 +1,6 @@
-import numpy as np
 import heat as H
+
+inf = float('inf')
 
 benchmark_id = 1
 
@@ -24,38 +25,39 @@ ci = [[0.0], [0.0]]
 
 # easy prop!
 
-error_set = [[-np.inf, -np.inf, -np.inf], [17.5, np.inf, np.inf]]
 # vio = _/100k took _ mins [plotting, logging?]
 # SS = falsified in _ [plotting, logging?]
 # grid_eps = <[0.0, 0.0]>
 # num_samples = <2>
 # SS + symex: falsified in _ [plotting, logging?]
 #
-grid_eps = [1.0, 1.0, 1.0]
-min_smt_sample_dist = 0.5
-
+#error_set = [[-inf, -inf, -inf], [17.5, inf, inf]]
+#grid_eps = [1.0, 1.0, 1.0]
+#min_smt_sample_dist = 0.5
 #num_samples = 1
+
 
 # hard prop
 
-error_set = [[-np.inf, -np.inf, -np.inf], [17.23, np.inf, np.inf]]
 # vio = _/100k took _ mins [plotting, logging?]
 # SS = falsified in _ [plotting, logging?]
 # grid_eps = <[0.0, 0.0]>
 # num_samples = <2>
 # SS + symex: falsified in _ [plotting, logging?]
 #
+error_set = [[-inf, -inf, -inf], [17.23, inf, inf]]
 grid_eps = [1.0, 1.0, 1.0]
 min_smt_sample_dist = 0.5
 #num_samples = 3
 # 1 works!! ?? need to run regression
-num_samples = 1
+#num_samples = 3 # symex
+num_samples = 5 # concrete
 
 
 #TODO : add OR operator for error set!
-#error_set = [[-np.inf, -np.inf, -np.inf], [np.inf, 17.5, np.inf]]
-#error_set = [[-np.inf, -np.inf, -np.inf], [np.inf, np.inf , 17.5]]
-#error_set = [[-np.inf, -np.inf, -np.inf], Xf]
+#error_set = [[-inf, -inf, -inf], [inf, 17.5, inf]]
+#error_set = [[-inf, -inf, -inf], [inf, inf , 17.5]]
+#error_set = [[-inf, -inf, -inf], Xf]
 
 
 initial_discrete_state = [0]
@@ -67,7 +69,7 @@ initial_controller_float_state = []
 
 num_control_inputs = NUM_ROOMS
 
-pi = []
+pi = [[],[]]
 
 MAX_ITER = 10
 

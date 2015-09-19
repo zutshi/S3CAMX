@@ -6,7 +6,8 @@ import time
 
 import fileOps as f
 
-NUM_TESTS = 2
+MAX_TESTS = 3000
+NUM_TESTS = 10
 prog_name = 'secam.py'
 filename_arg = '--filename'
 ss_symex_opt = '--ss-symex'
@@ -46,13 +47,18 @@ tenu3_path = './examples/toy_model_10u/toy_model_10u_3.tst'
 heat_name = 'heat'
 heat_path = './examples/heat/heat.tst'
 
+fuzzy_name = 'fuzzy_invp'
+fuzzy_path = './examples/fuzzy_invp/fuzzy_invp.tst'
+
+SYMEX = False
 benchmark_list = [
-                  (heater_name, heater_path),
-                  (dc_name, dc_motor_path),
+                  #(heater_name, heater_path),
+                  #(dc_name, dc_motor_path),
                   (tenu1_name, tenu1_path),
-                  (tenu2_name, tenu2_path),
-                  (tenu3_name, tenu3_path),
-                  (heat_name, heat_path),
+                  #(tenu2_name, tenu2_path),
+                  #(tenu3_name, tenu3_path),
+                  #(heat_name, heat_path),
+                  #(fuzzy_name, fuzzy_path),
                   ]
 
 # (time ./secam.py ./examples/heater/heater.tst)>>./regression_results/heater.log 2>>./regression_results/heater.time
@@ -62,6 +68,7 @@ time_spent_list = ''
 SUCC_CTR = 0
 FAIL_CTR = 0
 STDOUT_DATA = ''
+LAST_RESULT = None
 
 TIME_STAMP = time.strftime("%c")
 
@@ -86,12 +93,17 @@ def process_times(time_spent_str):
 
 def process_status_msg(msg):
     global SUCC_CTR, FAIL_CTR
+    global LAST_RESULT
     if msg.startswith('Concretized'):
+        LAST_RESULT = True
         SUCC_CTR += 1
         print '✓'
+        f.append_data(run_summary_log, ' ✓ ')
     else:
+        LAST_RESULT = False
         FAIL_CTR += 1
         print '✗'
+        f.append_data(run_summary_log, ' ✗ ')
 
 
 def process_stderr(msg):
@@ -117,14 +129,31 @@ for benchmark in benchmark_list:
     test_hdr = '{DECO}\n{deco} TEST DATE: {ts}\n{DECO}\n'.format(DECO='#'*40, deco='##', ts=TIME_STAMP)
     f.append_data(run_summary_log, test_hdr)
 
-    for i in range(NUM_TESTS):
-        print 'RUN', i, ':',
+    #for i in range(NUM_TESTS):
+    exceeded_num_runs = False
+    done = False
+    test_ctr = 0
+
+    if SYMEX:
+        run_description = '-- ss-symex --\n'
+        arg_list = [filename_arg, path, ss_symex_opt, PC, rep_opt, rep, struct_opt, struct]
+    else:
+        run_description = '-- running ss-concrete --\n'
+        arg_list = [filename_arg, path, ss_opt]
+    print run_description
+    f.append_data(run_summary_log, run_description)
+
+    while (not done) and (not exceeded_num_runs):
+        print 'RUN', test_ctr, ':',
         #sh.python(prog_name, benchmark_path, _out=output_log, _err=process_stderr)
         # ./secam.py --filename ./examples/heater/heater.tst --ss-symex klee
-        arg_list = [filename_arg, path, ss_symex_opt, PC, rep_opt, rep, struct_opt, struct]
         sh.python(prog_name, *arg_list, _out=process_stdout, _err=process_stderr)
         f.append_data(output_log, STDOUT_DATA)
         STDOUT_DATA = ''
+
+        test_ctr = test_ctr+1 if LAST_RESULT else test_ctr
+        done = NUM_TESTS == test_ctr
+        exceeded_num_runs = test_ctr > MAX_TESTS
 
     avg_time_str = 'average time = {}\n'.format(T/NUM_TESTS)
     success_str = 'successfull runs = {}\n'.format(SUCC_CTR)

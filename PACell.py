@@ -127,7 +127,13 @@ class PlantAbstraction:
 
         # construct a grid
 
-        grid = np.meshgrid(*x_range_list)
+        # sometimes fails with memory errors
+        try:
+            grid = np.meshgrid(*x_range_list)
+        except MemoryError as e:
+            print 'meshgrid with the below x_cons failed'
+            print cons
+            raise e
 
         # create iterators which iterate over each element of the dim. array
 

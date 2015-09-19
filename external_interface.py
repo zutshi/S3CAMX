@@ -45,7 +45,7 @@ def load_system(file_path):
     sys.init_sims(None)
     # useful to talk about the parameterization of ci without talking about
     # delta_t
-    prop.ci_zoh_time = sys.delta_t
+    prop.delta_t = sys.delta_t
     #step_sim = simsys.get_step_simulator(
     #    sys.controller_sim,
     #    sys.plant_sim,

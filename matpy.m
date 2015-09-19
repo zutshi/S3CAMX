@@ -24,6 +24,7 @@ y.deserialize_prop = @deserialize_prop;
         prop.w = deserialize_array(prop_ser.w);
         prop.T = double(prop_ser.T);
         prop.num_segments = double(prop_ser.num_segments);
+        prop.delta_t = double(prop_ser.delta_t);
     end
 
     function [one_shot_sim, prop] = load_system(file_path)

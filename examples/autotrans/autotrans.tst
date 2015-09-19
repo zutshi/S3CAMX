@@ -1,4 +1,4 @@
-import numpy as np
+inf = float('inf')
 
 # sampling time
 delta_t = 1.0
@@ -14,11 +14,12 @@ plant_pvt_init_data = None
 T = 30.0
 
 # Rectangular bounds on initial plant states X0[0, :] <= X <= X0[1, :]
-# wheel speed, engine rpm
-initial_set = [[10.0, 1000.0], [10.0, 1000.0]]
+# [plant outputs, plant states]
+# vehicle speed[output], wheel speed, engine rpm
+initial_set = [[0.0, 10.0, 1000.0], [0.0, 10.0, 1000.0]]
 
 # Unsafe Boxed Region
-error_set = [[-np.inf, 3000.0], [np.inf, 4000.0]]
+error_set = [[-inf, -inf, 3000.0], [inf, inf, 4000.0]]
 
 # rectangular bounds on exogenous inputs to the contorller. Such as, controller
 # disturbance: Throttle, Brake Torque
@@ -35,7 +36,7 @@ ci = [[0.0, 0.0],[100.0, 300]]
 # Abstraction Params
 ########################
 # initial abstraction grid size
-grid_eps = [5.0, 1000.0]
+grid_eps = [100.0, 5.0, 1000.0]
 min_smt_sample_dist = 1.0;
 
 # number of samples at every scatter step
@@ -48,10 +49,13 @@ MAX_ITER = 5
 ########################
 
 # initial controller states which are C ints
-initial_controller_integer_state = []
+# temporalCounter_i1, is_active_c1_shift_controller, is_gear_state, is_active_gear_state,
+# is_selection_state, is_active_selection_state
+initial_controller_integer_state = [0]*6
 
 # initial controller states which are C doubles
-initial_controller_float_state = []
+# disturbance[0], disturbance[1], Gear
+initial_controller_float_state = [0.0]*3
 
 # number of control inputs to the plant
 num_control_inputs = 3
@@ -62,7 +66,7 @@ num_control_inputs = 3
 # Initial plant discrete state: List all states
 initial_discrete_state = [0]
 # Rectangularly bounded exogenous inputs to the plant (plant noise).
-pi = None
+pi = [[],[]]
 # Initial pvt simulator state, associated with with an execution trace.
 initial_pvt_states = []
 ################################
