@@ -33,8 +33,8 @@ initial_set, error_set, ci = toy_instance.select(benchmark_id)
 grid_eps = [1.0, 1.0, 1.0, 1.0]
 
 # number of samples at every scatter step
-#num_samples = 5
-num_samples = 1
+#num_samples = 1 # symex
+num_samples = 100 # ss-concrete
 
 # maximum iteration before SS iter outs.
 MAX_ITER = 5

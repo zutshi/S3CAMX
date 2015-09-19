@@ -83,3 +83,22 @@ average time = 27.7926880121
 successfull runs = 2
 failures = 0
 
+########################################
+## TEST DATE: Thu Sep 17 13:28:24 2015
+########################################
+-- ss-symex --
+ ✓ time spent(s) = 31.0413429737
+ ✓ time spent(s) = 29.6007790565
+ ✓ time spent(s) = 24.6793210506
+ ✓ time spent(s) = 23.9537279606
+ ✓ time spent(s) = 24.0758049488
+ ✓ time spent(s) = 24.0900199413
+ ✓ time spent(s) = 24.1892359257
+ ✓ time spent(s) = 23.8865940571
+ ✓ time spent(s) = 29.98781991
+ ✓ time spent(s) = 24.385627985
+total_time_taken = 259.890273809
+average time = 25.9890273809
+successfull runs = 10
+failures = 0
+

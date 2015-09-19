@@ -25,13 +25,12 @@ T = 2
 #P1 = (initial_set, error_set, T)
 
 ## Used for SS + SymEx
-grid_eps = [5.0]
-num_samples = 5
+#grid_eps = [5.0]
+#num_samples = 5
 
 ## Used for SS
-#grid_eps = [0.1]
-#num_samples = 5
-###midist = 3
+grid_eps = [0.1]
+num_samples = 5
 
 
 #################################
@@ -41,13 +40,13 @@ num_samples = 5
 # num vio = 38/100k in 5min
 # SS + SymEX
 #refinement_factor = 2.0
-#grid_eps = 1
+#grid_eps = [0.1]
 #num_samples = 5
 #delta_t = 0.2
 # midist = 1
-# initial_set = [[55.0], [75.0]]
-# error_set = [[76.0], [100.0]]
-# T = 20
+#initial_set = [[55.0], [75.0]]
+#error_set = [[76.0], [100.0]]
+#T = 2
 
 # concrete run
 # grid_eps = 5
@@ -91,7 +90,7 @@ num_control_inputs = 1
 ci = [[0.0], [-0.0]]
 #.65
 #.6
-pi = []
+pi = [[],[]]
 
 MAX_ITER = 10
 

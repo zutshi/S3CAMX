@@ -7,12 +7,14 @@
  *
  * Code generated for Simulink model 'shift_controller'.
  *
- * Model version                  : 1.346
+ * Model version                  : 1.351
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Wed Aug 12 15:25:17 2015
+ * C/C++ source code generated on : Mon Aug 17 11:57:04 2015
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: 32-bit Generic
+ * Emulation hardware selection:
+ *    Differs from embedded hardware (MATLAB Host)
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */
@@ -209,14 +211,16 @@ static void shift_controller_gear_state(const int32_T *sfEvent,
 }
 
 /* Model step function */
-void shift_controller_step(RT_MODEL_shift_controller_T *const shift_controller_M,
-  ExtU_shift_controller_T *shift_controller_U, ExtY_shift_controller_T
-  *shift_controller_Y)
+void shift_controller_step(RT_MODEL_shift_controller_T *const shift_controller_M)
 {
   P_shift_controller_T *shift_controller_P = ((P_shift_controller_T *)
     shift_controller_M->ModelData.defaultParam);
   DW_shift_controller_T *shift_controller_DW = ((DW_shift_controller_T *)
     shift_controller_M->ModelData.dwork);
+  ExtU_shift_controller_T *shift_controller_U = (ExtU_shift_controller_T *)
+    shift_controller_M->ModelData.inputs;
+  ExtY_shift_controller_T *shift_controller_Y = (ExtY_shift_controller_T *)
+    shift_controller_M->ModelData.outputs;
   int32_T sfEvent;
   real_T InterpDown;
   real_T InterpUp;
@@ -376,11 +380,14 @@ void shift_controller_step(RT_MODEL_shift_controller_T *const shift_controller_M
 
 /* Model initialize function */
 void shift_controller_initialize(RT_MODEL_shift_controller_T *const
-  shift_controller_M, ExtU_shift_controller_T *shift_controller_U,
-  ExtY_shift_controller_T *shift_controller_Y)
+  shift_controller_M)
 {
   DW_shift_controller_T *shift_controller_DW = ((DW_shift_controller_T *)
     shift_controller_M->ModelData.dwork);
+  ExtY_shift_controller_T *shift_controller_Y = (ExtY_shift_controller_T *)
+    shift_controller_M->ModelData.outputs;
+  ExtU_shift_controller_T *shift_controller_U = (ExtU_shift_controller_T *)
+    shift_controller_M->ModelData.inputs;
 
   /* Registration code */
 
@@ -424,6 +431,14 @@ void shift_controller_initialize(RT_MODEL_shift_controller_T *const
   shift_controller_DW->Gear = 0.0;
 
   /* End of InitializeConditions for SubSystem: '<Root>/shift_controller' */
+}
+
+/* Model terminate function */
+void shift_controller_terminate(RT_MODEL_shift_controller_T *const
+  shift_controller_M)
+{
+  /* (no terminate code required) */
+  UNUSED_PARAMETER(shift_controller_M);
 }
 
 /*

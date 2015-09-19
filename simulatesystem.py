@@ -97,6 +97,16 @@ def get_system_simulator(sys):
         trace = traces.Trace(sys.num_dims, num_segments + 1)
         t = t0
 
+        #print('num_segments:', num_segments)
+        #print('ci_array', ci_array)
+        # need the below try catch shenanigans to print the error message,
+        # because matlab does not.
+        #try:
+        #    assert(ci_array.shape[0]-1 == num_segments)
+        #except AssertionError as e:
+        #    print('assertion failed: ci_array.shape[0]-1 == num_segments: {},{}'.format(ci_array.shape[0], num_segments))
+        #    print(ci_array.shape)
+        #    raise e
         for i in xrange(num_segments):
             ci = ci_array[i]
             (t_, x_, s_, d_, pvt_, u_) = step_sim(t, x, s, d, pvt, ci)

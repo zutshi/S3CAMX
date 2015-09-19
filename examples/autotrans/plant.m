@@ -28,15 +28,24 @@ classdef plant < handle
     %% props
     properties
         %             properties(Constant): causes matlab to crash
+        % number of simulink blocks with states
         NUM_State_Blocks = 2;
+        % number of plant states, usually the same as state blocks
         NUM_X = 2;
+        % number of exogenous plant inputs
         NUM_W = 0;
+        % number of exogenous controller inputs
         NUM_CI = 2;
+        % model output, should be usually 0 for a closed loop system
         NUM_O = 0;
+        % number of plant outputs
         NUM_PO = 1;
+        % number of control inputs, i.e., controller -> plant
         NUM_U = 3;
-        MODEL_NAME = 'autotrans';
+        % model path
         MODEL_PATH = '/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/branches/RB-0.75/examples/autotrans/autotrans.slx';
+        % model name
+        MODEL_NAME;
         plot_or_not = false;
         SaveFormat = 'Dataset';
         FR = false;
@@ -71,6 +80,9 @@ classdef plant < handle
             % SaveFormat = 'Array'
             % SaveFormat = 'Structure'
             % ... several others
+            
+            % populate the model name
+            [~, obj.MODEL_NAME, ~] = fileparts(obj.MODEL_PATH); %[pathstr,name,ext] = fileparts(
             
             if obj.plot_or_not
                 figure(420);
@@ -113,6 +125,7 @@ classdef plant < handle
                     'StateSaveName', 'xout';
                     'OutputSaveName', 'yout';
                     'LimitDataPoints', 'off';
+%                     'MaxDataPoints', '1';
                     'SimulationMode', obj.sim_mode;
                     };
                 
@@ -139,12 +152,19 @@ classdef plant < handle
                 obj.paramNameValStruct.StateSaveName = 'xout';
                 obj.paramNameValStruct.OutputSaveName = 'yout';
                 obj.paramNameValStruct.LimitDataPoints = 'off';
+%                 obj.paramNameValStruct.MaxDataPoints = '1';
                 obj.paramNameValStruct.SrcWorkspace = 'current';
                 obj.paramNameValStruct.SimulationMode = obj.sim_mode;
             end
         end
         %% sim function
-        function [tt,YY,D,P,prop_violated_flag] = sim(obj, t,T,X0,D,P,U,W,property_check)
+        function [tt,Y,D,P,prop_violated_flag] = sim(obj, t,T,X0,D,P,U,W,property_check)
+            
+            % packing format(X): [plant outputs, plant states]
+            
+            % discard the plant outputs...masquerading as plants
+            X0 = X0(1+obj.NUM_PO:end);
+            
             for j = 1:obj.NUM_U
                 [u_path, u_name] = obj.control_inputs{j, :};
                 set_param([obj.MODEL_NAME, '/', u_path], u_name, num2str(U(j)));
@@ -223,25 +243,25 @@ classdef plant < handle
             % assignin('base', 'mySimOut', mySimOut)
             
             if strcmp(obj.SaveFormat, 'Array') == 1
-                yt = repmat(tout, 1, obj.NUM_O);
+                ty = repmat(tout, 1, obj.NUM_O);
                 y = yout;
-                xt = repmat(tout, 1, obj.NUM_State_Blocks);
+                tx = repmat(tout, 1, obj.NUM_State_Blocks);
                 x = xout;
             elseif strcmp(obj.SaveFormat, 'Dataset') == 1
                 % get yout
-                yt = []; y = [];
+                ty = []; y = [];
                 for j = 1:obj.NUM_O
-                    yt_j = yout.getElement(j).Values.Time;
-                    y_j = yout.getElement(j).Values.Data;
-                    yt = [yt yt_j];
+                    yt_j = yout.getElement(j).Values.Time(end);
+                    y_j = yout.getElement(j).Values.Data(end);
+                    ty = [ty yt_j];
                     y = [y y_j];
                 end
                 % get xout
-                xt = []; x = [];
+                tx = []; x = [];
                 for j = 1:obj.NUM_State_Blocks
-                    xt_j = xout.getElement(j).Values.Time;
-                    x_j = xout.getElement(j).Values.Data;
-                    xt = [xt xt_j];
+                    xt_j = xout.getElement(j).Values.Time(end);
+                    x_j = xout.getElement(j).Values.Data(end);
+                    tx = [tx xt_j];
                     x = [x x_j];
                 end
             else
@@ -252,12 +272,12 @@ classdef plant < handle
                 % plot
                 for j = 1:obj.NUM_O
                     figure(figO{j});
-                    plot(yt(:, j), y(:, j))
+                    plot(ty(:, j), y(:, j))
                 end
                 
                 for j = 1:obj.NUM_State_Blocks
                     figure(figX{j});
-                    plot(xt(:, j), x(:, j))
+                    plot(tx(:, j), x(:, j))
                 end
             end
             
@@ -267,6 +287,10 @@ classdef plant < handle
             if obj.FR
                 my_sim_deinit(obj.MODEL_NAME)
             end
+            
+            YX = x;
+            % packing format(Y): [plant outputs, plant states]
+            Y = [YY YX]
         end
         
     end

@@ -20,3 +20,15 @@ Changes made in this branch which should be merged to Master:
       -simulate_plant.m was modified to work with classes. This adds the feature to call init()
   - FILE modified: ./psim.py, ./simulate_plant.m
   - TAG: CLSS
+
+  (3) Added sanity checks in loadsystem.py,   
+  - DESCRIPTION: Makes sure that all required parameters are present in the .tst file. Also ensures
+    consistency by catching and reporting any dimensions mismatces.
+  - SOLUTION:
+      - Added try: except blocks and created an exception class to print user friendly erorr
+        messages when an expected parameter is missing
+      - parse() was replaced by a new parse() and saved as
+        parse_without_sanity_checki())
+      - Created a new class MissingSystemDefError
+    FILE modified: ./loadsystem.py
+    TAG: No tags, as changes were pure additions and replacements. NO EDITS
