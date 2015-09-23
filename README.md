@@ -1,13 +1,10 @@
-S3CAMX:
-
-Falsification of closed loop control systems:
-  S3CAM + Symbolic Execution
+#S3CAMX: S3CAM + Symbolic Execution
 
 This release is meant to be accompanied by a conference publication.
 
-#Dependencies
+##Dependencies
 
-##Requires Manual install
+###Requires Manual install
 
 - python 2.7x
 
@@ -17,7 +14,7 @@ Refer: [enable shared](https://www.mathworks.com/help/matlab/matlab_external/und
 The python distribution must be compiled with 
 ./configure --enable-shared 
 and if using [pyenv](https://github.com/yyuu/pyenv), then must set 
-export CONFIGURE_OPTS='--enable-shared --enable-unicode=ucs4'
+export CONFIGURE\_OPTS='--enable-shared --enable-unicode=ucs4'
 before issuing
 pyenv install 2.7.3
 
@@ -31,7 +28,7 @@ pyenv install 2.7.3
   All in all, time consuming
 
 
-##Python Packages
+###Python Packages
 install [pip](https://bootstrap.pypa.io/get-pip.py)
 use pip install <...>
 
@@ -43,13 +40,13 @@ use pip install <...>
 - tqdm.py
 - pyparsing.py
 
-##matlabengineforpython [Python -> Matlab]
+###matlabengineforpython [Python -> Matlab]
 Refer: [Install MATLAB Engine for Python](https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html)
 - matlab
 - matlab/engine
 
 
-#Update Local Paths
+##Update Local Paths
 
-- update set_path
+- update set\_path
 - update startup.m
