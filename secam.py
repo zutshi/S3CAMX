@@ -28,7 +28,6 @@ import err
 import loadsystem
 import traces
 import example_list as egl
-import CSymLoader as CSL
 
 ###############################
 ## terminal color printing compatibility for windows
@@ -77,6 +76,11 @@ class SystemParams:
         self.sampler = sampler
         self.final_cons = final_cons
         return
+
+
+
+def sanity_check_input(sys, prop, opts):
+    return
 
 
 # TODO: make a module of its own once we add more general property using
@@ -168,6 +172,7 @@ def create_abstraction(sys, prop, opts):
                 raise err.Fatal('argparse should have caught this!')
 
             # Parse PC Trace
+            import CSymLoader as CSL
             controller_sym_path_obj = CSL.load_sym_obj((opts.cntrl_rep, opts.trace_struct), controller_path_dir_path)
         else:
             raise err.Fatal('unknown symbolic analyzer requested:{}'.format(opts.symbolic_analyzer))
@@ -368,6 +373,8 @@ def main():
     #print(args)
 
     if args.filename is None:
+        print('No arguments passed. Exiting!. Please use --help')
+        exit()
         print('No arguments passed. Loading list of packaged benchmarks!')
         example_list = egl.get_example_list()
         print('select from a list of examples')
@@ -427,6 +434,7 @@ def main():
         #matplotlib.use('GTK3Agg')
         #global plt
         #import matplotlib.pyplot as plt
+    sanity_check_input(sys, prop, opts)
     run_secam(sys, prop, opts)
     # ##!!##logger.debug('execution ends')
 

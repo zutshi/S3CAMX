@@ -19,18 +19,19 @@ plant_pvt_init_data = None
 # num_samples = 5
 min_smt_sample_dist  = 1
 initial_set = [[55.0], [75.0]]
-error_set = [[0.0], [52.0]]
+#error_set = [[0.0], [52.0]]
+error_set = [[76.0], [500]]
 T = 2
 # SS + SymEx takes 30s
 #P1 = (initial_set, error_set, T)
 
 ## Used for SS + SymEx
-#grid_eps = [5.0]
-#num_samples = 5
+grid_eps = [5.0]
+num_samples = 5
 
 ## Used for SS
-grid_eps = [0.1]
-num_samples = 5
+#grid_eps = [0.1]
+#num_samples = 5
 
 
 #################################
