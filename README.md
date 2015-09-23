@@ -1,8 +1,8 @@
 This release is meant to be accompanied by a conference publication.
 
-Dependencies
+#Dependencies
 
-#Manual install
+##Requires Manual install
 
 - python 2.7x
 
@@ -26,7 +26,7 @@ pyenv install 2.7.3
   All in all, time consuming
 
 
-#Python Packages
+##Python Packages
 use pip install <...>
 
 - scipy
@@ -37,8 +37,13 @@ use pip install <...>
 - tqdm.py
 - pyparsing.py
 
-#matlabengineforpython [Python -> Matlab]
+##matlabengineforpython [Python -> Matlab]
 Refer: https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html
 - matlab
 - matlab/engine
 
+
+#Update Local Paths
+
+- update set_path
+- update startup.m
