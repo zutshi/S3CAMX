@@ -6,6 +6,7 @@ Dependencies
 
 - python 2.7x
 
+Required for Matlab -> Python interface used to generate test results by S-Taliro
 Refer: https://www.mathworks.com/help/matlab/matlab_external/undefined-variable-py-or-function-py-command.html#buialof-67
 
 The python distribution must be compiled with 
@@ -37,7 +38,7 @@ use pip install <...>
 - pyparsing.py
 
 #matlabengineforpython [Python -> Matlab]
-
+Refer: https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html
 - matlab
 - matlab/engine
 
