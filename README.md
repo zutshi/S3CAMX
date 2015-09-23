@@ -14,12 +14,12 @@ Dependencies
 - python 2.7x
 #######################################
 
-`Refer: https://www.mathworks.com/help/matlab/matlab_external/undefined-variable-py-or-function-py-command.html#buialof-67`
+Refer: https://www.mathworks.com/help/matlab/matlab_external/undefined-variable-py-or-function-py-command.html#buialof-67
 
 The python distribution must be compiled with 
 ./configure --enable-shared 
 and if using pyenv, https://github.com/yyuu/pyenv, then must set 
-`export CONFIGURE_OPTS='--enable-shared --enable-unicode=ucs4'`
+export CONFIGURE_OPTS='--enable-shared --enable-unicode=ucs4'
 before issuing
 pyenv install 2.7.3
 
