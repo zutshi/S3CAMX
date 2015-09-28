@@ -27,6 +27,7 @@ T = 2
 
 ## Used for SS + SymEx
 grid_eps = [5.0]
+grid_eps = [.0]
 num_samples = 5
 
 ## Used for SS

@@ -171,6 +171,7 @@ def create_abstraction(sys, prop, opts):
             else:
                 raise err.Fatal('argparse should have caught this!')
 
+            # TAG:PCH_IND
             # Parse PC Trace
             import CSymLoader as CSL
             controller_sym_path_obj = CSL.load_sym_obj((opts.cntrl_rep, opts.trace_struct), controller_path_dir_path)
@@ -342,21 +343,21 @@ def main():
 
     usage = '%(prog)s <filename>'
     parser = argparse.ArgumentParser(description='S3CAM', usage=usage)
-    parser.add_argument('--filename', default=None, metavar='file_path.tst')
+    parser.add_argument('-f','--filename', default=None, metavar='file_path.tst')
 
     #parser.add_argument('--run-benchmarks', action="store_true", default=False,
     #                    help='run pacakged benchmarks')
 
-    parser.add_argument('--simulate', type=int, metavar='num-sims',
+    parser.add_argument('-s', '--simulate', type=int, metavar='num-sims',
                         help='simulate')
-    parser.add_argument('--ss-concrete', action="store_true",
+    parser.add_argument('-c', '--ss-concrete', action="store_true",
                         help='scatter & simulate')
     parser.add_argument('--ss-concolic', action="store_true",
                         help='scatter & simulate with concolic execution using KLEE')
-    parser.add_argument('--ss-symex', type=str, metavar='engine', choices=LIST_OF_SYEMX_ENGINES,
+    parser.add_argument('-x', '--ss-symex', type=str, metavar='engine', choices=LIST_OF_SYEMX_ENGINES,
                         help='SS + SymEx with static paths')
 
-    parser.add_argument('--cntrl-rep', type=str, metavar='repr', choices=LIST_OF_CONTROLLER_REPRS,
+    parser.add_argument('-r', '--cntrl-rep', type=str, metavar='repr', choices=LIST_OF_CONTROLLER_REPRS,
                         help='Controller Representation')
 
     parser.add_argument('-p', '--plot', action='store_true',
@@ -365,7 +366,7 @@ def main():
     parser.add_argument('--seed', type=int, metavar='seed_value',
                         help='seed for the random generator')
 
-    parser.add_argument('--trace-struct', type=str, metavar='struct', default='tree',
+    parser.add_argument('-t', '--trace-struct', type=str, metavar='struct', default='tree',
                         choices=LIST_OF_TRACE_STRUCTS, help='structure for cntrl-rep')
 
 #    argcomplete.autocomplete(parser)
@@ -373,7 +374,7 @@ def main():
     #print(args)
 
     if args.filename is None:
-        print('No arguments passed. Exiting!. Please use --help')
+        print('No file to test. Please use --help')
         exit()
         print('No arguments passed. Loading list of packaged benchmarks!')
         example_list = egl.get_example_list()
@@ -406,6 +407,8 @@ def main():
     elif args.ss_concolic:
         opts.MODE = 'falsify'
         opts.METHOD = 'concolic'
+        print('removed concolic (KLEE)')
+        exit(0)
     elif args.ss_symex is not None:
         opts.MODE = 'falsify'
         opts.METHOD = 'symbolic'
