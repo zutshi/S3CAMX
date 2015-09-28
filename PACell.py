@@ -339,3 +339,20 @@ class PlantAbstractState(object):
 
     def __repr__(self):
         return 'cell={}, n={}, d={}'.format(self.cell_id, self.n, self.d)
+
+
+class GridEps(object):
+    def __init__(self, eps):
+        self.eps = eps
+
+    def __add__(self, x):
+        return
+
+    def __sub__(self, x):
+        return
+
+    def __mult__(self, x):
+        return
+
+    def __div__(self, x):
+        return
