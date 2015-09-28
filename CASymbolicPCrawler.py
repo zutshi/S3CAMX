@@ -8,7 +8,10 @@ import numpy as np
 # matplotlib.use('GTK3Agg')
 # import matplotlib.pyplot as plt
 
-import smtSolver as smt
+#TAG:Z3_IND
+# Comment out below import
+#import smtSolver as smt
+
 import state as st
 import utils
 import err
@@ -76,6 +79,7 @@ class ControllerSymbolicAbstraction:
             num_dims,
             controller_sym_path_obj, #controller_path_dir_path,
             min_smt_sample_dist,
+            smt_solver, #TAG:Z3_IND - Add solver param
             max_hd=0,
             ):
 
@@ -89,7 +93,10 @@ class ControllerSymbolicAbstraction:
         # TODO: gets paths as z3 constraints, should take care of them bby
         # itself
 
-        self.solver = smt.smt_solver_factory('z3')
+        # TAG:Z3_IND - get the solver from the passed in args
+        #self.solver = smt.smt_solver_factory('z3')
+        self.solver = smt_solver
+
         self.id_generator = self.gen_id_()
         self.gen_id = lambda: next(self.id_generator)
 
