@@ -8,7 +8,9 @@ import numpy as np
 
 import err
 import constraints as cons
-import smtSolver as smt
+#TAG:Z3_IND
+# Comment out below import
+#import smtSolver as smt
 import concretePlant as cp
 
 logger = logging.getLogger(__name__)
@@ -39,6 +41,7 @@ class PlantAbstraction:
             eps,
             refinement_factor,
             num_samples,
+            smt_solver, #TAG:Z3_IND - Add solver param
             ):
 
             # init_cons_list, final_cons, controller_sim, num_dims, delta_t, prog_bar=False):
@@ -55,7 +58,9 @@ class PlantAbstraction:
         self.delta_t = delta_t
         self.refinement_factor = refinement_factor
         self.num_samples = num_samples
-        self.solver = smt.smt_solver_factory('z3')
+        # TAG:Z3_IND - get the solver from the passed in args
+        #self.solver = smt.smt_solver_factory('z3')
+        self.solver = smt_solver
 
         # ##!!##logger.debug('==========abstraction parameters==========')
         # ##!!##logger.debug('eps: {}, refinement_factor: {}, num_samples: {},delta_t: {}'.format(str(self.eps), self.refinement_factor, self.num_samples, self.delta_t))

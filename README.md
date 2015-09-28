@@ -18,6 +18,8 @@ export CONFIGURE\_OPTS='--enable-shared --enable-unicode=ucs4'
 before issuing
 pyenv install 2.7.3
 
+Then in Matlab, specify the path of python: e.g. pyversion <path>/bin/python
+
 
 - z3py [optional, required for symex] 
   from https://github.com/Z3Prover/z3

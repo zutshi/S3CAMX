@@ -90,28 +90,19 @@ class TopLevelAbs:
 
         self.parse_config(config_dict)
 
-        if plant_abstraction_type == 'cell':
-            #from PACell import *
-            import PACell as PA
-        else:
-            raise NotImplementedError
+        # TAG:Z3_IND - default init
+        smt_solver = None
 
-        # Overriding the passed in plant and conctroller abstractions
-
-        plant_abs = PA.PlantAbstraction(
-            self.T,
-            self.N,
-            self.num_dims,
-            self.delta_t,
-            self.eps,
-            self.refinement_factor,
-            self.num_samples,
-            )
+        # TAG:Z3_IND - shuffled the plant abstraction creation after controller
+        # abstraction. This lets us get the smt_solver depending upon the
+        # requeseted controller abstraction
 
         if controller_abstraction_type == 'symbolic_pathcrawler':
+            import smtSolver as smt
+            smt_solver = smt.smt_solver_factory('z3')
             import CASymbolicPCrawler as CA
             controller_abs = CA.ControllerSymbolicAbstraction(self.num_dims,
-                    controller_sym_path_obj, min_smt_sample_dist)
+                    controller_sym_path_obj, min_smt_sample_dist, smt_solver)
         elif controller_abstraction_type == 'symbolic_klee':
             import CASymbolicKLEE as CA
             controller_abs = CA.ControllerSymbolicAbstraction(self.num_dims,
@@ -126,6 +117,25 @@ class TopLevelAbs:
             controller_abs = CA.ControllerCollectionAbstraction(self.num_dims)
         else:
             raise NotImplementedError
+
+        if plant_abstraction_type == 'cell':
+            #from PACell import *
+            import PACell as PA
+        else:
+            raise NotImplementedError
+        # Overriding the passed in plant and conctroller abstractions
+        plant_abs = PA.PlantAbstraction(
+            self.T,
+            self.N,
+            self.num_dims,
+            self.delta_t,
+            self.eps,
+            self.refinement_factor,
+            self.num_samples,
+            smt_solver, #TAG:Z3_IND - Add solver param
+            )
+
+
         print U.decorate('new abstraction created')
         print 'eps:', self.eps
         print 'num_samples:', self.num_samples
