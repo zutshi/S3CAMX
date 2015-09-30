@@ -37,6 +37,7 @@ def simulator_factory(
         plant_pvt_init_data,
         parallel=False,
         test_params=None,
+        sim_args=None
         ):
 
     # ##!!##logger.debug('requested simulator creation')
@@ -55,7 +56,7 @@ def simulator_factory(
 
                     # return MatlabSim(m_file_path, benchmark_os_path, parallel)
 
-                    return MEngPy(m_file_path, benchmark_os_path, parallel)
+                    return MEngPy(m_file_path, benchmark_os_path, parallel, sim_args)
                 else:
                     raise err.FileNotFound('file does not exist: ' + m_file_path)
             elif sim_type == 'simulink':
@@ -734,6 +735,7 @@ class MEngPy(Simulator):
             m_file_path,
             benchmark_os_path,
             parallel,
+            shared_engine=None #TAG:MSH
             ):
         self.parallel = parallel
         import matlab.engine as matlab_engine
@@ -743,9 +745,14 @@ class MEngPy(Simulator):
         # self.matlab_engine = matlab_engine
         self.matlab = matlab
 
-        print 'initializing matlab...'
-        self.eng = matlab_engine.start_matlab()
-        print 'done'
+        #TAG:MSH
+        if shared_engine is None:
+            print 'starting matlab...'
+            self.eng = matlab_engine.start_matlab()
+            print 'done'
+        else:
+            print 'attempting to connect to an existing matlab session'
+            self.eng = matlab_engine.connect_matlab(shared_engine)
 
         self.m_file = m_file_path
 
