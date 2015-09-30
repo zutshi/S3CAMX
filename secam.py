@@ -366,6 +366,10 @@ def main():
     parser.add_argument('--seed', type=int, metavar='seed_value',
                         help='seed for the random generator')
 
+    # TAG:MSH
+    parser.add_argument('--meng', type=str, metavar='engine_name',
+                        help='Shared Matlab Engine name')
+
     parser.add_argument('-t', '--trace-struct', type=str, metavar='struct', default='tree',
                         choices=LIST_OF_TRACE_STRUCTS, help='structure for cntrl-rep')
 
@@ -425,7 +429,9 @@ def main():
     opts.plot = args.plot
 
     sys, prop = loadsystem.parse(filepath)
-    sys.init_sims(plt)
+    # TAG:MSH
+    matlab_engine = args.meng
+    sys.init_sims(plt, psim_args=matlab_engine)
 
     if opts.plot:
         pass
