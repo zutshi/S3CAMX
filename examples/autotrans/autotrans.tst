@@ -1,7 +1,7 @@
 inf = float('inf')
 
 # sampling time
-delta_t = 1.0
+delta_t = 0.5
 
 # pvt simulator state required for initializing the simulator
 plant_pvt_init_data = None
