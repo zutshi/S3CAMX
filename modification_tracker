@@ -30,22 +30,31 @@ Changes made in this branch which should be merged to Master:
       - parse() was replaced by a new parse() and saved as
         parse_without_sanity_checki())
       - Created a new class MissingSystemDefError
-    FILE modified: ./loadsystem.py
-    TAG: No tags, as changes were pure additions and replacements. NO EDITS
+  - FILE modified: ./loadsystem.py
+  - TAG: No tags, as changes were pure additions and replacements. NO EDITS
 
-    (4) Z3 is required only if symex is explicitly requested
-    - DESCRIPTION: Z3 no longer needs to be installed if -ss-symex is never provided.
-    - SOLUTION:
-        - smt_solver is imported only if its required.
-        - Earlier, it was loaded in both plant and controller
-          abstractions. Now, its loaded in abstraction and passed to the plant and the controller
-          abstraction. If not required, then its inited with None.
-    FILES modified: PACell.py, CASymbolicPCrawler.py, abstraction.py
-    TAG: Z3_IND
+  (5) Z3 is required only if symex is explicitly requested
+  - DESCRIPTION: Z3 no longer needs to be installed if -ss-symex is never provided.
+  - SOLUTION:
+      - smt_solver is imported only if its required.
+      - Earlier, it was loaded in both plant and controller
+        abstractions. Now, its loaded in abstraction and passed to the plant and the controller
+        abstraction. If not required, then its inited with None.
+  - FILES modified: PACell.py, CASymbolicPCrawler.py, abstraction.py
+  - TAG: Z3_IND
 
-    (4) pc_trace_parser.py is required only if symex is explicitly requested
-    - DESCRIPTION: ./path_crawler_helpers is not required unless symex is requested
-    - SOLUTION: Changed unconditional import of CSymLoader.py conditional
-    FILES modified: secam.py
-    TAG: PCH_IND
+  (6) pc_trace_parser.py is required only if symex is explicitly requested
+  - DESCRIPTION: ./path_crawler_helpers is not required unless symex is requested
+  - SOLUTION: Changed unconditional import of CSymLoader.py conditional
+  - FILES modified: secam.py
+  - TAG: PCH_IND
 
+  (7) eps: do not splice
+      Tried to accept inf in grid_eps, implying 'do not splice'.
+      Changes are checked in the 'eps' local branch.
+      TAG: EPS
+
+  (8) Added the new R2015b feature to connect to an existing Matlab session.
+      Can use the switch --meng 'session name'
+  - TAG: MSH
+  - FILES: secam.py, psim.py, loadsystem.py
