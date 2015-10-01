@@ -56,13 +56,14 @@ class System(object):
 
         return
 
-    def init_sims(self, plt_lib):
+    def init_sims(self, plt_lib, psim_args):
         self.plant_sim = psim.simulator_factory(
             self.plant_config_dict,
             self.path,
             plt=plt_lib,
             plant_pvt_init_data=self.plant_pvt_init_data,
-            parallel=False)
+            parallel=False,
+            sim_args=psim_args)# TAG:MSH
         if self.controller_path is None:
             self.controller_sim = csim.DummyController(self.num_dims)
         else:
