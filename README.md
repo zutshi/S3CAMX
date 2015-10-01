@@ -42,22 +42,22 @@ Required Python Packages:
 - tqdm
 - pyparsing
 
-To install the packages along with their dependencies, execute the commands below (preferably in the same order).
-sudo apt-get install python-pip python-dev build-essential
-sudo pip install numpy
-sudo apt-get install libatlas-base-dev gfortran
-sudo pip install scipy
-sudo pip install blessings
-sudo pip install matplotlib
-(
-Note: 
-If the matplotlib installation throws an error because of missing dependencies, try this:
-sudo apt-get install python-matplotlib
-sudo pip install matplotlib
-)
-sudo pip install networkx
-sudo pip install tqdm
-sudo pip install pyparsing
+To install the packages along with their dependencies, execute the commands below (preferably in the same order).  
+sudo apt-get install python-pip python-dev build-essential  
+sudo pip install numpy  
+sudo apt-get install libatlas-base-dev gfortran  
+sudo pip install scipy  
+sudo pip install blessings  
+sudo pip install matplotlib  
+(  
+Note:   
+If the matplotlib installation throws an error because of missing dependencies, try this:  
+sudo apt-get install python-matplotlib  
+sudo pip install matplotlib  
+)  
+sudo pip install networkx  
+sudo pip install tqdm  
+sudo pip install pyparsing  
 
 
 ###matlabengineforpython [Python -> Matlab]
