@@ -47,7 +47,7 @@ class SIM(object):
         ret_P = dummy_P
 
         # TODO: plotting needs to be fixed
-        PLT.plot(plot_data[0] + Ti, plot_data[1][:, 0])
+        #PLT.plot(plot_data[0] + Ti, plot_data[1][:, 0])
         #PLT.plot(plot_data[0] + Ti, plot_data[1][:, 1])
         #PLT.plot(plot_data[1][:, 0], plot_data[1][:, 1])
         ##PLT.plot(plot_data[0] + Ti, np.tile(U, plot_data[0].shape))
