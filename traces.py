@@ -61,15 +61,15 @@ class Trace(object):
         x, y = parsed_plot_cmd
         plt.plot(x, y)
 
-        # ###### used to generate heater plots for the rtss paper##############
-        # #plt.rc('text', usetex=True)
-        # #plt.rc('font', family='serif')
-        # #plt.title(r'Room-Heater-Thermostat: Random Simulations',fontsize=30)
-        # #plt.xlabel(r'Time (s)',fontsize=28)
-        # #plt.ylabel(r'Room Temp. ($^\circ$F)',fontsize=28)
-        # #plt.plot([0, 10], [76, 76], 'r-', lw=2)
-        # #plt.plot([0, 10], [52, 52], 'r-', lw=2)
-        # #####################################################################
+#         ###### used to generate heater plots for the rtss paper##############
+#         plt.rc('text', usetex=True)
+#         plt.rc('font', family='serif')
+#         plt.title(r'Room-Heater-Thermostat: Random Simulations',fontsize=30)
+#         plt.xlabel(r'Time (s)',fontsize=28)
+#         plt.ylabel(r'Room Temp. ($^\circ$F)',fontsize=28)
+#         plt.plot([0, 10], [76, 76], 'r-', lw=2)
+#         plt.plot([0, 10], [52, 52], 'r-', lw=2)
+#         #####################################################################
 
     # plt.figure()
     # AC = plt.gca()
@@ -154,6 +154,9 @@ def get_plot_cmd_from_stdin():
 
 
 def plot_trace_list(trace_list, plt):
+    '''
+    @type plt: matplotlib.pyplot
+    '''
 
     # plot for each plant state
     # NUM_PLOTS = num_dims.x+1
@@ -166,18 +169,47 @@ def plot_trace_list(trace_list, plt):
 
     for i in range(NUM_PLOTS):
         plt.figure()
-        AX_list.append(plt.gca())
+        ax = plt.gca()
+        AX_list.append(ax)
         plt.title('x{}'.format(i))
 
-        # ###### used to generate heater plots for the rtss paper##############
-        # #plt.rc('text', usetex=True)
-        # #plt.rc('font', family='serif')
-        # #plt.title(r'Room-Heater-Thermostat: Random Simulations',fontsize=30)
-        # #plt.xlabel(r'Time (s)',fontsize=28)
-        # #plt.ylabel(r'Room Temp. ($^\circ$F)',fontsize=28)
-        # #plt.plot([0, 10], [76, 76], 'r-', lw=2)
-        # #plt.plot([0, 10], [52, 52], 'r-', lw=2)
-        # #####################################################################
+#         # ##### used to generate heater plots for the rtss paper##############
+
+#         # Font sizes
+#         title_size = 22
+#         label_szie = 20
+#         major_tick_size = 16
+
+#         plt.rc('text', usetex=True)
+#         plt.rc('font', family='serif')
+#         plt.title(r'Room-Heater-Thermostat: Random Simulations', fontsize=title_size)
+#         # change font sizes for the labels and also set padding
+#         # between the plots and the label; else they are too close.
+#         plt.xlabel(r'Time (s)', fontsize=label_szie, labelpad=20)
+#         plt.ylabel(r'Room Temp. ($^\circ$F)', fontsize=label_szie, labelpad=20)
+
+#         # set custom Title position; originally the title is too close
+#         # to the plot.
+#         ttl = ax.title
+#         ttl.set_position([0.5, 1.05])
+
+#         # plot max min temp
+#         #plt.plot([0, 10], [76, 76], 'r-', lw=2)
+#         plt.plot([0, 10], [52, 52], 'r-', lw=2)
+
+#         # change tick fonts
+#         plt.tick_params(axis='both', which='major', labelsize=major_tick_size)
+#         #plt.tick_params(axis='both', which='minor', labelsize=1)
+
+#         # specify ticks explicitly
+#         plt.yticks(np.array([50, 52, 55, 60, 65, 70, 75]))
+#         #plt.xticks(np.arange(min(x), max(x)+1, 1.0))
+
+#         # set axes range
+#         ax.set_xlim([0, 10])
+#         ax.set_ylim([50, 80])
+#         #fig.tight_layout()
+#         #####################################################################
 
     # plt.figure()
     # AC = plt.gca()
@@ -188,10 +220,12 @@ def plot_trace_list(trace_list, plt):
         t_array = trace.t_array
 
         # plt_x0 = AX0.plot(t_array, x_array[:, 10], label='x10')
-
+#         filepath = '/home/zutshi/work/RA/cpsVerification/HyCU/papers/mining_djikstra/hscc_2016'
         for i in range(NUM_PLOTS):
-            # AX_list[i].plot(t_array, x_array[:, i], 'b-',lw=1)
             AX_list[i].plot(t_array, x_array[:, i])
+#             AX_list[i].plot(t_array, x_array[:, i], 'b-', lw=1)
+#             plt.savefig(filepath+'/heater.png', bbox_inches='tight')
+#             plt.savefig(filepath+'/heater.pdf', bbox_inches='tight')
 
         #plt_x0x1 = AX0X1.plot(x_array[:, 0], x_array[:, 1], label='x0x1')
 

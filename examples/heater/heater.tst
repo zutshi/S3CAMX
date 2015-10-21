@@ -21,7 +21,9 @@ min_smt_sample_dist  = 1
 initial_set = [[55.0], [75.0]]
 error_set = [[0.0], [52.0]]
 #error_set = [[76.0], [500]]
-T = 2
+#T = 2 [for results as of 20th Oct '15]
+T = 10
+
 # SS + SymEx takes 30s
 #P1 = (initial_set, error_set, T)
 
