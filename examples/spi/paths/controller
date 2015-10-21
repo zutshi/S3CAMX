@@ -1,0 +1,130 @@
+
+
+TEST CASE 1
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 0;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 0;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = -118.000000;
+input__controller[0].x_arr[0] = -14.000000;
+ret_val__controller[0].output_arr[0] = -273.000000;
+
+Result:
+unknown
+
+Path Covered :
+spi_controller.c
+-10 +11
+
+
+Path Predicate for case 1:
+spi_controller.c: -10 input[0].input_arr[0]=<((double)0)
+spi_controller.c: +11 input[0].input_arr[0]<((double)0)
+
+Simplified Path Predicate for case 1:
+input[0].input_arr[0]=<((double)0) AND
+input[0].input_arr[0]<((double)0)
+
+Output Values for case 1: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].output_arr[0] = -1.000000, -1.000000
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+spi_controller.c: -10 input[0].input_arr[0]=<((double)0)
+spi_controller.c: -11 input[0].input_arr[0]>=((double)0)
+Path Prefix to cover :
+spi_controller.c
+-10 -11
+
+
+TEST CASE 2
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 0;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 0;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 0.000000;
+input__controller[0].x_arr[0] = -14.000000;
+ret_val__controller[0].output_arr[0] = -273.000000;
+
+Result:
+unknown
+
+Path Covered :
+spi_controller.c
+-10 -11
+
+
+Path Predicate for case 2:
+spi_controller.c: -10 input[0].input_arr[0]=<((double)0)
+spi_controller.c: -11 input[0].input_arr[0]>=((double)0)
+
+Simplified Path Predicate for case 2:
+input[0].input_arr[0]=<((double)0) AND
+input[0].input_arr[0]>=((double)0)
+
+Output Values for case 2: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].output_arr[0] = 0.000000, 0.000000
+
+to explore negation deepest unexplored condition of predicate,
+Path Predicate Prefix to solve :
+spi_controller.c: +10 input[0].input_arr[0]>((double)0)
+Path Prefix to cover :
+spi_controller.c
++10
+
+
+TEST CASE 3
+
+Dimensions:
+input__controller = 1;
+input__controller[0].input_arr = 1;
+input__controller[0].int_state_arr = 0;
+input__controller[0].float_state_arr = 0;
+input__controller[0].x_arr = 1;
+ret_val__controller = 1;
+ret_val__controller[0].int_state_arr = 0;
+ret_val__controller[0].float_state_arr = 0;
+ret_val__controller[0].output_arr = 1;
+
+Other input values:
+input__controller[0].input_arr[0] = 308.000000;
+input__controller[0].x_arr[0] = -14.000000;
+ret_val__controller[0].output_arr[0] = -273.000000;
+
+Result:
+unknown
+
+Path Covered :
+spi_controller.c
++10
+
+
+Path Predicate for case 3:
+spi_controller.c: +10 input[0].input_arr[0]>((double)0)
+
+Simplified Path Predicate for case 3:
+input[0].input_arr[0]>((double)0)
+
+Output Values for case 3: (Symbolic,Concrete)
+return value = 0, 0
+ret_val[0].output_arr[0] = 1.000000, 1.000000
