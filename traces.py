@@ -53,6 +53,7 @@ class Trace(object):
 # TODO: unfinished function...
 # Need to take care of matplotlib format and test the function!!
     def plot(self, plot_cmd):
+        raise NotImplementedError
         parsed_plot_cmd = None
         while(parsed_plot_cmd is None):
             plot_cmd = get_plot_cmd_from_stdin()
@@ -163,74 +164,146 @@ def plot_trace_list(trace_list, plt):
 
     # plot all continuous plant states against time
     NUM_PLOTS = trace_list[0].x_array.shape[1]
-    AX_list = []
-    plt.figure()
+#     AX_list = []
+    #plt.figure()
     #AX0X1 = plt.gca()
+
+#     for i in range(NUM_PLOTS):
+#         plt.figure()
+#         ax = plt.gca()
+#         AX_list.append(ax)
+#         plt.title('x{}'.format(i))
+
+
+
+#     for trace in trace_list:
+#         x_array = trace.x_array
+#         t_array = trace.t_array
+
+#         # plt_x0 = AX0.plot(t_array, x_array[:, 10], label='x10')
+#         for i in range(NUM_PLOTS):
+#             AX_list[i].plot(t_array, x_array[:, i])
+
+#         #plt_x0x1 = AX0X1.plot(x_array[:, 0], x_array[:, 1], label='x0x1')
+
+#         # plt.legend([plt_x0, plt_x1, plt_s0, plt_s1], ['x0', 'x1', 's0', 's1'])
+
+#     # plt.plot(t_array, ref_signal, drawstyle='steps-post')
+#     # plt.autoscale()
+#     plt.show()
+
+    line_list = []
 
     for i in range(NUM_PLOTS):
         plt.figure()
         ax = plt.gca()
-        AX_list.append(ax)
         plt.title('x{}'.format(i))
+        for trace in trace_list:
+            x_array = trace.x_array
+            t_array = trace.t_array
+            line, = ax.plot(t_array, x_array[:, i])
+            line_list.append(line)
+        figure_for_paper(plt, ax, line_list)
 
-#         # ##### used to generate heater plots for the rtss paper##############
-
-#         # Font sizes
-#         title_size = 22
-#         label_szie = 20
-#         major_tick_size = 16
-
-#         plt.rc('text', usetex=True)
-#         plt.rc('font', family='serif')
-#         plt.title(r'Room-Heater-Thermostat: Random Simulations', fontsize=title_size)
-#         # change font sizes for the labels and also set padding
-#         # between the plots and the label; else they are too close.
-#         plt.xlabel(r'Time (s)', fontsize=label_szie, labelpad=20)
-#         plt.ylabel(r'Room Temp. ($^\circ$F)', fontsize=label_szie, labelpad=20)
-
-#         # set custom Title position; originally the title is too close
-#         # to the plot.
-#         ttl = ax.title
-#         ttl.set_position([0.5, 1.05])
-
-#         # plot max min temp
-#         #plt.plot([0, 10], [76, 76], 'r-', lw=2)
-#         plt.plot([0, 10], [52, 52], 'r-', lw=2)
-
-#         # change tick fonts
-#         plt.tick_params(axis='both', which='major', labelsize=major_tick_size)
-#         #plt.tick_params(axis='both', which='minor', labelsize=1)
-
-#         # specify ticks explicitly
-#         plt.yticks(np.array([50, 52, 55, 60, 65, 70, 75]))
-#         #plt.xticks(np.arange(min(x), max(x)+1, 1.0))
-
-#         # set axes range
-#         ax.set_xlim([0, 10])
-#         ax.set_ylim([50, 80])
-#         #fig.tight_layout()
-#         #####################################################################
-
-    # plt.figure()
-    # AC = plt.gca()
-    # plt.title('ci')
-
-    for trace in trace_list:
-        x_array = trace.x_array
-        t_array = trace.t_array
-
-        # plt_x0 = AX0.plot(t_array, x_array[:, 10], label='x10')
-#         filepath = '/home/zutshi/work/RA/cpsVerification/HyCU/papers/mining_djikstra/hscc_2016'
-        for i in range(NUM_PLOTS):
-            AX_list[i].plot(t_array, x_array[:, i])
-#             AX_list[i].plot(t_array, x_array[:, i], 'b-', lw=1)
-#             plt.savefig(filepath+'/heater.png', bbox_inches='tight')
-#             plt.savefig(filepath+'/heater.pdf', bbox_inches='tight')
-
-        #plt_x0x1 = AX0X1.plot(x_array[:, 0], x_array[:, 1], label='x0x1')
-
-        # plt.legend([plt_x0, plt_x1, plt_s0, plt_s1], ['x0', 'x1', 's0', 's1'])
-
-    # plt.plot(t_array, ref_signal, drawstyle='steps-post')
-    # plt.autoscale()
     plt.show()
+
+
+# ##### used to generate heater plots for the rtss paper##############
+def figure_for_paper(plt, ax, line_list):
+    p = spi_params()
+    p.plot(plt, ax, line_list)
+    return
+
+
+def spi_params():
+    p = PlotParams()
+    p.filepath = '/home/zutshi/work/RA/cpsVerification/HyCU/papers/mining_djikstra/hscc_2016/spi'
+    # Font sizes
+    p.title = r'SPI: Symbolic Execution'
+    p.xlabel = r'Time (s)'
+    p.ylabel = r'x'
+    return p
+
+
+def heater_params():
+    p = PlotParams()
+    p.filepath = '/home/zutshi/work/RA/cpsVerification/HyCU/papers/mining_djikstra/hscc_2016/heater'
+    # Font sizes
+    p.title = r'Room-Heater-Thermostat: Random Simulations'
+    p.xlabel = r'Time (s)'
+    p.ylabel = r'Room Temp. ($^\circ$F)'
+    p.yticks = np.array([50, 52, 55, 60, 65, 70, 75])
+    p.xlim = [0, 10]
+    p.ylim = [50, 80]
+
+    def plot_prop(plt):
+        #plot max min temp
+        plt.plot([0, 10], [52, 52], 'r-', lw=2)
+
+    p.prop_fun = plot_prop
+    return p
+
+
+class PlotParams(object):
+    def __init__(self):
+        self.filepath = None
+        self.title_size = 22
+        self.label_szie = 20
+        self.major_tick_size = 16
+        self.title = None
+        self.xlabel = None
+        self.ylabel = None
+        self.labelpad = 20
+        self.linecolor = 'blue'
+        self.linewidth = 1
+        self.xticks = None
+        self.yticks = None
+        self.xlim = None
+        self.ylim = None
+        self.prop_fun = None
+
+    def plot(self, plt, ax, line_list):
+        plt.rc('text', usetex=True)
+        plt.rc('font', family='serif')
+        plt.title(self.title, fontsize=self.title_size)
+        # change font sizes for the labels and also set padding
+        # between the plots and the label; else they are too close.
+        plt.xlabel(self.xlabel, fontsize=self.label_szie, labelpad=self.labelpad)
+        plt.ylabel(self.ylabel, fontsize=self.label_szie, labelpad=self.labelpad)
+
+        # set custom Title position; originally the title is too close
+        # to the plot.
+        ttl = ax.title
+        ttl.set_position([0.5, 1.05])
+
+        if self.prop_fun:
+            self.prop_fun(plt)
+
+        # change tick fonts
+        plt.tick_params(axis='both', which='major', labelsize=self.major_tick_size)
+        #plt.tick_params(axis='both', which='minor', labelsize=1)
+
+        # specify ticks explicitly
+        if self.yticks is not None:
+            plt.yticks(self.yticks)
+        if self.xticks is not None:
+            plt.xticks(self.xticks)
+
+        # set axes range
+        if self.xlim is not None:
+            ax.set_xlim(self.xlim)
+        if self.ylim is not None:
+            ax.set_ylim(self.ylim)
+        #fig.tight_layout()
+        #####################################################################
+
+        for line in line_list:
+            line.set_color(self.linecolor)
+            line.set_linewidth(self.linewidth)
+    #     for trace in trace_list:
+    #         x_array = trace.x_array
+    #         t_array = trace.t_array
+    #         ax.plot(t_array, x_array[:, idx], 'b-', lw=1)
+
+        #plt.savefig(filepath+'.png', format='png', bbox_inches='tight')
+        #plt.savefig(filepath+'.pdf', bbox_inches='tight')

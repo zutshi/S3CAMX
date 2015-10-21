@@ -39,10 +39,12 @@ ci = [[-1.0], [1.0]]
 ########################
 # initial abstraction grid size
 grid_eps = [0.5]
-pi_grid_eps = []
 
 # number of samples at every scatter step
-num_samples = 10
+# SymEx
+num_samples = 1
+# SS
+#num_samples = 10
 
 # maximum iteration before SS iter outs.
 MAX_ITER = 10
