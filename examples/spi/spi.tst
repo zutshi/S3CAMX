@@ -12,16 +12,25 @@ plant_pvt_init_data = None
 
 # Rectangular bounds on initial plant states X0[0, :] <= X <= X0[1, :]
 initial_set = [[0.0],[0.0]]
-# Unsafe Boxed Region
-error_set = [[20.0], [inf]]
-#error_set = [[2], [3]]
-# Time Horizon
-T = 50
 
-#T = 200
-#error_set = [[50.0], [inf]]
-#T = 500
-#error_set = [[150.0], [inf]]
+
+# XXX: Have replaced infinity with 1000 because S-Taliro cribs like anything,
+# and am not very confident passing it infinity!
+
+# ********************
+# P1: number of violations: 348
+# time spent(s) = 1052.58428597
+# error_set = [[20.0], [1000.0]]
+# T = 50
+
+# ********************
+# P2: number of violations: 33
+# time spent(s) = 3656.08513999
+error_set = [[50.0], [1000]]
+T = 200
+
+# error_set = [[150.0], [1000]]
+# T = 500
 
 # rectangular bounds on exogenous inputs to the contorller. Such as, controller
 # disturbance.

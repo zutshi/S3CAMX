@@ -23,24 +23,21 @@ import traces
 
 # TODO: test all examples using the examplel isting
 def main():
-    example_list = []
-    one_shot_sim, prop = exifc.load_system('./examples/fuzzy_invp/fuzzy_invp.tst')
-    example_list.append((one_shot_sim, prop))
-    one_shot_sim, prop = exifc.load_system('./examples/heater/heater.tst')
-    example_list.append((one_shot_sim, prop))
-    one_shot_sim, prop = exifc.load_system('./examples/dc_motor/dci.tst')
-    example_list.append((one_shot_sim, prop))
-    one_shot_sim, prop = exifc.load_system('./examples/toy_model_10u/toy_model_10u.tst')
-    example_list.append((one_shot_sim, prop))
-    #one_shot_sim, prop = exifc.load_system('./examples/heater/heater.tst')
-    #one_shot_sim, prop = exifc.load_system('./examples/dc_controller_hand_coded_input/dci.tst')
+    systems = [
+        './examples/fuzzy_invp/fuzzy_invp.tst',
+        './examples/heater/heater.tst',
+        './examples/dc_motor/dci.tst',
+        './examples/toy_model_10u/toy_model_10u.tst',
+        './examples/heat/heat.tst',
+        './examples/spi/spi.tst',
+            ]
 
-    for example in example_list:
-        one_shot_sim, prop = example
+    for s in systems:
+        one_shot_sim, prop = exifc.load_system(s)
         NUM_SIMS = 1
         x0 = sample.sample_ival_constraints(prop.init_cons, NUM_SIMS)
 
-        w0 = sample.sample_ival_constraints(prop.ci, np.ceil(prop.T/prop.ci_zoh_time))
+        w0 = sample.sample_ival_constraints(prop.ci, np.ceil(prop.T/prop.delta_t))
 
         trace_list = []
         tic = time.time()
