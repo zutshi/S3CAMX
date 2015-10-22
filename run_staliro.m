@@ -154,7 +154,9 @@ opt.interpolationtype = interpolationtype;
 opt.n_workers = 1;
 opt.runs = 1;
 % opt.sa_params.n_tests = 1000;
-opt.optim_params.n_tests = 2000;
+% modified for SPI
+% opt.optim_params.n_tests = 5000;
+opt.optim_params.n_tests = 1000;
 
 
 % figure(1)

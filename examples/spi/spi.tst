@@ -26,11 +26,14 @@ initial_set = [[0.0],[0.0]]
 # ********************
 # P2: number of violations: 33
 # time spent(s) = 3656.08513999
-error_set = [[50.0], [1000]]
-T = 200
+# error_set = [[50.0], [1000]]
+# T = 200
 
-# error_set = [[150.0], [1000]]
-# T = 500
+# ********************
+# P3: number of violations: 0
+# time spent(s) =
+error_set = [[150.0], [1000.0]]
+T = 500
 
 # rectangular bounds on exogenous inputs to the contorller. Such as, controller
 # disturbance.
