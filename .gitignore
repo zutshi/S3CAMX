@@ -1,4 +1,5 @@
 *.pyc
+*.pyo
 *.tstc
 *.so
 *.pickled
