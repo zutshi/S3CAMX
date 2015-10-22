@@ -53,7 +53,10 @@ fuzzy_path = './examples/fuzzy_invp/fuzzy_invp.tst'
 afc_name = 'afc_FR'
 afc_path = './examples/abstractFuelControl/AbstractFuelControl_FR.tst'
 
-SYMEX = False
+spi_name = 'spi'
+spi_path = './examples/spi/spi.tst'
+
+SYMEX = True
 benchmark_list = [
                   #(heater_name, heater_path),
                   #(dc_name, dc_motor_path),
@@ -62,7 +65,8 @@ benchmark_list = [
                   #(tenu3_name, tenu3_path),
                   #(heat_name, heat_path),
                   #(fuzzy_name, fuzzy_path),
-                  (afc_name, afc_path)
+                  #(afc_name, afc_path),
+                  (spi_name, spi_path)
                   ]
 
 # (time ./secam.py ./examples/heater/heater.tst)>>./regression_results/heater.log 2>>./regression_results/heater.time
