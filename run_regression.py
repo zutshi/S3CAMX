@@ -56,7 +56,11 @@ afc_path = './examples/abstractFuelControl/AbstractFuelControl_FR.tst'
 spi_name = 'spi'
 spi_path = './examples/spi/spi.tst'
 
-SYMEX = True
+# standby example till ci is fixed to like pi in --ss-concrete mode
+spi_name = 'spi_plant'
+spi_path = './examples/spi_plant/spi.tst'
+
+SYMEX = False
 benchmark_list = [
                   #(heater_name, heater_path),
                   #(dc_name, dc_motor_path),
