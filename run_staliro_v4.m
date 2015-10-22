@@ -1,4 +1,4 @@
-function run_staliro(num_runs)
+function run_staliro_v4(num_runs)
 % filename = 'heat.tst';
 % path = '/examples/heat';
 
@@ -57,7 +57,7 @@ for eg_ = eg_cell_array
     filename = char(eg.filename);
     % TODO: platform dependant file path construction!!
     file_path = [path '/' filename];
-    
+
     %     if any(strmatch(filename, systems_to_run, 'exact'))
     if any(strmatch(path, systems_to_run, 'exact'))
         run_example(filename, path, num_runs);
@@ -126,8 +126,8 @@ interpolationtype = repmat({'pconst'}, 1, ni);
 phi = '!<>p';
 poly = cubeToPoly(prop.final_cons);
 preds(1).str = 'p';
-preds(1).A = poly.A;
-preds(1).b = poly.b+0;
+preds(1).A = poly.A+1-10+9;
+preds(1).b = poly.b+1-10+9;
 
 preds(1).A
 preds(1).b
@@ -142,6 +142,7 @@ SampTime = prop.delta_t;
 % poly.b
 % pausg
 
+
 simTime = prop.T;
 opt = staliro_options();
 opt.SampTime = SampTime;
@@ -151,17 +152,18 @@ opt.optimization_solver= 'SA_Taliro' ;
 opt.spec_space = 'X';
 opt.interpolationtype = interpolationtype;
 
-opt.n_workers = 1;
 opt.runs = 1;
-% opt.sa_params.n_tests = 1000;
-opt.optim_params.n_tests = 2000;
 
+opt.n_tests = 1000;
+
+%opt.sa_params.n_tests = 1000;
+%opt.n_workers = 1;
 
 % figure(1)
 % hold on
 
 disp('Running S-TaLiRo with chosen solver ...')
-
+opt;
 TO = 3600;
 
 run_time = zeros(1, num_runs);
@@ -173,7 +175,7 @@ for i = 1:num_runs
     timed_out = 0;
     staliroTime = tic;
     run_id_str = ['run_' num2str(i)]
-    
+
     while falsified == 0 && timed_out == 0
         [results, history] = staliro(@sim_wrapper_for_staliro,x0_bounds,input_range,cp_array,phi,preds,simTime,opt);
         results.run(results.optRobIndex).bestRob;
@@ -183,12 +185,12 @@ for i = 1:num_runs
             timed_out = 1;
         end
     end
-    
+
     run_time(i) = toc(staliroTime);
-    
+
     fprintf(summary_fileID, 'number of S-Taliro runs: %d\t', num_runs_staliro);
     fprintf(summary_fileID, 'run_time: %f\t', run_time(i));
-    
+
     if timed_out == 1
         warning('timed out!')
         fprintf(summary_fileID, 'result: TO\n');
@@ -198,7 +200,7 @@ for i = 1:num_runs
     else
         fprintf(summary_fileID, 'result: Failed\n');
     end
-    
+
     assignin('base', ['cp_array' '_' run_id_str], cp_array);
     assignin('base', ['results' '_' run_id_str],  results);
     assignin('base', ['run_time' '_' run_id_str], run_time);
@@ -224,16 +226,29 @@ function init()
 %clc;    % clear variables
 
 % Add S-Taliro path
-% addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4')
-% addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Polarity/')
-% addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/dp_taliro/')
-% addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/dp_t_taliro/')
-% addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/fw_taliro/')
-% addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/ha_robust_tester/')
-% addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Distances/')
-% addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/auxiliary/')
-addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/')
-setup_public
+addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4')
+addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Polarity/')
+addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/dp_taliro/')
+addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/dp_t_taliro/')
+addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/fw_taliro/')
+addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/ha_robust_tester/')
+addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Distances/')
+addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/auxiliary/')
+end
+
+function init2()
+%clear;  % clear command history
+%clc;    % clear variables
+
+% Add S-Taliro path
+%S_TALIRO_PATH = '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s-taliro_public/trunk/'
+S_TALIRO_PATH = '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_60_beta/'
+S_TALIRO_PATH = '/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_60_beta/'
+
+curr_dir = pwd
+cd(S_TALIRO_PATH)
+path_setup
+cd(curr_dir)
 end
 
 function poly = cubeToPoly(cube)

@@ -4,6 +4,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.path import Path
 import matplotlib.patches as patches
+import numpy as np
 
 
 def rectangle(fig, cons, fc):
@@ -62,3 +63,110 @@ def draw_arrow(fig, coord1, coord2):
     return
 
 
+# ##### used to generate heater plots for the rtss paper##############
+def figure_for_paper(ax, line_list):
+    p = spi_params()
+    p.plot(ax, line_list)
+    return
+
+
+def spi_params():
+    p = PlotParams()
+    p.filepath = '/home/zutshi/work/RA/cpsVerification/HyCU/papers/mining_djikstra/hscc_2016/spi'
+    # Font sizes
+    p.title = r'SPI: Symbolic Execution'
+    p.xlabel = r'Time (s)'
+    p.ylabel = r'$x$'
+    p.xlim = [0, 50]
+    p.ylim = [-30, 25]
+
+    def plot_prop():
+        #plot max min temp
+        plt.plot([0, 50], [20, 20], 'r-', lw=2)
+
+    p.prop_fun = plot_prop()
+    return p
+
+
+def heater_params():
+    p = PlotParams()
+    p.filepath = '/home/zutshi/work/RA/cpsVerification/HyCU/papers/mining_djikstra/hscc_2016/heater'
+    # Font sizes
+    p.title = r'Room-Heater-Thermostat: Random Simulations'
+    p.xlabel = r'Time (s)'
+    p.ylabel = r'Room Temp. ($^\circ$F)'
+    p.yticks = np.array([50, 52, 55, 60, 65, 70, 75])
+    p.xlim = [0, 10]
+    p.ylim = [50, 80]
+
+    def plot_prop():
+        #plot max min temp
+        plt.plot([0, 10], [52, 52], 'r-', lw=2)
+
+    p.prop_fun = plot_prop
+    return p
+
+
+class PlotParams(object):
+    def __init__(self):
+        self.filepath = None
+        self.title_size = 22
+        self.label_szie = 20
+        self.major_tick_size = 16
+        self.title = None
+        self.xlabel = None
+        self.ylabel = None
+        self.labelpad = 20
+        self.linecolor = 'blue'
+        self.linewidth = 1
+        self.xticks = None
+        self.yticks = None
+        self.xlim = None
+        self.ylim = None
+        self.prop_fun = None
+
+    def plot(self, ax, line_list):
+        plt.rc('text', usetex=True)
+        plt.rc('font', family='serif')
+        plt.title(self.title, fontsize=self.title_size)
+        # change font sizes for the labels and also set padding
+        # between the plots and the label; else they are too close.
+        plt.xlabel(self.xlabel, fontsize=self.label_szie, labelpad=self.labelpad)
+        plt.ylabel(self.ylabel, fontsize=self.label_szie, labelpad=self.labelpad)
+
+        # set custom Title position; originally the title is too close
+        # to the plot.
+        ttl = ax.title
+        ttl.set_position([0.5, 1.05])
+
+        if self.prop_fun:
+            self.prop_fun()
+
+        # change tick fonts
+        plt.tick_params(axis='both', which='major', labelsize=self.major_tick_size)
+        #plt.tick_params(axis='both', which='minor', labelsize=1)
+
+        # specify ticks explicitly
+        if self.yticks is not None:
+            plt.yticks(self.yticks)
+        if self.xticks is not None:
+            plt.xticks(self.xticks)
+
+        # set axes range
+        if self.xlim is not None:
+            ax.set_xlim(self.xlim)
+        if self.ylim is not None:
+            ax.set_ylim(self.ylim)
+        #fig.tight_layout()
+        #####################################################################
+
+        for line in line_list:
+            line.set_color(self.linecolor)
+            line.set_linewidth(self.linewidth)
+    #     for trace in trace_list:
+    #         x_array = trace.x_array
+    #         t_array = trace.t_array
+    #         ax.plot(t_array, x_array[:, idx], 'b-', lw=1)
+
+        #plt.savefig(filepath+'.png', format='png', bbox_inches='tight')
+        #plt.savefig(filepath+'.pdf', bbox_inches='tight')

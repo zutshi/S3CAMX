@@ -28,6 +28,8 @@ import err
 import loadsystem
 import traces
 import example_list as egl
+import plothelper as ph
+import plot_hack
 
 ###############################
 ## terminal color printing compatibility for windows
@@ -260,7 +262,9 @@ def falsify(sys, prop, opts, current_abs, sampler):
         SS.discover(current_abs, system_params)
 
         if plot:
-            plt.autoscale()
+            #plt.autoscale()
+            ph.figure_for_paper(plt.gca(), plot_hack.LINE_LIST)
+            plot_hack.LINE_LIST = []
             plt.show()
 
         if not system_params.final_state_set:
@@ -297,6 +301,7 @@ def falsify(sys, prop, opts, current_abs, sampler):
             initial_controller_state,
             )
         if plot:
+            ph.figure_for_paper(plt.gca(), plot_hack.LINE_LIST)
             plt.show()
         if done:
             print('Concretized', file=SYS.stderr)

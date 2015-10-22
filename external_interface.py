@@ -42,7 +42,7 @@ class SimState(object):
 
 def load_system(file_path):
     sys, prop = loadsystem.parse(file_path)
-    sys.init_sims(None)
+    sys.init_sims(plt_lib=None, psim_args=None)
     # useful to talk about the parameterization of ci without talking about
     # delta_t
     prop.delta_t = sys.delta_t
