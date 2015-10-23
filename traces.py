@@ -193,21 +193,34 @@ def plot_trace_list(trace_list, plt):
 #     # plt.autoscale()
 #     plt.show()
 
-    line_list = []
     if plot_figure_for_paper:
+        # count num of plotted sims
+        ctr_total = 0
         import plothelper as ph
-
-    for i in range(NUM_PLOTS):
-        plt.figure()
-        ax = plt.gca()
-        plt.title('x{}'.format(i))
-        for trace in trace_list:
-            x_array = trace.x_array
-            t_array = trace.t_array
-            line, = ax.plot(t_array, x_array[:, i])
-            line_list.append(line)
-
-        if plot_figure_for_paper:
+        line_list = []
+        for i in range(NUM_PLOTS):
+            plt.figure()
+            ax = plt.gca()
+            plt.title('x{}'.format(i))
+            for trace in trace_list:
+                x_array = trace.x_array
+                t_array = trace.t_array
+                if not (x_array[0, i] <= 70.0 and x_array[0, i] >= 69.9):
+                    # select to plot with probability 20%
+                    if np.random.random() >= 0.05:
+                        continue
+                line, = ax.plot(t_array, x_array[:, i])
+                line_list.append(line)
+                ctr_total += 1
+            print('plotted {} sims'.format(ctr_total))
             ph.figure_for_paper(ax, line_list)
-
-    plt.show()
+    else:
+        for i in range(NUM_PLOTS):
+            plt.figure()
+            ax = plt.gca()
+            plt.title('x{}'.format(i))
+            for trace in trace_list:
+                x_array = trace.x_array
+                t_array = trace.t_array
+                ax.plot(t_array, x_array[:, i])
+            plt.show()
