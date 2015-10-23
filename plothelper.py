@@ -65,14 +65,15 @@ def draw_arrow(fig, coord1, coord2):
 
 # ##### used to generate heater plots for the rtss paper##############
 def figure_for_paper(ax, line_list):
-    p = spi_params()
-    p.plot(ax, line_list)
+    #p = spi_params()
+    p = heater_params()
+    p.pretty_plot(ax, line_list)
     return
 
 
 def spi_params():
     p = PlotParams()
-    p.filepath = '/home/zutshi/work/RA/cpsVerification/HyCU/papers/mining_djikstra/hscc_2016/spi'
+    p.filepath = '/home/zutshi/work/RA/cpsVerification/HyCU/papers/mining_djikstra/hscc_2016/spi_new'
     # Font sizes
     p.title = r'SPI: Symbolic Execution'
     p.xlabel = r'Time (s)'
@@ -88,9 +89,11 @@ def spi_params():
     return p
 
 
+# To generate HSCC 2016 fig, execute secam with :
+# ./secam.py -f ./examples/heater/heater.tst -s # 2000 -p --seed 1
 def heater_params():
     p = PlotParams()
-    p.filepath = '/home/zutshi/work/RA/cpsVerification/HyCU/papers/mining_djikstra/hscc_2016/heater'
+    p.filepath = '/home/zutshi/work/RA/cpsVerification/HyCU/papers/mining_djikstra/hscc_2016/heater_100'
     # Font sizes
     p.title = r'Room-Heater-Thermostat: Random Simulations'
     p.xlabel = r'Time (s)'
@@ -110,9 +113,9 @@ def heater_params():
 class PlotParams(object):
     def __init__(self):
         self.filepath = None
-        self.title_size = 22
-        self.label_szie = 20
-        self.major_tick_size = 16
+        self.title_size = 20
+        self.label_szie = 18
+        self.major_tick_size = 14
         self.title = None
         self.xlabel = None
         self.ylabel = None
@@ -125,7 +128,7 @@ class PlotParams(object):
         self.ylim = None
         self.prop_fun = None
 
-    def plot(self, ax, line_list):
+    def pretty_plot(self, ax, line_list):
         plt.rc('text', usetex=True)
         plt.rc('font', family='serif')
         plt.title(self.title, fontsize=self.title_size)
@@ -168,5 +171,16 @@ class PlotParams(object):
     #         t_array = trace.t_array
     #         ax.plot(t_array, x_array[:, idx], 'b-', lw=1)
 
-        #plt.savefig(filepath+'.png', format='png', bbox_inches='tight')
-        #plt.savefig(filepath+'.pdf', bbox_inches='tight')
+
+#       fig = plt.gcf()
+#       plt.show()  # replaces current figure with a new blank
+#       figure and savefig saves a blank figure.
+#       Hence. should be using fig.savefig(), but for some reasons, it
+#       ignores bbox_inches='tight'. Need to investigate further!
+        ans = raw_input('save images?(no?): ')
+        if ans.lower() != 'no':
+            print('saving png...')
+            plt.savefig(self.filepath+'.png', bbox_inches='tight')
+            print('saving pdf...')
+            plt.savefig(self.filepath+'.pdf', bbox_inches='tight')
+        plt.show()
