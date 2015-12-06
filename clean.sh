@@ -14,3 +14,4 @@ rm klee-last
 echo 'removing tstc files too...'
 # remove compiled tst files with extension: tstc
 find ./|grep --color=never '\.tstc$'|xargs rm
+find ./|grep --color=never '\.pyc$'|xargs rm

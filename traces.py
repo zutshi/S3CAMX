@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import numpy as np
+from scipy import io
 
 ## commented off because matplotlib is not installed for python installation
 ## used with matlab
@@ -93,6 +94,16 @@ class Trace(object):
     # plt.plot(t_array, ref_signal, drawstyle='steps-post')
     # plt.autoscale()
         plt.show()
+
+    def dump_matlab(self):
+        data = {'T': self.t_array,
+                'X': self.x_array,
+                'S': self.s_array,
+                'U': self.u_array,
+                'CI': self.ci,
+                'PI': self.pi}
+        io.savemat('mat_file.mat', data, appendmat=False, format='5',
+                   do_compression=False, oned_as='column')
 
 
     def __repr__(self):
