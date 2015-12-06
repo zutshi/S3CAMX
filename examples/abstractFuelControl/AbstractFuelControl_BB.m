@@ -35,7 +35,7 @@ if FR == 1
     catch
         disp('An error occurred while simulating...ignoring');
     end
-    YY = get_states_FR();
+    [YY, vio] = get_states_FR();
 else
     mySimOut = sim(model_name, 'StartTime', num2str(t),'StopTime', num2str(T), 'SaveFinalState', 'on', 'FinalStateName',[model_name 'SimState'], 'SaveCompleteFinalSimState', 'on', 'SaveFormat', 'dataset', 'SimulationMode', 'accelerator');
     YY = get_states(mySimOut);
@@ -64,13 +64,19 @@ YY(15) = T;
 
 YY = YY';
 tt = T;
-prop_violated_flag = 0;
+%prop_violated_flag = 0;
 D = D;
 P = P;
 
-if YY(12) >= 0.02
-    prop_violated_flag = 1;
-end
+%display('YY')
+%YY
+
+%if YY(12) >= 0.02
+%    prop_violated_flag = 1;
+%end
+
+prop_violated_flag = vio;
+
 end
 
 function [state_path, state_name, state_abbrv] = state_id_map(state_id)
@@ -182,7 +188,7 @@ end
 
 end
 
-function Y = get_states_FR()
+function [Y, vio] = get_states_FR()
 bws = 'base';
 %% plant states
 xf = evalin(bws, [model_name 'SimState']);
@@ -245,7 +251,20 @@ tmp = evalin(bws, 'throttle_flow_wk'); Y(10) = tmp.Data;
 tmp = evalin(bws, 'airbyfuel_meas_wk'); Y(11) = tmp.Data;
 % get the last data point of verification measurement, as all dat apoitns
 % are stored
-tmp = evalin(bws, 'verification_measurement_wk'); Y(12) = tmp.Data(end);
+tmp = evalin(bws, 'verification_measurement_wk');
+vm_wk = tmp.Data;
+
+%figure(1)
+%hold on
+%plot(tmp.Time, vm_wk)
+
+Y(12) = vm_wk(end);
+vio = any(vm_wk >= 0.02);
+
+%display('vmwk')
+%vm_wk
+%display('vmwk')
+
 Y(13) = 0; % set it in the main func
 % AF_tol
 Y(14) = 0; % set it in the main func
@@ -349,7 +368,7 @@ disp('done...')
 if FR == 1
     %TODO: It should not know about delta!
     % But its needed to support FR. A better idea?
-    delta = 4.0;
+    delta = 5.0;
     
     %'StartTime', num2str(t);
     %'StopTime', num2str(T);
@@ -381,7 +400,7 @@ if FR == 1
 end
 % TODO: fix simtime using pvt data!
 % simulation time (sec)
-simTime = 12.0;
+simTime = 15.0;
 assignin('base', 'simTime', simTime);
 % engine speed (rpm)
 %en_speed = 1000;
