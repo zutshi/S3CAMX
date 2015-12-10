@@ -319,6 +319,11 @@ def falsify(sys, prop, opts, current_abs, sampler):
     print('Failed: MAX iterations {} exceeded.format(MAX_ITER)', file=SYS.stderr)
 
 
+def dump_trace(trace_list):
+    print('dumping trace[0]')
+    trace_list[0].dump_matlab()
+
+
 def run_secam(sys, prop, opts):
     MODE = opts.MODE
     plot = opts.plot
@@ -327,8 +332,8 @@ def run_secam(sys, prop, opts):
         start_time = time.time()
         trace_list = simulate(sys, prop, opts)
         if plot:
-            print('dumping trace[0]')
-            trace_list[0].dump_matlab()
+            if opts.dump_trace:
+                dump_trace(trace_list)
             traces.plot_trace_list(trace_list, plt)
     elif MODE == 'falsify':
         # ignore time taken to create_abstraction: mainly to ignore parsing
@@ -372,6 +377,9 @@ def main():
 
     parser.add_argument('-p', '--plot', action='store_true',
                         help='enable plotting')
+
+    parser.add_argument('--dump', action='store_true',
+                        help='dump trace in mat file')
 
     parser.add_argument('--seed', type=int, metavar='seed_value',
                         help='seed for the random generator')
@@ -437,6 +445,7 @@ def main():
     else:
         raise err.Fatal('no options passed. Check usage.')
     opts.plot = args.plot
+    opts.dump_trace = args.dump
 
     sys, prop = loadsystem.parse(filepath)
     # TAG:MSH

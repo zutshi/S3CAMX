@@ -1,6 +1,6 @@
 inf = float('inf')
 # sampling time
-delta_t = 50.0
+delta_t = 1000.0
 
 # pvt simulator state required for initializing the simulator
 plant_pvt_init_data = None
@@ -17,14 +17,13 @@ T = 8000.0
 
 # violatins have been found for this
 #initial_set = [[2730.12176, 2107.72809, 6280.01960, -6.79622541, -1.75317772, 3.88977028], [2730.12176, 2107.72809, 6280.01960, -6.79622541, -1.75317772, 3.88977028]]
-#
-# smaller set
-#initial_set = [[2700, 2100, 6200, -7.0, -2.0, 3.5],
-#               [2800, 2200, 6300, -6.5, -1.7, 4.0]]
+initial_set = [[2700, 2100, 6200, -7.0, -2.0, 3.5],
+               [2800, 2200, 6300, -6.5, -1.7, 4.0]]
 
 # Cosmos 2251
-initial_set = [[2689.06, 2726.88, 6049.935, -6.53545, -1.16479, 3.40109],
-               [2689.06, 2726.88, 6049.935, -6.53545, -1.16479, 3.40109]]
+#initial_set = [[2689.06, 2726.88, 6049.935, -6.53545, -1.16479, 3.40109],
+#               [2689.06, 2726.88, 6049.935, -6.53545, -1.16479, 3.40109]]
+
 # Unsafe Boxed Region
 error_set = [[1250,1350, 6500,-inf,-inf,-inf], [1750, 1850,7000,inf,inf,inf]]
 
@@ -69,9 +68,9 @@ initial_pvt_states = []
 ################
 ## Plant ##
 # is the plant simulator implemented in Python(python) or Matlab(matlab)?
-plant_description = 'matlab'
+plant_description = 'python'
 # relative/absolute path for the simulator file containing sim()
-plant_path = 'satellite_MEE.m'
+plant_path = 'satellite_MEE.py'
 
 ################
 # DO NOT MODIFY
