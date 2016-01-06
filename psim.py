@@ -136,15 +136,256 @@ class Simulator(object):
         raise NotImplementedError
 
 
-def matlab_communicator_factory(communicator_type):
-    if communicator_type == 'pymatlab':
-        logger.info('requested pymatlab communicator object')
-        return PyMatlab()
-    elif communicator_type == 'matlab_engine':
-        logger.info('requested matlab engine communicator object')
-        return MatlabEngine()
-    else:
-        raise err.Fatal('Internal Error')
+# imp.load_source(name, pathname[, file])
+# Load and initialize a module implemented as a Python source file and return
+# its module object. If the module was already initialized, it will be
+# initialized again. The name argument is used to create or access a module
+# object. The pathname argument points to the source file. The file argument is
+# the source file, open for reading as text, from the beginning. It must
+# currently be a real file object, not a user-defined class emulating a file.
+# Note that if a properly matching byte-compiled file (with suffix .pyc or
+# .pyo) exists, it will be used instead of parsing the given source file.
+class NativeSim(Simulator):
+
+    def __init__(
+            self,
+            module_name,
+            module_path,
+            plt,
+            plant_pvt_init_data,
+            parallel,
+            ):
+        super(NativeSim, self).__init__()
+
+        sim_module = imp.load_source(module_name, module_path)
+        self.sim_obj = sim_module.SIM(plt, plant_pvt_init_data)
+        self.sim = self.sim_obj.sim
+
+    def simulate(
+            self,
+            sim_states,
+            T,
+            property_checker=None,
+            property_violated_flag=None,
+            ):
+        t_array = np.empty((sim_states.n, 1))
+
+        num_dim = sim_states.cont_states.shape[1]
+        X_array = np.empty((sim_states.n, num_dim))
+
+        num_dim = sim_states.discrete_states.shape[1]
+        D_array = np.empty((sim_states.n, num_dim))
+
+        num_dim = sim_states.pvt_states.shape[1]
+        P_array = np.empty((sim_states.n, num_dim))
+
+        i = 0
+
+        for state in sim_states.iterable():
+            dummy_val = 0.0
+            (t, X, D, pvt) = self.sim(
+                (state.t, state.t + T),
+                state.x,
+                state.d,
+                state.pvt,
+                state.u,
+                dummy_val,
+                property_checker,
+                property_violated_flag,
+                )
+            t_array[i, :] = t
+            X_array[i, :] = X
+            D_array[i, :] = D
+            P_array[i, :] = pvt
+            i += 1
+
+        return st.StateArray(
+            t=t_array,
+            x=X_array,
+            d=D_array,
+            pvt=P_array,
+            s=sim_states.controller_states,
+            u=sim_states.controller_outputs,
+            pi=sim_states.plant_extraneous_inputs,
+            ci=sim_states.controller_extraneous_inputs,
+            )
+
+    def check_property(self, trace):
+        pass
+
+    def simulate_entire_trajectories(self, sim_states, T):
+        raise NotImplementedError
+
+
+class SimulinkSim(Simulator):
+
+    pass
+
+
+# Matlab Engine for Pythion
+
+class MEngPy(Simulator):
+
+    def __init__(
+            self,
+            m_file_path,
+            benchmark_os_path,
+            parallel,
+            shared_engine=None #TAG:MSH
+            ):
+        self.parallel = parallel
+        import matlab.engine as matlab_engine
+        import matlab as matlab
+        # Don't seem to nee matlab.engine other than to start the matlab
+        # session.
+        # self.matlab_engine = matlab_engine
+        self.matlab = matlab
+
+        #TAG:MSH
+        if shared_engine is None:
+            print 'starting matlab...'
+            self.eng = matlab_engine.start_matlab()
+            print 'done'
+        else:
+            print 'attempting to connect to an existing matlab session'
+            self.eng = matlab_engine.connect_matlab(shared_engine)
+
+        self.m_file = m_file_path
+
+        m_file_name_split = self.m_file.split('.')
+        if m_file_name_split[1].strip() != 'm':
+            raise err.Fatal('internal error!')
+
+        self.m_fun_str = m_file_name_split[0].strip()
+
+        # self.sim_fun = self.eng.simulate_m_file(1)
+
+        # add paths
+        # comm.call_function([], 'addpath', [SQ + benchmark_os_path + SQ])
+
+        self.eng.addpath(benchmark_os_path)
+
+        #TAG:CLSS
+        # TODO: Remove this hack. Added for backwards compatibility
+        # detect if the simulator file is a function or a class
+        # source: http://blogs.mathworks.com/loren/2013/08/26/what-kind-of-matlab-file-is-this/
+        # classy = 8 if class else is 0 (function or a script)
+        classy = self.eng.exist(self.m_fun_str, 'class')
+        if classy == 0.0:
+            print 'maltab file is a function'
+            self.sim_is_class = False
+        elif classy == 8.0:
+            print 'maltab file is a class'
+            self.sim_is_class = True
+            self.sim_obj = self.eng.init_plant(self.m_fun_str)
+        else:
+            raise err.Fatal('''Supplied matlab simulator is neither a class or a function:
+                possible floating point error?. exist() returned: {}'''.format(classy))
+
+    # Assumptions
+    # For Each state a valid state is provided:
+    # else [inf, inf, inf, ... inf] is returned
+
+    def simulate(
+            self,
+            sim_states,
+            T,
+            property_checker=None,
+            property_violated_flag=None,
+            ):
+
+        #print '='*100
+        #print sim_states
+        #print '='*100
+
+        if property_checker is None:
+            property_check = 0
+        else:
+            property_check = 1
+
+        matlab = self.matlab
+
+        m_t = matlab.double(sim_states.t.tolist())
+        m_T = matlab.double([T])
+        m_c = matlab.double(sim_states.cont_states.tolist())
+        m_d = matlab.double(sim_states.discrete_states.tolist())
+        m_p = matlab.double(sim_states.pvt_states.tolist())
+        m_u = matlab.double(sim_states.controller_outputs.tolist())
+        #m_p = matlab.double([0.0] * sim_states.cont_states.shape[0])
+        #m_pc = matlab.double([property_check])
+        m_pc = property_check
+
+        #TAG:CLSS
+        if self.sim_is_class:
+            [T__, X__, D__, P__, pvf_] = self.eng.simulate_plant(
+                self.sim_obj,
+                m_t,
+                m_T,
+                m_c,
+                m_d,
+                m_p,
+                m_u,
+                m_p,
+                m_pc,
+                )
+        else:
+            [T__, X__, D__, P__, pvf_] = self.eng.simulate_plant_fun(
+                self.m_fun_str,
+                m_t,
+                m_T,
+                m_c,
+                m_d,
+                m_p,
+                m_u,
+                m_p,
+                m_pc,
+                )
+
+        T_ = np.array(T__)
+        X_ = np.array(X__)
+        D_ = np.array(D__)
+        P_ = np.array(P__)
+        #print T__, X__
+        #print T_, X_
+
+        pvf = pvf_
+
+        if property_checker is not None:
+            property_violated_flag[0] = bool(pvf)
+
+        # TODO: fix this weird matlab-numpy interfacing
+        # FIXED: is it correct though?
+        t_array = np.array(T_, ndmin=2)
+        x = np.array(X_, ndmin=2)
+        if D_.ndim <= 1:
+            d = np.array(D_, ndmin=2).T
+        else:
+            d = D_
+        if P_.ndim <= 1:
+            pvt = np.array(P_, ndmin=2).T
+        else:
+            pvt = P_
+        statearray = st.StateArray(
+            t=t_array,
+            x=x,
+            d=d,
+            pvt=pvt,
+            s=sim_states.controller_states,
+            u=sim_states.controller_outputs,
+            pi=sim_states.plant_extraneous_inputs,
+            ci=sim_states.controller_extraneous_inputs,
+            )
+        #print '='*100
+        #print statearray
+        #print '='*100
+        return statearray
+
+
+#####################################################################
+# ###################################################################
+# Code Cemtery
+# ###################################################################
+#####################################################################
 
 
 class MatlabCommunicator(object):
@@ -178,98 +419,21 @@ class MatlabCommunicator(object):
         raise NotImplementedError
 
 
-class PyMatlab(MatlabCommunicator):
-
-    # TODO: currently accepts only a single arguement!
-
-    @staticmethod
-    def get_matlab_command_str(command, arg):
-        single_quotes = '\''
-        if command == 'addpath':
-            s = 'addpath({0}{1}{0})'.format(single_quotes, arg)
-        elif command == '':
-            s = ''
-        else:
-            raise err.Fatal('Internal error!')
-        return s
-
-    @staticmethod
-    def get_fun_call_str(ret_val_str, fun_name, arg_str):
-        if ret_val_str:
-            return '[{}] = {}({});'.format(ret_val_str, fun_name, arg_str)
-        else:
-            return '{}({});'.format(fun_name, arg_str)
-
-    def __init__(self):
-        logger.info('instantiating matlab')
-        import pymatlab
-
-# self.session = pymatlab.session_factory('-nodisplay -nosplash')
-# self.session = pymatlab.session_factory('-nosplash -nodesktop -nodisplay')
-
-        self.session = pymatlab.session_factory()
-
-    def call_function(
-            self,
-            ret_val_list,
-            fun_name,
-            arg_list,
-            ):
-        arg_str = COMMA.join(arg_list)
-        ret_val_str = COMMA.join(ret_val_list)
-        fun_call_str = self.get_fun_call_str(ret_val_str, fun_name, arg_str)
-
-        # ##!!##logger.debug('created fun call: ' + fun_call_str)
-
-        self.exec_command(fun_call_str)
-
-    def call_function_retVal(
-            self,
-            ret_val_list,
-            fun_name,
-            arg_list,
-            ):
-        arg_composed_str = COMMA.join(arg_list)
-        ret_val_composed_str = COMMA.join(ret_val_list)
-        fun_call_str = self.get_fun_call_str(ret_val_composed_str, fun_name, arg_composed_str)
-
-        # ##!!##logger.debug('created fun call with retVal: ' + fun_call_str)
-
-        self.exec_command(fun_call_str)
-        return [self.get_value(ret_val_str) for ret_val_str in ret_val_list]
-
-    def put_value(self, var_name, var_val):
-
-        # ##!!##logger.debug('setting {} to {}'.format(var_name, var_val))
-
-        self.session.putvalue(var_name, var_val)
-
-        # cross check!
-        # ##!!##logger.debug('crosschecking by reading set value')
-
-        self.get_value(var_name)
-
-    def get_value(self, var_name):
-
-        # ##!!##logger.debug('getting ' + var_name)
-
-        var_val = self.session.getvalue(var_name)
-
-        # ##!!##logger.debug('read value: ' + str(var_val))
-
-        return var_val
-
-    def exec_command(self, cmd_str):
-
-        # ##!!##logger.debug('executing command: ' + cmd_str)
-
-        self.session.run(cmd_str)
-
-
 class MatlabEngine(MatlabCommunicator):
 
     def __init__(self):
         raise NotImplementedError
+
+
+def matlab_communicator_factory(communicator_type):
+    if communicator_type == 'pymatlab':
+        logger.info('requested pymatlab communicator object')
+        return PyMatlab()
+    elif communicator_type == 'matlab_engine':
+        logger.info('requested matlab engine communicator object')
+        return MatlabEngine()
+    else:
+        raise err.Fatal('Internal Error')
 
 
 class MatlabSim(Simulator):
@@ -516,91 +680,92 @@ class MatlabSim(Simulator):
         return list_of_trajs
 
 
-# imp.load_source(name, pathname[, file])
-# Load and initialize a module implemented as a Python source file and return
-# its module object. If the module was already initialized, it will be
-# initialized again. The name argument is used to create or access a module
-# object. The pathname argument points to the source file. The file argument is
-# the source file, open for reading as text, from the beginning. It must
-# currently be a real file object, not a user-defined class emulating a file.
-# Note that if a properly matching byte-compiled file (with suffix .pyc or
-# .pyo) exists, it will be used instead of parsing the given source file.
+class PyMatlab(MatlabCommunicator):
 
-class NativeSim(Simulator):
+    # TODO: currently accepts only a single arguement!
 
-    def __init__(
+    @staticmethod
+    def get_matlab_command_str(command, arg):
+        single_quotes = '\''
+        if command == 'addpath':
+            s = 'addpath({0}{1}{0})'.format(single_quotes, arg)
+        elif command == '':
+            s = ''
+        else:
+            raise err.Fatal('Internal error!')
+        return s
+
+    @staticmethod
+    def get_fun_call_str(ret_val_str, fun_name, arg_str):
+        if ret_val_str:
+            return '[{}] = {}({});'.format(ret_val_str, fun_name, arg_str)
+        else:
+            return '{}({});'.format(fun_name, arg_str)
+
+    def __init__(self):
+        logger.info('instantiating matlab')
+        import pymatlab
+
+# self.session = pymatlab.session_factory('-nodisplay -nosplash')
+# self.session = pymatlab.session_factory('-nosplash -nodesktop -nodisplay')
+
+        self.session = pymatlab.session_factory()
+
+    def call_function(
             self,
-            module_name,
-            module_path,
-            plt,
-            plant_pvt_init_data,
-            parallel,
+            ret_val_list,
+            fun_name,
+            arg_list,
             ):
-        super(NativeSim, self).__init__()
+        arg_str = COMMA.join(arg_list)
+        ret_val_str = COMMA.join(ret_val_list)
+        fun_call_str = self.get_fun_call_str(ret_val_str, fun_name, arg_str)
 
-        sim_module = imp.load_source(module_name, module_path)
-        self.sim_obj = sim_module.SIM(plt, plant_pvt_init_data)
-        self.sim = self.sim_obj.sim
+        # ##!!##logger.debug('created fun call: ' + fun_call_str)
 
-    def simulate(
+        self.exec_command(fun_call_str)
+
+    def call_function_retVal(
             self,
-            sim_states,
-            T,
-            property_checker=None,
-            property_violated_flag=None,
+            ret_val_list,
+            fun_name,
+            arg_list,
             ):
-        t_array = np.empty((sim_states.n, 1))
+        arg_composed_str = COMMA.join(arg_list)
+        ret_val_composed_str = COMMA.join(ret_val_list)
+        fun_call_str = self.get_fun_call_str(ret_val_composed_str, fun_name, arg_composed_str)
 
-        num_dim = sim_states.cont_states.shape[1]
-        X_array = np.empty((sim_states.n, num_dim))
+        # ##!!##logger.debug('created fun call with retVal: ' + fun_call_str)
 
-        num_dim = sim_states.discrete_states.shape[1]
-        D_array = np.empty((sim_states.n, num_dim))
+        self.exec_command(fun_call_str)
+        return [self.get_value(ret_val_str) for ret_val_str in ret_val_list]
 
-        num_dim = sim_states.pvt_states.shape[1]
-        P_array = np.empty((sim_states.n, num_dim))
+    def put_value(self, var_name, var_val):
 
-        i = 0
+        # ##!!##logger.debug('setting {} to {}'.format(var_name, var_val))
 
-        for state in sim_states.iterable():
-            dummy_val = 0.0
-            (t, X, D, pvt) = self.sim(
-                (state.t, state.t + T),
-                state.x,
-                state.d,
-                state.pvt,
-                state.u,
-                dummy_val,
-                property_checker,
-                property_violated_flag,
-                )
-            t_array[i, :] = t
-            X_array[i, :] = X
-            D_array[i, :] = D
-            P_array[i, :] = pvt
-            i += 1
+        self.session.putvalue(var_name, var_val)
 
-        return st.StateArray(
-            t=t_array,
-            x=X_array,
-            d=D_array,
-            pvt=P_array,
-            s=sim_states.controller_states,
-            u=sim_states.controller_outputs,
-            pi=sim_states.plant_extraneous_inputs,
-            ci=sim_states.controller_extraneous_inputs,
-            )
+        # cross check!
+        # ##!!##logger.debug('crosschecking by reading set value')
 
-    def check_property(self, trace):
-        pass
+        self.get_value(var_name)
 
-    def simulate_entire_trajectories(self, sim_states, T):
-        raise NotImplementedError
+    def get_value(self, var_name):
 
+        # ##!!##logger.debug('getting ' + var_name)
 
-class SimulinkSim(Simulator):
+        var_val = self.session.getvalue(var_name)
 
-    pass
+        # ##!!##logger.debug('read value: ' + str(var_val))
+
+        return var_val
+
+    def exec_command(self, cmd_str):
+
+        # ##!!##logger.debug('executing command: ' + cmd_str)
+
+        self.session.run(cmd_str)
 
 
 class TestSim(Simulator):
@@ -724,162 +889,3 @@ class TestSim(Simulator):
                                            dummy_d_array_complete,
                                            dummy_p_array_complete)
         return concrete_state_arr
-
-
-# Matlab Engine for Pythion
-
-class MEngPy(Simulator):
-
-    def __init__(
-            self,
-            m_file_path,
-            benchmark_os_path,
-            parallel,
-            shared_engine=None #TAG:MSH
-            ):
-        self.parallel = parallel
-        import matlab.engine as matlab_engine
-        import matlab as matlab
-        # Don't seem to nee matlab.engine other than to start the matlab
-        # session.
-        # self.matlab_engine = matlab_engine
-        self.matlab = matlab
-
-        #TAG:MSH
-        if shared_engine is None:
-            print 'starting matlab...'
-            self.eng = matlab_engine.start_matlab()
-            print 'done'
-        else:
-            print 'attempting to connect to an existing matlab session'
-            self.eng = matlab_engine.connect_matlab(shared_engine)
-
-        self.m_file = m_file_path
-
-        m_file_name_split = self.m_file.split('.')
-        if m_file_name_split[1].strip() != 'm':
-            raise err.Fatal('internal error!')
-
-        self.m_fun_str = m_file_name_split[0].strip()
-
-        # self.sim_fun = self.eng.simulate_m_file(1)
-
-        # add paths
-        # comm.call_function([], 'addpath', [SQ + benchmark_os_path + SQ])
-
-        self.eng.addpath(benchmark_os_path)
-
-        #TAG:CLSS
-        # TODO: Remove this hack. Added for backwards compatibility
-        # detect if the simulator file is a function or a class
-        # source: http://blogs.mathworks.com/loren/2013/08/26/what-kind-of-matlab-file-is-this/
-        # classy = 8 if class else is 0 (function or a script)
-        classy = self.eng.exist(self.m_fun_str, 'class')
-        if classy == 0.0:
-            print 'maltab file is a function'
-            self.sim_is_class = False
-        elif classy == 8.0:
-            print 'maltab file is a class'
-            self.sim_is_class = True
-            self.sim_obj = self.eng.init_plant(self.m_fun_str)
-        else:
-            raise err.Fatal('''Supplied matlab simulator is neither a class or a function:
-                possible floating point error?. exist() returned: {}'''.format(classy))
-
-    # Assumptions
-    # For Each state a valid state is provided:
-    # else [inf, inf, inf, ... inf] is returned
-
-    def simulate(
-            self,
-            sim_states,
-            T,
-            property_checker=None,
-            property_violated_flag=None,
-            ):
-
-        #print '='*100
-        #print sim_states
-        #print '='*100
-
-        if property_checker is None:
-            property_check = 0
-        else:
-            property_check = 1
-
-        matlab = self.matlab
-
-        m_t = matlab.double(sim_states.t.tolist())
-        m_T = matlab.double([T])
-        m_c = matlab.double(sim_states.cont_states.tolist())
-        m_d = matlab.double(sim_states.discrete_states.tolist())
-        m_p = matlab.double(sim_states.pvt_states.tolist())
-        m_u = matlab.double(sim_states.controller_outputs.tolist())
-        #m_p = matlab.double([0.0] * sim_states.cont_states.shape[0])
-        #m_pc = matlab.double([property_check])
-        m_pc = property_check
-
-        #TAG:CLSS
-        if self.sim_is_class:
-            [T__, X__, D__, P__, pvf_] = self.eng.simulate_plant(
-                self.sim_obj,
-                m_t,
-                m_T,
-                m_c,
-                m_d,
-                m_p,
-                m_u,
-                m_p,
-                m_pc,
-                )
-        else:
-            [T__, X__, D__, P__, pvf_] = self.eng.simulate_plant_fun(
-                self.m_fun_str,
-                m_t,
-                m_T,
-                m_c,
-                m_d,
-                m_p,
-                m_u,
-                m_p,
-                m_pc,
-                )
-
-        T_ = np.array(T__)
-        X_ = np.array(X__)
-        D_ = np.array(D__)
-        P_ = np.array(P__)
-        #print T__, X__
-        #print T_, X_
-
-        pvf = pvf_
-
-        if property_checker is not None:
-            property_violated_flag[0] = bool(pvf)
-
-        # TODO: fix this weird matlab-numpy interfacing
-        # FIXED: is it correct though?
-        t_array = np.array(T_, ndmin=2)
-        x = np.array(X_, ndmin=2)
-        if D_.ndim <= 1:
-            d = np.array(D_, ndmin=2).T
-        else:
-            d = D_
-        if P_.ndim <= 1:
-            pvt = np.array(P_, ndmin=2).T
-        else:
-            pvt = P_
-        statearray = st.StateArray(
-            t=t_array,
-            x=x,
-            d=d,
-            pvt=pvt,
-            s=sim_states.controller_states,
-            u=sim_states.controller_outputs,
-            pi=sim_states.plant_extraneous_inputs,
-            ci=sim_states.controller_extraneous_inputs,
-            )
-        #print '='*100
-        #print statearray
-        #print '='*100
-        return statearray

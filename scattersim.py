@@ -649,8 +649,7 @@ def random_test(
             print U.decorate('concretized!')
             for (idx, xf) in enumerate(rchd_concrete_state_array.iterable()):
                 if xf.x in system_params.final_cons:
-                    print x0_array[idx, :], d0_array[idx, :], '->'
-                    print '\t', xf.x, xf.d
+                    print x0_array[idx, :], d0_array[idx, :], '->', '\t', xf.x, xf.d
                     if A.num_dims.ci != 0:
                         print 'ci:', ci_array[idx]
             res = True
