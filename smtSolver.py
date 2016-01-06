@@ -120,6 +120,9 @@ class Z(Solver):
                       + map((lambda x, c: x >= c), x, ic.l)
         else:
             raise err.Fatal('unhandled type: {}'.format(type(x)))
+#         # Loop Sentinel
+#         if cons_list == []:
+#             cons_list = True
         return z3.And(cons_list)
 
     # TODO: fix the function call!

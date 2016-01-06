@@ -31,6 +31,9 @@ import example_list as egl
 import plothelper as ph
 import plot_hack
 
+#precision=None, threshold=None, edgeitems=None, linewidth=None, suppress=True, nanstr=None, infstr=None, formatter=Nonu)
+np.set_printoptions(suppress=True)
+
 ###############################
 ## terminal color printing compatibility for windows
 ## https://pypi.python.org/pypi/colorama/0.2.4
@@ -316,6 +319,11 @@ def falsify(sys, prop, opts, current_abs, sampler):
     print('Failed: MAX iterations {} exceeded.format(MAX_ITER)', file=SYS.stderr)
 
 
+def dump_trace(trace_list):
+    print('dumping trace[0]')
+    trace_list[0].dump_matlab()
+
+
 def run_secam(sys, prop, opts):
     MODE = opts.MODE
     plot = opts.plot
@@ -324,6 +332,8 @@ def run_secam(sys, prop, opts):
         start_time = time.time()
         trace_list = simulate(sys, prop, opts)
         if plot:
+            if opts.dump_trace:
+                dump_trace(trace_list)
             traces.plot_trace_list(trace_list, plt)
     elif MODE == 'falsify':
         # ignore time taken to create_abstraction: mainly to ignore parsing
@@ -367,6 +377,9 @@ def main():
 
     parser.add_argument('-p', '--plot', action='store_true',
                         help='enable plotting')
+
+    parser.add_argument('--dump', action='store_true',
+                        help='dump trace in mat file')
 
     parser.add_argument('--seed', type=int, metavar='seed_value',
                         help='seed for the random generator')
@@ -432,6 +445,7 @@ def main():
     else:
         raise err.Fatal('no options passed. Check usage.')
     opts.plot = args.plot
+    opts.dump_trace = args.dump
 
     sys, prop = loadsystem.parse(filepath)
     # TAG:MSH
