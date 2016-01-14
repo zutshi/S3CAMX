@@ -30,11 +30,7 @@ Required for running symbolic execution of the controller (**included** in this 
 Needed to reproduce comparison results (**included** in the distribution)
 
 ##Installing S3CAMX
-The distribution package was tested on 
-- Ubuntu 12.04 and 14.04
-- Python 2.7.9
-
-but should also work on other Linux distributions with Python 2.7.x.
+The distribution package was tested on Ubuntu 12.04 and 14.04 and should work on Python 2.7.x (Python 2.7.3 and higher).
 
 We provide two packages of S3CAMX
 
@@ -66,56 +62,68 @@ before issuing <br>
 
 ===================================================
 
+- Update Repository<br>
 `sudo apt-get update`
+
+- Get basic dependencies<br>
+`sudo apt-get install build-essential python-dev`
+
+- [pip](https://pip.pypa.io/en/stable/installing/)<br>
 `sudo python ./get-pip.py`
 
-	- [pyparsing](https://pypi.python.org/pypi/pyparsing)<br>
+- [pyparsing](https://pypi.python.org/pypi/pyparsing)<br>
 `sudo -H pip install pyparsing`
 
-	- [numpy](http://www.numpy.org/)<br>
-	    - install dependencies (lapack, blas, gfortran): `sudo apt-get install libatlas-base-dev gfortran`
-	    - install numpy `sudo -H pip install numpy`
-`sudo apt-get build-dep python-numpy` [required?]
-`sudo apt-get install build-essential python-dev`
-`sudo -H pip install numpy --upgrade` [numpy-1.10.4]
+- [numpy 1.10.4](http://www.numpy.org/)<br>
+    - Install or upgrade numpy. <br>
+     `sudo -H pip install numpy --upgrade`
+    - Install dependencies: If the above step gives an error due to missing dependencies, then either the user can manually resolve them or use `sudo apt-get build-dep python-numpy` to install an exhaustive list.
 
-- [scipy](http://www.scipy.org/)<br>
-`sudo apt-get build-dep python-scipy` [required?]
-`sudo apt-get install gfortran libatlas-base-dev`
-`sudo -H pip install scipy --upgrade` [scipy-0.16.1]
+- [scipy 0.16.1](http://www.scipy.org/)<br>
+    - Install or upgrade scipy. <br>
+     `sudo -H pip install scipy --upgrade`
+    - If the above step gives an error due to missing dependencies, (usually blas, and gfortran) they can be installed using `sudo apt-get install libatlas-base-dev gfortran`. If this does not work then an exhaustive list can be installed using `sudo apt-get build-dep python-scipy`
 
-	- [blessings](https://pypi.python.org/pypi/blessings/)<br>
+- [blessings](https://pypi.python.org/pypi/blessings/)<br>
 `sudo -H pip install blessings
-	- [networkx](https://networkx.github.io/)<br>
+
+- [networkx](https://networkx.github.io/)<br>
 `sudo -H pip install networkx
 
-	- [matplotlib](http://matplotlib.org/)<br>
+- [matplotlib 1.5.1](http://matplotlib.org/)<br>
 	    - try to automatically resolve dependencies: 
 `sudo apt-get build-dep python-matplotlib` [required? ]
 `sudo apt-get install libpng-dev libfreetype6-dev`
-`sudo -H pip install matplotlib --upgrade` [matplotlib-1.5.1]
+`sudo -H pip install matplotlib --upgrade` [matplotlib]
 
-	- [tqdm](https://pypi.python.org/pypi/tqdm)<br>
+- [tqdm](https://pypi.python.org/pypi/tqdm)<br>
 `sudo -H pip install tqdm`
-	- [sh](https://pypi.python.org/pypi/sh)<br>
+
+- [sh](https://pypi.python.org/pypi/sh)<br>
 `sudo -H pip install sh`
 
 sudo apt-get install git
 
 
+## Installing MATLAB
 
-- Matlab R2015b or higher
+- MATLAB R2015b or higher. <br>
+The below toolboxes may be required:
+    - Simulink: required for running example **AFC**
+    - Optimization toolbox: required for running S-Taliro for comparison
+
 > **Note:**
 >  The version R2015b is required and earlier versions will not work due to missing features.
 
-Requires the below toolboxes:
-	- Simulink
+S3CAMX uses both MATLAB -> Python and Python -> MATLAB interface for running S-Taliro on systems based on Python simulators and for analyzing systems based on MATLAB simulator respectively. These two interfaces are provided by MATLAB and can be set up as follows.
 
+### Setting up MATLAB -> Python
 
 Then in Matlab, specify the path of python: e.g. pyversion <path>/bin/python
 
 ~~sudo apt-get install python-pip python-dev build-essential~~
 
+### Setting up Python -> MATLAB
 
 ###matlabengineforpython [Python -> Matlab]
 Refer: [Install MATLAB Engine for Python](https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html)
