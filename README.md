@@ -61,24 +61,48 @@ before issuing <br>
 `python get-pip.py`
 
 - Python Packages: Install the packages along with their dependencies, using the commands below (preferably in the same order).
-	- [scipy](http://www.scipy.org/)<br>
-	`sudo -H pip install scipy`
+
+
+
+===================================================
+
+`sudo apt-get update`
+`sudo python ./get-pip.py`
+
+	- [pyparsing](https://pypi.python.org/pypi/pyparsing)<br>
+`sudo -H pip install pyparsing`
+
 	- [numpy](http://www.numpy.org/)<br>
 	    - install dependencies (lapack, blas, gfortran): `sudo apt-get install libatlas-base-dev gfortran`
 	    - install numpy `sudo -H pip install numpy`
+`sudo apt-get build-dep python-numpy` [required?]
+`sudo apt-get install build-essential python-dev`
+`sudo -H pip install numpy --upgrade` [numpy-1.10.4]
+
+- [scipy](http://www.scipy.org/)<br>
+`sudo apt-get build-dep python-scipy` [required?]
+`sudo apt-get install gfortran libatlas-base-dev`
+`sudo -H pip install scipy --upgrade` [scipy-0.16.1]
+
 	- [blessings](https://pypi.python.org/pypi/blessings/)<br>
-	`sudo -H pip install blessings`
+`sudo -H pip install blessings
 	- [networkx](https://networkx.github.io/)<br>
-	`sudo -H pip install networkx`
+`sudo -H pip install networkx
+
 	- [matplotlib](http://matplotlib.org/)<br>
-	    - try to automatically resolve dependencies: `sudo apt-get install python-matplotlib`
-	    - install matplotlib `sudo -H pip install matplotlib`
+	    - try to automatically resolve dependencies: 
+`sudo apt-get build-dep python-matplotlib` [required? ]
+`sudo apt-get install libpng-dev libfreetype6-dev`
+`sudo -H pip install matplotlib --upgrade` [matplotlib-1.5.1]
+
 	- [tqdm](https://pypi.python.org/pypi/tqdm)<br>
-	`sudo -H pip install tqdm`
-	- [pyparsing](https://pypi.python.org/pypi/pyparsing)<br>
-	`sudo -H pip install pyparsing`
+`sudo -H pip install tqdm`
 	- [sh](https://pypi.python.org/pypi/sh)<br>
-	`sudo -H pip install sh`
+`sudo -H pip install sh`
+
+sudo apt-get install git
+
+
 
 - Matlab R2015b or higher
 > **Note:**
