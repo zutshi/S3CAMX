@@ -140,6 +140,9 @@ Install Z3, S-Taliro and Pathcrawler using their respective instructions.
 
 - To configure paths, please modify `set_path.sh` and update the paths for Z3's Python bindingd and py2z3.
 
+Modify staliro_add_path.m
+
+
 - Start and share minimal Matlab session (optional):
 	- Open a terminal and type
 	`matlab& -nojvm -nodisplay -nosplash`
