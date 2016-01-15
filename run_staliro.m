@@ -234,8 +234,8 @@ function init()
 % addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/ha_robust_tester/')
 % addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Distances/')
 % addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/auxiliary/')
-addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/')
-setup_public
+%addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/')
+staliro_add_path
 end
 
 function poly = cubeToPoly(cube)
