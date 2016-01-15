@@ -29,8 +29,8 @@ Required for running symbolic execution of the controller (**included** in this 
 - [S-Taliro 1.6](https://sites.google.com/a/asu.edu/s-taliro/s-taliro):
 Needed to reproduce comparison results (**included** in the distribution)
 
-##Installing S3CAMX
-The distribution package was tested on Ubuntu 12.04 and 14.04 and should work on Python 2.7.x (Python 2.7.3 and higher).
+##Installation
+The distribution package was tested on Ubuntu 12.04 and 14.04 and should work on Python 2.7.x (**Python 2.7.3 and higher**).
 
 We provide two packages of S3CAMX
 
@@ -42,9 +42,13 @@ We provide two packages of S3CAMX
 Package A is a pre-compiled distribution and does not require the installation of Python or its packages including Z3. However, Matlab + Simulink and S-Taliro still need to be installed. It is recommended that the user tries to run this before moving on to Package B. The package has been tested with a fresh install of Ubuntu ?, but a library mismatch can cause unexpected behavior, in which case a fallback to Package B is advised.
 
 ###Installing from Package B
-- Install Python 2.7.x
-The Python build must be configured with the option --enable-shared.
-This is not the case with the default Python installation found in both Ubuntu 12.04 and 14.04 and hence a different local installation is required. This is needed to interface Matlab with Python [Matlab -> Python], which is used to generate test results by S-Taliro on systems with simulators in Python.
+This package contains only sources and requires the user to compile and obtain the necessary dependencies.
+
+
+###Installing Python and Required Packages
+1. Install [Python 2.7.x](https://www.python.org/downloads/)<br>
+> **Note:** The Python build must be configured with the option --enable-shared.
+This is not the case with the default Python installation found in both Ubuntu 12.04 and hence a different local installation is required. This is only needed to interface Matlab with Python [Matlab -> Python], which is used to generate test results by S-Taliro on systems with simulators in Python.
 For more details, refer to: [--enable-shared](https://www.mathworks.com/help/matlab/matlab_external/undefined-variable-py-or-function-py-command.html#buialof-65)<br><br>
 e.g. if using [pyenv](https://github.com/yyuu/pyenv), then CONFIGURE\_OPTS must be set as below
 <br>
@@ -52,23 +56,14 @@ e.g. if using [pyenv](https://github.com/yyuu/pyenv), then CONFIGURE\_OPTS must 
 before issuing <br>
 `pyenv install 2.7.x`
 
-- Install [pip](https://bootstrap.pypa.io/get-pip.py) using get-pip.py (**included**)
-<br>
-`python get-pip.py`
-
-- Python Packages: Install the packages along with their dependencies, using the commands below (preferably in the same order).
-
-
-
-===================================================
-
 - Update Repository<br>
 `sudo apt-get update`
 
-- Get basic dependencies<br>
+- Install basic dependencies<br>
 `sudo apt-get install build-essential python-dev`
 
 - [pip](https://pip.pypa.io/en/stable/installing/)<br>
+Download [get-pip.py](https://bootstrap.pypa.io/get-pip.py) and install using <br>
 `sudo python ./get-pip.py`
 
 - [pyparsing](https://pypi.python.org/pypi/pyparsing)<br>
@@ -91,10 +86,12 @@ before issuing <br>
 `sudo -H pip install networkx
 
 - [matplotlib 1.5.1](http://matplotlib.org/)<br>
-	    - try to automatically resolve dependencies: 
-`sudo apt-get build-dep python-matplotlib` [required? ]
-`sudo apt-get install libpng-dev libfreetype6-dev`
-`sudo -H pip install matplotlib --upgrade` [matplotlib]
+    - Install or upgrade matplotlib <br>
+`sudo -H pip install matplotlib --upgrade`
+    - In the case of unresolved dependencies try to install the commonly missing packages: libfreetpy and libpng <br>
+`sudo apt-get install libpng-dev libfreetype6-dev` <br>
+Else, use the below for an exhaustive resolution <br>
+`sudo apt-get build-dep python-matplotlib`
 
 - [tqdm](https://pypi.python.org/pypi/tqdm)<br>
 `sudo -H pip install tqdm`
@@ -102,6 +99,7 @@ before issuing <br>
 - [sh](https://pypi.python.org/pypi/sh)<br>
 `sudo -H pip install sh`
 
+- Git
 sudo apt-get install git
 
 
@@ -119,17 +117,22 @@ S3CAMX uses both MATLAB -> Python and Python -> MATLAB interface for running S-T
 
 ### Setting up MATLAB -> Python
 
-Then in Matlab, specify the path of python: e.g. pyversion <path>/bin/python
+References:
 
-~~sudo apt-get install python-pip python-dev build-essential~~
+- [Getting Started with Python](http://www.mathworks.com/help/matlab/getting-started_buik_wp-3.html)
+- [Common Issues](http://www.mathworks.com/help/matlab/matlab_external/undefined-variable-py-or-function-py-command.html)
 
 ### Setting up Python -> MATLAB
 
-###matlabengineforpython [Python -> Matlab]
-Refer: [Install MATLAB Engine for Python](https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html)
-- matlab
-- matlab/engine
+Reference: [MATLAB Engine for Python](https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html)
 
+
+## Obtain the Sources
+
+- py2z3<br>
+`git clone https://github.com/zutshi/py2z3.git`
+- S3CAMX<br>
+`git clone https://github.com/zutshi/S3CAMX.git`
 
 ## RUNNING S3CAMX
 
