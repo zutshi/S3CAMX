@@ -2,8 +2,8 @@
 #!/usr/bin/env bash
 set -o verbose
 
-soname=toy_model_10u_controller.so
-SOURCE=toy_model_10u_controller.c
+soname=mrs_controller.so
+SOURCE=mrs_controller.c
 
 # gcc -c -Wall ./$SOURCE
 # Create SO

@@ -69,11 +69,11 @@ initial_pvt_states = []
 # is the plant simulator implemented in Python(python) or Matlab(matlab)?
 plant_description = 'python' 
 # relative/absolute path for the simulator file containing sim()
-plant_path = 'toy_model_10u_plant.py' 
+plant_path = 'mrs_plant.py' 
 
 ## Controller ##
 # relative/absolute path for the controller .so
-controller_path = 'toy_model_10u_controller.so'
+controller_path = 'mrs_controller.so'
 # relative path for the directory containing smt2 files for each path
 controller_path_dir_path = './paths'
 ###############
