@@ -39,7 +39,7 @@ We provide two packages of S3CAMX
 
 ###Installing from Package A
 
-Package A is a pre-compiled distribution and does not require the installation of Python or its packages including Z3. However, Matlab + Simulink and S-Taliro still need to be installed. It is recommended that the user tries to run this before moving on to Package B. The package has been tested with a fresh install of Ubuntu 14.04, but a library mismatch can cause unexpected behavior, in which case a fallback to Package B is advised. In case package A is being used, skip to [Installing MATLAB](#installing-matlab)
+Package A is a pre-compiled distribution and does not require the installation of Python or its packages including Z3. However, Matlab + Simulink and S-Taliro still need to be installed. It is recommended that the user tries to run this before moving on to Package B. The package has been tested with a fresh install of Ubuntu 14.04, but a library mismatch can cause unexpected behavior, in which case a fallback to Package B is advised. In case package A is being used, skip to [Installing MATLAB](#installing-matlab).
 
 ###Installing from Package B
 This package contains only sources and requires the user to compile and obtain the necessary dependencies.
@@ -131,25 +131,38 @@ Install Z3, S-Taliro and Pathcrawler using their respective instructions.
 
 ## Obtaining the Sources
 
+Get py2z3 and S3CAMX (**branch:** `conf_pub`).
+
 - py2z3<br>
 `git clone https://github.com/zutshi/py2z3.git`
 - S3CAMX<br>
-`git clone https://github.com/zutshi/S3CAMX.git`
+`git clone https://github.com/zutshi/S3CAMX.git` <br>
+`git checkout conf_pub`
+
+## Pathcrawler
+
+### Pathcrawler Installation and Setup
+Please refer to the provided documentation.
+
+### Running Pathcrawler
+Each system in the Pathcrawler directory contains a script `run.sh` to generate the trace required to run S3CAMX.
+The bash script `generate_symbolic_paths.sh` can be used to generate the traces for every system in the examples folder.
 
 ## RUNNING S3CAMX
 
-- To configure paths, please modify `set_path.sh` and update the paths for Z3's Python bindingd and py2z3.
+- To configure paths, please modify 
+    - `set_path.sh` and update the paths for Z3's Python bindingd and py2z3.
+    - `staliro_add_path.m` and update the path for S-Taliro.
 
-Modify staliro_add_path.m
-
+- Compile each system's controller by running <br>
+`compile_examples.sh`
 
 - Start and share minimal Matlab session (optional):
 	- Open a terminal and type
 	`matlab& -nojvm -nodisplay -nosplash`
 	- In Matlab, type the below to share the matlab engine
 	`matlab.engine.shareEngine('<engine_name>')`
-- Compile each system's controller by running <br>
-`compile_examples.sh`
+
 
 - To simulate a system run, use
 `./secam.py -f <system path> -s <number of simulations>`
