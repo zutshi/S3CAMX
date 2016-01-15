@@ -172,7 +172,7 @@ for benchmark in benchmark_list:
             num_sims = '10000'
         arg_list = [filename_arg, path, sim_opt, num_sims, simple_output]
 
-        rs_output_log = '{}{}.random_sim_new'.format(result_dir, name)
+        rs_output_log = '{}{}.random_sim'.format(result_dir, name)
         print run_description
         sh.python(prog_name, *arg_list, _out=rs_output_log, _err=rs_output_log)
         continue
