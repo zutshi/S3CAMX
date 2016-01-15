@@ -22,8 +22,12 @@ system_details = {
 'dci.tst', './examples/dc_motor';
 'fuzzy_invp.tst', './examples/fuzzy_invp';
 'heater.tst', './examples/heater';
-'toy_model_10u.tst', './examples/toy_model_10u';
-'spi.tst', './examples/spi';
+'mrs1.tst', './examples/mrs';
+'mrs2.tst', './examples/mrs';
+'mrs3.tst', './examples/mrs';
+'spi1.tst', './examples/spi';
+'spi2.tst', './examples/spi';
+'spi3.tst', './examples/spi';
 };
 
 display 'Enter a system to test...'
