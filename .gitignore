@@ -5,9 +5,6 @@
 *.so
 *.pickled
 log.secam
-examples/abstractFuelControl/AbstractFuelControl_FR.m
-examples/abstractFuelControl/AbstractFuelControl_FR.tst
-examples/abstractFuelControl/AbstractFuelControl_M1_FR.slx
 .*.swp
 tags
 log_matlab
