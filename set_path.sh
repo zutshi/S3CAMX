@@ -1,6 +1,6 @@
 
 Z3_PATH=/home/re/RE_secam/z3_libs/
-PY2Z3_PATH=/home/re/RE_secam/S3CAMX/Package_B/
+PY2Z3_PATH=/home/re/RE_secam/
 CURR_PATH=$PWD
 
 #export PATH+=:/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splicing/klee/llvm-gcc4.2-2.9-x86_64-linux/bin/

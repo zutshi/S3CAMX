@@ -22,6 +22,15 @@ rep = 'trace'
 struct_opt = '--trace-struct'
 struct = 'tree'
 
+user_ip = raw_input('Run S3CAMX[X] or S3CAM[C]? ')
+if user_ip.lower() == 'x':
+    SYMEX = True
+elif user_ip.lower() == 'c':
+    SYMEX = False
+else:
+    print 'Did not not understand input!'
+    exit()
+
 #'./secam.py --filename ./examples/heater_float/heater.tst --ss-symex pathcrawler'
 # TODO: use fileops functions ot construct filenames!
 result_dir = './regression_results/'
@@ -60,16 +69,15 @@ spi_path = './examples/spi/spi.tst'
 spi_name = 'spi_plant'
 spi_path = './examples/spi_plant/spi.tst'
 
-SYMEX = False
 benchmark_list = [
-                  #(heater_name, heater_path),
-                  #(dc_name, dc_motor_path),
-                  #(tenu1_name, tenu1_path),
-                  #(tenu2_name, tenu2_path),
-                  #(tenu3_name, tenu3_path),
-                  #(heat_name, heat_path),
-                  #(fuzzy_name, fuzzy_path),
-                  #(afc_name, afc_path),
+                  (heater_name, heater_path),
+                  (dc_name, dc_motor_path),
+                  (tenu1_name, tenu1_path),
+                  (tenu2_name, tenu2_path),
+                  (tenu3_name, tenu3_path),
+                  (heat_name, heat_path),
+                  (fuzzy_name, fuzzy_path),
+                  (afc_name, afc_path),
                   (spi_name, spi_path)
                   ]
 

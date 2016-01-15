@@ -27,7 +27,7 @@ import scattersim as SS
 import err
 import loadsystem
 import traces
-import example_list as egl
+#import example_list as egl
 import plothelper as ph
 import plot_hack
 
@@ -398,16 +398,16 @@ def main():
     if args.filename is None:
         print('No file to test. Please use --help')
         exit()
-        print('No arguments passed. Loading list of packaged benchmarks!')
-        example_list = egl.get_example_list()
-        print('select from a list of examples')
-        for (idx, example) in enumerate(example_list):
-            print('({}) {}'.format(idx, example_list[idx]['description']))
+        #print('No arguments passed. Loading list of packaged benchmarks!')
+        #example_list = egl.get_example_list()
+        #print('select from a list of examples')
+        #for (idx, example) in enumerate(example_list):
+        #    print('({}) {}'.format(idx, example_list[idx]['description']))
 
-        i = int(raw_input())
-        filename = example_list[i]['filename']
-        path = example_list[i]['path']
-        filepath = fp.construct_path(filename, path)
+        #i = int(raw_input())
+        #filename = example_list[i]['filename']
+        #path = example_list[i]['path']
+        #filepath = fp.construct_path(filename, path)
     else:
         filepath = args.filename
 
