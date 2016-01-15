@@ -6,7 +6,8 @@ do
     cd $d
     dir_name=${PWD##*/}
     echo "Compiling $dir_name..."
-    #./compile.sh
+    ./compile.sh
     ls *.so
+    tar -xf ./paths/controller.pickled.tar.gz -C ./paths/
     cd ..
 done
