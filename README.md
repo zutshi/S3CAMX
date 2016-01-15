@@ -39,7 +39,7 @@ We provide two packages of S3CAMX
 
 ###Installing from Package A
 
-Package A is a pre-compiled distribution and does not require the installation of Python or its packages including Z3. However, Matlab + Simulink and S-Taliro still need to be installed. It is recommended that the user tries to run this before moving on to Package B. The package has been tested with a fresh install of Ubuntu ?, but a library mismatch can cause unexpected behavior, in which case a fallback to Package B is advised.
+Package A is a pre-compiled distribution and does not require the installation of Python or its packages including Z3. However, Matlab + Simulink and S-Taliro still need to be installed. It is recommended that the user tries to run this before moving on to Package B. The package has been tested with a fresh install of Ubuntu 14.04, but a library mismatch can cause unexpected behavior, in which case a fallback to Package B is advised. In case package A is being used, skip to [Installing MATLAB](#Installing-MATLAB)
 
 ###Installing from Package B
 This package contains only sources and requires the user to compile and obtain the necessary dependencies.
