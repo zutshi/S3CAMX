@@ -21,12 +21,15 @@ rep_opt = '--cntrl-rep'
 rep = 'trace'
 struct_opt = '--trace-struct'
 struct = 'tree'
+simple_output = '--basic-visual'
 
-user_ip = raw_input('Run S3CAMX[X] or S3CAM[C]? ')
+user_ip = raw_input('Run S3CAMX[X] or S3CAM[C] or Random Testing[S]? ')
 if user_ip.lower() == 'x':
-    SYMEX = True
+    RUN_MODE = 'S3CAMX'
 elif user_ip.lower() == 'c':
-    SYMEX = False
+    RUN_MODE = 'S3CAM'
+elif user_ip.lower() == 's':
+    RUN_MODE = 'SIM'
 else:
     print 'Did not not understand input!'
     exit()
@@ -154,12 +157,26 @@ for benchmark in benchmark_list:
     done = False
     test_ctr = 0
 
-    if SYMEX:
-        run_description = '-- ss-symex --\n'
+    if RUN_MODE == 'S3CAMX':
+        run_description = '-- Running S3CAMX: ss-symex --\n'
         arg_list = [filename_arg, path, ss_symex_opt, PC, rep_opt, rep, struct_opt, struct]
-    else:
-        run_description = '-- running ss-concrete --\n'
+    elif RUN_MODE == 'S3CAM':
+        run_description = '-- Running S3CAM: ss-concrete --\n'
         arg_list = [filename_arg, path, ss_opt]
+    elif RUN_MODE == 'SIM':
+        global OUTPUT_DATA
+        run_description = '-- Running Rand Simulations: --simulate --\n'
+        if name == 'afc_FR':
+            num_sims = '0'
+        else:
+            num_sims = '10000'
+        arg_list = [filename_arg, path, sim_opt, num_sims, simple_output]
+
+        rs_output_log = '{}{}.random_sim_new'.format(result_dir, name)
+        print run_description
+        sh.python(prog_name, *arg_list, _out=rs_output_log, _err=rs_output_log)
+        continue
+
     print run_description
     f.append_data(run_summary_log, run_description)
 

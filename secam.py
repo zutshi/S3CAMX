@@ -103,7 +103,12 @@ def simulate(sys, prop, opts):
     trace_list = []
 
     sys_sim = simsys.get_system_simulator(sys)
-    for i in tqdm.trange(num_samples):
+    if opts.basic_visual:
+        range_fn = range
+    else:
+        range_fn = tqdm.trange
+
+    for i in range_fn(num_samples):
         trace = simsys.simulate(sys_sim, concrete_states[i], prop.T)
         trace_list.append(trace)
         sat_x, sat_t = check_prop_violation(trace, prop)
@@ -391,6 +396,9 @@ def main():
     parser.add_argument('-t', '--trace-struct', type=str, metavar='struct', default='tree',
                         choices=LIST_OF_TRACE_STRUCTS, help='structure for cntrl-rep')
 
+    parser.add_argument('--basic-visual', action='store_true',
+                        help='disable curses')
+
 #    argcomplete.autocomplete(parser)
     args = parser.parse_args()
     #print(args)
@@ -445,6 +453,7 @@ def main():
     else:
         raise err.Fatal('no options passed. Check usage.')
     opts.plot = args.plot
+    opts.basic_visual = args.basic_visual
     opts.dump_trace = args.dump
 
     sys, prop = loadsystem.parse(filepath)
