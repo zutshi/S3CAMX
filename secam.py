@@ -339,7 +339,7 @@ def run_secam(sys, prop, opts):
         if plot:
             if opts.dump_trace:
                 dump_trace(trace_list)
-            traces.plot_trace_list(trace_list, plt)
+            traces.plot_trace_list(trace_list, plt, opts.plot_fig2)
     elif MODE == 'falsify':
         # ignore time taken to create_abstraction: mainly to ignore parsing
         # time
@@ -399,6 +399,9 @@ def main():
     parser.add_argument('--basic-visual', action='store_true',
                         help='disable curses')
 
+    parser.add_argument('--plot-fig2', action='store_true',
+                        help='plot figure 2 in the paper')
+
 #    argcomplete.autocomplete(parser)
     args = parser.parse_args()
     #print(args)
@@ -454,6 +457,7 @@ def main():
         raise err.Fatal('no options passed. Check usage.')
     opts.plot = args.plot
     opts.basic_visual = args.basic_visual
+    opts.plot_fig2 = args.plot_fig2
     opts.dump_trace = args.dump
 
     sys, prop = loadsystem.parse(filepath)
