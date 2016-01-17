@@ -6,9 +6,9 @@
 
 function [tt,YY,D,P,prop_violated_flag] = AbstractFuelControl_FR(t,T,XX,D,P,U,I,property_check)
 
-display(XX)
+%display(XX)
 
-fprintf('%f, %f\n', t, T);
+%fprintf('%f, %f\n', t, T);
 %figure(1)
 %hold on
 %figure(2)
@@ -297,9 +297,9 @@ end
 
 function init()
 
-disp('loading simulink model...')
+%disp('loading simulink model...')
 load_system(mdl_path);
-disp('done...')
+%disp('done...')
 
 if FR == 1
         %TODO: It should not know about delta!
