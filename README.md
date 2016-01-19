@@ -12,7 +12,7 @@ S3CAM uses simulations and symboolic execution to find falsifications to safety 
         Proceedings of the 14th International Conference on Embedded Software. ACM, 2014.
 
 ##Overview
-The S3CAMX package implements both S3CAMX and S3CAM algorithms. 
+The S3CAMX package implements both S3CAMX and S3CAM algorithms.
 
 ##Dependencies
 
@@ -150,7 +150,7 @@ The bash script `generate_symbolic_paths.sh` can be used to generate the traces 
 
 ## RUNNING S3CAMX
 
-- To configure paths, please modify 
+- To configure paths, please modify
     - `set_path.sh` and update the paths for Z3's Python bindingd and py2z3.
     - `staliro_add_path.m` and update the path for S-Taliro.
 
@@ -158,10 +158,10 @@ The bash script `generate_symbolic_paths.sh` can be used to generate the traces 
 `compile_examples.sh`
 
 - Start and share minimal Matlab session (optional):
-	- Open a terminal and type
-	`matlab& -nojvm -nodisplay -nosplash`
-	- In Matlab, type the below to share the matlab engine
-	`matlab.engine.shareEngine('<engine_name>')`
+        - Open a terminal and type
+        `matlab& -nojvm -nodisplay -nosplash`
+        - In Matlab, type the below to share the matlab engine
+        `matlab.engine.shareEngine('<engine_name>')`
 
 
 - To simulate a system run, use
