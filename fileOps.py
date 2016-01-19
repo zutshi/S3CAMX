@@ -1,5 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+'''
+fileOps.py
+----------
+Provides os independant file manipulation functionality.
+'''
+
+
 import os
 import os.path as osp
 import logging

@@ -1,6 +1,46 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+'''
+run_regression.py
+------------------
+A script provided for convinient evaluation of S3CAMX and S3CAM on a
+given system. Sequentially evaluates the systems registered in
+'benchmark_list' defined below. Each system is analyzed using S3CAMX
+or S3CAM as chosen at the prompt for 'NUM_TESTS=10' times. Also
+provided is an option is to run ./secam.py in order to randomly
+simulate a system. This reproduces the DoD metric using 100,000 random
+simulations, apart from the AFC system for which 100 simulataions were
+used.
+
+For each system, the results are stored in './regression_results/'
+using the below format:
+
+    <system_name>.<analyses_engine>.summary
+        Contains a concise summary of the results.
+
+    <system_name>.<analyses_engine>.log
+        Contains the complete output log in case debugging is
+        required.
+
+    analyses_engine: can be either S3CAM, S3CAMX (S3CAM + symbolic
+    execution) or SIM (random simulations).
+
+    e.g. For the heater system, running S3CAMX will produce the below
+    two files
+        heater.S3CAM.summary, heater.S3CAMX.log
+
+The files are appended (and not overwritten) after each run. Also,
+the write is unbuffered, and happens as soon as the result is computed
+without waiting for the entire script to terminate. This ensures
+partial recovery in case of sudden interruptions.
+
+Multiple copies of run_regression.py can be run simultaneously without
+any issues as long as the combination of system and analyses being run
+is not exactly the same. Otherwise, the output files will get
+incoherent due to simulataneous writes.
+'''
+
 import sh
 import time
 

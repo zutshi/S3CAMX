@@ -1,5 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+'''
+concretePlant.py
+----------------
+Provides an interface to compute the concrete output of the
+plant.
+'''
+
 import err
 import utils as U
 

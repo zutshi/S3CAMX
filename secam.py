@@ -1,5 +1,22 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+'''
+secam.py
+----------
+The 'main' file.
+Imeplements both S3CAMX and S3CAM algorithms and provides an option to
+randomly simulate a system.
+
+Please type
+    ./secam.py --help
+for usage details.
+
+A convinience scrpt: run_regression.py is provided to run ./secam.py
+on the included benchmarks. It can also be used to understand the
+detailed usage.
+'''
+
 from __future__ import print_function
 
 #import matplotlib

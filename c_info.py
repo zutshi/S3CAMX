@@ -1,6 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+c_info.py
+---------
+Defines machine's C types.
+'''
+
 import ctypes
 
 

@@ -1,6 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+psim.py
+-------------
+Low level plant simulator.
+Abstracts away native simulators (python), MATLAB simulators
+using Matbalb's engine as well as pymatlab (now defunct).
+'''
+
 import logging
 import numpy as np
 

@@ -1,6 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+simulatesystem.py
+-----------------
+Provides a high level interface for concrete simulation the entire
+system. Wraps up the individual plant and controller simulators in a
+single sim function.
+'''
+
 from __future__ import print_function
 
 import controlifc as cifc

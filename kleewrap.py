@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+
+'''
+kleewrap.py [DEFUNCT]
+-----------
+Used to run KLEE during run time.
+'''
+
 import os
 import struct
 import sys

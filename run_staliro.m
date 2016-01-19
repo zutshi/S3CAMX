@@ -1,3 +1,6 @@
+% Can be used to run s-taliro on systems written using python.
+% Was used to compare with s-taliro
+
 function run_staliro(num_runs)
 % filename = 'heat.tst';
 % path = '/examples/heat';

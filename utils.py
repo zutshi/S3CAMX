@@ -1,5 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+'''
+utils.py
+---------
+Containts, generic useful functions used throught the project.
+'''
 import itertools
 
 # Test for hashability of abstract state

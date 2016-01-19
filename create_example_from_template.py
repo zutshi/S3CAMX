@@ -1,6 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+create_example_from_template.py
+--------------------------------
+Creates all the necessary files needed to create a sample system. Once
+the template is created, it can be completed appropriately instead of
+defining a system from scratch.
+'''
+
 import fileOps as f
 import sys
 import err

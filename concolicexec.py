@@ -1,5 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+'''
+concolicexec.py [DEFUNCT]
+--------------------------
+Concolic engine to interface to process KLEE's outputs.
+'''
+
 import numpy as np
 import kleewrap as k
 

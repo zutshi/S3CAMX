@@ -1,6 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+err.py
+------
+Provides templates for exceptions.
+'''
 
 import blessings
 

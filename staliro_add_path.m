@@ -1,3 +1,5 @@
+% Adds path to setup S-Taliro
+
 staliro_path = '/home/re/RE_secam/s_taliro/trunk'
 
 addpath(staliro_path)

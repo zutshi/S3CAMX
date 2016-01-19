@@ -1,16 +1,15 @@
-###############################################################################
-# File name: external_interface.py
-# Author: Aditya
-# Python Version: 2.7
-#
-#                       #### Description ####
-# Provides an external interface to simulate a system described in native
-# format.
-# TODO: Currently provides only a one shot simulator, which can simulate the
-# system between t = [0, tf].
-# If desired, this can be extended to provide a simulator which can be called
-# multiple times from t = [t0, tf]
-###############################################################################
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+'''
+external_interface.py
+----------------------
+Provides an external interface to simulate a system described in native
+format.
+TODO: Currently provides only a one shot simulator, which can simulate the
+system between t = [0, tf].
+If desired, this can be extended to provide a simulator which can be called
+multiple times from t = [t0, tf]
+'''
 
 import loadsystem
 import simulatesystem as simsys

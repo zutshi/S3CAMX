@@ -1,5 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+
+'''
+traces.py
+----------
+Defines traces or trajectories of the system. Used only for plotting
+as of now.
+'''
+
 import numpy as np
 from scipy import io
 

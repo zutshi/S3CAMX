@@ -1,6 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+abstraction.py
+--------------
+Manages the top level abstraction (plant + controller).
+Provides interfaces to build and refine the abstraction.
+'''
+
+
+
 # S: Controller States
 # X: Plant states
 # U: controller outputs

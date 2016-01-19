@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+scattersim.py
+----------
+Defines the main algorithm described in the papers
+'scatter-and-simulate'.
+'''
+
 import logging
 import Queue
 import numpy as np

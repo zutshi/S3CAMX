@@ -1,6 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+graph.py
+----------
+Provides an interface to gaph libraries used for reachability graph
+construction.
+Currently can use
+    - networkx [in-use and stable]
+    - graph-tool [experimental]
+'''
+
 import err
 import utils as U
 

@@ -1,6 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+PACell.py
+---------
+Cell based abstraction for the plant.
+It is included in the top level abstraction.
+Defines reachability, refinement, and other routines for the plant
+abstraction.
+'''
+
 import logging
 import numpy as np
 

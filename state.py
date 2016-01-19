@@ -1,6 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+state.py
+--------
+Defines the overall state of the system.
+'''
+
 import logging
 
 logger = logging.getLogger(__name__)

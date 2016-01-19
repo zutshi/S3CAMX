@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+smtSolver.py
+------------
+Abstracts away an SMT solver. Currently only gives the option of using
+z3.
+'''
+
 import logging
 import z3
 
