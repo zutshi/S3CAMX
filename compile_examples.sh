@@ -9,6 +9,6 @@ do
     ./compile.sh
     ls *.so
     tar -xf ./paths/controller.pickled.tar.gz -C ./paths/
-    tar -xf ./paths/controller.tar.gz -C ./paths/
+    #tar -xf ./paths/controller.tar.gz -C ./paths/
     cd ..
 done
