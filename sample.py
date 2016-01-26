@@ -125,8 +125,8 @@ class IntervalSampler(Sampler):
         else:
             ci_sample_per_state = 1
 
-        n_pi = num_samples * pi_sample_per_state
-        n_ci = num_samples * ci_sample_per_state
+        #n_pi = num_samples * pi_sample_per_state
+        #n_ci = num_samples * ci_sample_per_state
         n = num_samples * pi_sample_per_state * ci_sample_per_state
 
         plant_state_ival_cons = \
@@ -162,10 +162,14 @@ class IntervalSampler(Sampler):
         if A.num_dims.ci != 0:
             random_arr = np.random.rand(n, A.num_dims.ci)
             #reduce(lambda x,y:np.concatenate((x,y)), map(lambda x: np.tile(x,(2,1)), [a1,a2,a3]))
-            ci_cons_l_list = [np.tile(ci_cons.l, (n/n_ci, 1)) for ci_cons in ci_cons_list]
+            #print(ci_cons_list)
+            ci_cons_l_list = [np.tile(ci_cons.l, (n/ci_sample_per_state, 1)) for ci_cons in ci_cons_list]
+            #print(ci_cons_l_list)
             ci_cons_l = reduce(lambda x_arr, y_arr: np.concatenate((x_arr, y_arr)), ci_cons_l_list)
-            ci_cons_h_list = [np.tile(ci_cons.h, (n/n_ci, 1)) for ci_cons in ci_cons_list]
+            #print(ci_cons_l)
+            ci_cons_h_list = [np.tile(ci_cons.h, (n/ci_sample_per_state, 1)) for ci_cons in ci_cons_list]
             ci_cons_h = reduce(lambda x_arr, y_arr: np.concatenate((x_arr, y_arr)), ci_cons_h_list)
+            #print(random_arr)
             ci_array = ci_cons_l + random_arr * (ci_cons_h - ci_cons_l)
         else:
             ci_array = np.empty((n, A.num_dims.ci))
