@@ -51,6 +51,9 @@ ci = [[-1.0], [1.0]]
 ########################
 # initial abstraction grid size
 grid_eps = [0.5]
+#pi_grid_eps = [0.5, 0.5]
+pi_grid_eps = []
+ci_grid_eps = [0.5]
 
 # number of samples at every scatter step
 # SymEx
