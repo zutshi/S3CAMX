@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 # S: Controller States
 # X: Plant states
 # U: controller outputs
@@ -15,6 +17,7 @@ import numpy as np
 # import matplotlib.pyplot as plt
 
 import utils as U
+from utils import print
 import err
 import graph as g
 
@@ -107,15 +110,14 @@ class TopLevelAbs:
             import CASymbolicKLEE as CA
             controller_abs = CA.ControllerSymbolicAbstraction(self.num_dims,
                     controller_sym_path_obj, min_smt_sample_dist)
-        elif controller_abstraction_type == 'concolic':
-            #from CAConcolic import *
-            import CAConcolic as CA
-            controller_abs = CA.ControllerCollectionAbstraction(self.num_dims)
+        #elif controller_abstraction_type == 'concolic':
+        #    import CAConcolic as CA
+        #    controller_abs = CA.ControllerCollectionAbstraction(self.num_dims)
         elif controller_abstraction_type == 'concrete':
-            #from CAConcolic import *
             import CAConcolic as CA
             controller_abs = CA.ControllerCollectionAbstraction(self.num_dims)
         else:
+            print(controller_abstraction_type)
             raise NotImplementedError
 
         if plant_abstraction_type == 'cell':
@@ -136,14 +138,14 @@ class TopLevelAbs:
             )
 
 
-        print U.decorate('new abstraction created')
-        print 'eps:', self.eps
-        print 'num_samples:', self.num_samples
-        print 'refine:', self.refinement_factor
-        print 'deltaT:', self.delta_t
-        print 'TH:', self.T
-        print 'num traces:', self.N
-        print '=' * 50
+        print(U.decorate('new abstraction created'))
+        print('eps:', self.eps)
+        print('num_samples:', self.num_samples)
+        print('refine:', self.refinement_factor)
+        print('deltaT:', self.delta_t)
+        print('TH:', self.T)
+        print('num traces:', self.N)
+        print('=' * 50)
 
         # ##!!##logger.debug('==========abstraction parameters==========')
         # ##!!##logger.debug('eps: {}, refinement_factor: {}, num_samples: {},delta_t: {}'.format(str(self.eps), self.refinement_factor, self.num_samples, self.delta_t))
@@ -166,7 +168,8 @@ class TopLevelAbs:
         self.plant_abs = plant_abs
         self.controller_abs = controller_abs
 
-        if self.controller_abstraction_type.startswith('symbolic'):
+        #if self.controller_abstraction_type.startswith('symbolic'):
+        if self.controller_abs.is_symbolic:
             self.get_reachable_states = self.get_reachable_states_sym
         else:
             self.get_reachable_states = self.get_reachable_states_conc
@@ -182,8 +185,13 @@ class TopLevelAbs:
                 # remove braces
                 grid_eps_str = grid_eps_str[1:-1]
                 self.eps = np.array([float(eps) for eps in grid_eps_str.split(',')])
-                self.refinement_factor = float(config_dict['refinement_factor'
-                        ])
+
+                pi_grid_eps_str = config_dict['pi_grid_eps']
+                # remove braces
+                pi_grid_eps_str = pi_grid_eps_str[1:-1]
+                #self.pi_eps = np.array([float(pi_eps) for pi_eps in pi_grid_eps_str.split(',')])
+
+                self.refinement_factor = float(config_dict['refinement_factor'])
                 self.num_samples = int(config_dict['num_samples'])
                 self.delta_t = float(config_dict['delta_t'])
                 self.N = int(np.ceil(self.T / self.delta_t))
@@ -192,6 +200,7 @@ class TopLevelAbs:
                 # sanity check
 
                 config_dict['grid_eps'] = None
+                config_dict['pi_grid_eps'] = None
                 config_dict['refinement_factor'] = None
                 config_dict['num_samples'] = None
                 config_dict['delta_t'] = None
@@ -200,6 +209,8 @@ class TopLevelAbs:
         else:
             for attr in config_dict:
                 setattr(self, attr, config_dict[attr])
+            self.N = int(np.ceil(self.T / self.delta_t))
+            self.refinement_factor = 2.0
 
         return
 
@@ -212,11 +223,12 @@ class TopLevelAbs:
     # and update the abstraction function
 
     def add_relation(
-        self,
-        abs_state_src,
-        rchd_abs_state,
-        edge_attr,
-        ):
+            self,
+            abs_state_src,
+            rchd_abs_state,
+            ci,
+            pi
+            ):
 
         # get new distance/position from the initial state
         # THINK:
@@ -227,7 +239,7 @@ class TopLevelAbs:
         #   - get it from simulation trace:
         #       n = int(np.floor(t/self.delta_t))
 
-        self.G.add_edge(abs_state_src, rchd_abs_state, edge_attr)
+        self.G.add_edge(abs_state_src, rchd_abs_state, ci, pi)
         return
 
     # TODO: does not have access to step plant and step controller!
@@ -240,20 +252,18 @@ class TopLevelAbs:
 
             # reachable_plant_state_set = self.plant_abs.get_reachable_abs_states_sym(c, self, system_params)
 
-            reachable_plant_state_list = self.plant_abs.get_reachable_abs_states_sym(
+            reachable_plant_state_ci_pi_list = self.plant_abs.get_reachable_abs_states_sym(
                 c,
                 self,
                 system_params)
-            for (ps, ci) in reachable_plant_state_list:
+            for (ps, ci, pi_cell) in reachable_plant_state_ci_pi_list:
                 reachable_abs_state = AbstractState(ps, cs)
                 abs2rchd_abs_state_set.add(reachable_abs_state)
 
                 # why making a tuple?
                 # edge_attr = (ci,)
 
-                edge_attr = ci
-                self.add_relation(abs_state, reachable_abs_state,
-                                  edge_attr)
+                self.add_relation(abs_state, reachable_abs_state, ci, pi_cell)
         return abs2rchd_abs_state_set
 
     def get_reachable_states_conc(self, abs_state, system_params):
@@ -265,112 +275,169 @@ class TopLevelAbs:
 
         intermediate_state = \
             self.controller_abs.get_reachable_abs_states(abs_state, self, system_params)
-        abs2rchd_abs_state_ci_list = \
+        abs2rchd_abs_state_ci_pi_list = \
             self.plant_abs.get_reachable_abs_states(intermediate_state, self, system_params)
-        for (rchd_abs_state, ci) in abs2rchd_abs_state_ci_list:
 
-            # print ci
+        for (rchd_abs_state, ci_cell, pi_cell) in abs2rchd_abs_state_ci_pi_list:
 
-            self.add_relation(abs_state, rchd_abs_state, ci)
+            # print(ci)
+
+            self.add_relation(abs_state, rchd_abs_state, ci_cell, pi_cell)
             abs2rchd_abs_state_set.add(rchd_abs_state)
         return abs2rchd_abs_state_set
 
-    def compute_error_paths(self, initial_state_set, final_state_set):
-        print 'self.N', self.N
-        return self.G.get_path_generator(initial_state_set, final_state_set, self.N + 2)
+#     def states_along_paths(self, paths):
+#         MAX_ERROR_PATHS = 2
+#         bounded_paths = U.bounded_iter(paths, MAX_ERROR_PATHS)
 
-    def get_seq_of_ci(self, path):
-        return self.G.get_path_attr_list(path)
+#         ret_list = []
+#         for path in bounded_paths:
+#             ret_list.append(path)
+#         return ret_list
 
-    def get_initial_states_from_error_paths(self, initial_state_set, final_state_set):
+    def compute_error_paths(self, initial_state_set, final_state_set, MAX_ERROR_PATHS):
+        # length of path is num nodes, whereas N = num segments
+        max_len = self.N + 1
+        return self.G.get_path_generator(initial_state_set, final_state_set, max_len, MAX_ERROR_PATHS)
+
+    # memoized because the same function is called twice for ci and pi
+    # FIXME: Need to fix it
+    #@U.memodict
+    def get_seq_of_ci_pi(self, path):
+        attr_map = self.G.get_path_attr_list(path, ['ci', 'pi'])
+        #print('attr_map:', attr_map)
+        return attr_map['ci'], attr_map['pi']
+
+    def get_initial_states_from_error_paths(self, initial_state_set,
+                                            final_state_set, pi_ref,
+                                            ci_ref, pi_cons, ci_cons):
+        '''
+        @type pi_cons: constraints.IntervalCons
+        @type ci_cons: constraints.IntervalCons
+        '''
+
         MAX_ERROR_PATHS = 100
         ci_dim = self.num_dims.ci
-        init_set = set()
+        pi_dim = self.num_dims.pi
+#         init_set = set()
         init_list = []
         ci_seq_list = []
+        pi_seq_list = []
 
-        if ci_dim == 0:
-            error_paths = self.compute_error_paths(initial_state_set,
-                    final_state_set)
-            for (num_paths, path) in enumerate(error_paths):
-                if num_paths >= MAX_ERROR_PATHS:
-                    break
-                ci_seq = []
-                ci_seq_list.append(ci_seq)
-                init_set.add(path[0])
+        error_paths = self.compute_error_paths(initial_state_set, final_state_set, MAX_ERROR_PATHS)
+        #bounded_error_paths = U.bounded_iter(error_paths, MAX_ERROR_PATHS)
+        bounded_error_paths = error_paths
 
-            # return list(init_set), []
+        def get_ci_seq(path):
+            return self.get_seq_of_ci_pi(path)[0]
 
-            return (list(init_set), ci_seq_list)
-        else:
+        def get_pi_seq(path):
+            return self.get_seq_of_ci_pi(path)[1]
 
-            # zero_array = np.zeros((1, ci_dim))
+        def get_empty(_):
+            return []
 
-            zero_array = np.zeros(ci_dim)
-            error_paths = self.compute_error_paths(initial_state_set,
-                    final_state_set)
+        get_ci = get_ci_seq if ci_dim != 0 else get_empty
+        get_pi = get_pi_seq if pi_dim != 0 else get_empty
 
-            max_len = -np.inf
-            min_len = np.inf
-            unique_paths = set()
-            num_paths = 0
-            for path in error_paths:
-                if num_paths > MAX_ERROR_PATHS:
-                    break
+#         if ci_dim == 0:
+#             for path in bounded_error_paths:
+#                 ci_seq = []
+#                 ci_seq_list.append(ci_seq)
+#                 init_set.add(path[0])
 
-                # init_set.add(path[0])
-                # print self.get_seq_of_ci(path)
+#             return (list(init_set), ci_seq_list)
+#         else:
+        max_len = -np.inf
+        min_len = np.inf
+        unique_paths = set()
+        for path in bounded_error_paths:
+#             ci_seq = self.get_seq_of_ci(path)
+            pi_seq_cells = get_pi(path)
+            pi_ref.update_from_path(path, pi_seq_cells)
+            # convert pi_cells to ival constraints
+            #pi_seq = map(self.plant_abs.get_ival_cons_pi_cell, get_pi(path))
+            pi_seq = [self.plant_abs.get_ival_cons_cell(pi_cell, pi_ref.eps) for pi_cell in pi_seq_cells]
+            if ci_ref is not None:
+                ci_seq_cells = get_ci(path)
+                ci_ref.update_from_path(path, ci_seq_cells)
+                ci_seq = [self.controller_abs.get_ival_cons_cell(ci_cell, ci_ref.eps) for ci_cell in ci_seq_cells]
+            else:
+                ci_seq = get_ci(path)
 
-                ci_seq = self.get_seq_of_ci(path)
+            #print(pi_seq)
 
-                # ci_seq = [attr[0] for attr in self.get_seq_of_ci(path)]
-                # e = (hash(path[0]), hash(np.array(ci_seq).tostring()))
+            #FIXME: Why are uniqe paths found only for the case when dim(ci) != 0?
+            plant_states_along_path = tuple(state.plant_state for state in path)
+            if plant_states_along_path not in unique_paths:
+                unique_paths.add(plant_states_along_path)
 
-                plant_states_along_path = tuple(state.plant_state for state in
-                        path)
-                if plant_states_along_path not in unique_paths:
-                    unique_paths.add(plant_states_along_path)
-                    max_len = max(len(ci_seq), max_len)
-                    min_len = min(len(ci_seq), min_len)
-                    ci_seq_list.append(ci_seq)
-                    init_list.append(path[0])
-                    num_paths += 1
+                if ci_dim != 0:
+                    assert(len(ci_seq) == len(path) - 1)
                 else:
-                    pass
+                    assert(len(ci_seq) == 0)
+                if pi_dim != 0:
+                    assert(len(pi_seq) == len(path) - 1)
+                else:
+                    assert(len(pi_seq) == 0)
 
-            # normalize list lens by appending 0
+#                 max_len = max(len(ci_seq), max_len)
+#                 min_len = min(len(ci_seq), min_len)
 
-            if max_len != min_len or max_len < self.N:
+                max_len = max(len(path), max_len)
+                min_len = min(len(path), min_len)
 
-                # TODO: many a times we find paths, s.t. len(path) > self.N
-                # How should those paths be handled?
-                #   - Should they be ignored, shortened, or what?
-                #   - or should nothing be done about them?
+                ci_seq_list.append(ci_seq)
+                pi_seq_list.append(pi_seq)
+                init_list.append(path[0])
 
-                for (idx, ci_seq) in enumerate(ci_seq_list):
+        assert(max_len <= self.N + 1)
 
-                    # append 0s to make len(list) = N
-                    # ci_seq_list[idx] = ci_seq + [zero_array]*(max_len - len(ci_seq))
-                    # ci_seq_list[idx] = ci_seq + [zero_array]*(max(max_len, self.N) - len(ci_seq))
-                    # instead of zeros, use random!
+        # normalize list lens by appending 0
 
-                    num_of_missing_ci_tail = max(max_len, self.N) - len(ci_seq)
-                    ci_seq_list[idx] = ci_seq \
-                        + list(np.random.random((num_of_missing_ci_tail,
-                               ci_dim)))
+#         if max_len != min_len or max_len < self.N:
 
-            # return init_set, 0
+#             # TODO: many a times we find paths, s.t. len(path) > self.N
+#             # How should those paths be handled?
+#             #   - Should they be ignored, shortened, or what?
+#             #   - or should nothing be done about them?
 
-            print 'path states, min_len:{}, max_len:{}'.format(min_len,
-                    max_len)
+#             for (idx, ci_seq) in enumerate(ci_seq_list):
+#                 # instead of zeros, use random!
+#                 num_of_missing_ci_tail = max(max_len, self.N) - len(ci_seq)
+#                 ci_seq_list[idx] = ci_seq \
+#                     + list(np.random.random((num_of_missing_ci_tail, ci_dim)))
 
-            # ##!!##logger.debug('init_list:{}\n'.format(init_list))
-            # ##!!##logger.debug('ci_seq_list:{}\n'.format(ci_seq_list))
-            # print 'len(init_list)', len(init_list)
-            # print 'len(ci_seq_list)', len(ci_seq_list)
-            # print ci_seq_list
+#             for (idx, pi_seq) in enumerate(pi_seq_list):
+#                 num_of_missing_pi_tail = max(max_len, self.N) - len(pi_seq)
+#                 pi_seq_list[idx] = pi_seq \
+#                     + list(np.random.random((num_of_missing_pi_tail, pi_dim)))
 
-            return (init_list, ci_seq_list)
+        for (idx, (ci_seq, pi_seq)) in enumerate(zip(ci_seq_list, pi_seq_list)):
+            missing_input_len = self.N - len(ci_seq)
+            # row, column
+            r, c_ci = missing_input_len, ci_dim
+            #FIXME: default random values
+            if ci_ref is not None:
+                ci_seq_list[idx] = ci_seq + [ci_cons] * missing_input_len
+            else:
+                ci_seq_list[idx] = ci_seq + list(np.random.uniform(ci_cons.l, ci_cons.h, (r, c_ci)))
+            #pi_seq_list[idx] = pi_seq + list(np.random.uniform(pi_cons.l, pi_cons.h, (r, c_pi)))
+            pi_seq_list[idx] = pi_seq + [pi_cons] * missing_input_len
+
+        print('path states, min_len:{}, max_len:{}'.format(min_len, max_len))
+
+        # ##!!##logger.debug('init_list:{}\n'.format(init_list))
+        # ##!!##logger.debug('ci_seq_list:{}\n'.format(ci_seq_list))
+        # print('len(init_list)', len(init_list))
+        # print('len(ci_seq_list)', len(ci_seq_list))
+
+#         for ci_seq in ci_seq_list:
+#             print(ci_seq)
+#         for pi_seq in pi_seq_list:
+#             print(pi_seq)
+
+        return (init_list, ci_seq_list, pi_seq_list)
 
     def get_abs_state_from_concrete_state(self, concrete_state):
 
@@ -435,19 +502,17 @@ class AbstractState(object):
 
     def __eq__(self, x):
 
-        # print 'abstraction_eq_invoked'
+        # print('abstraction_eq_invoked')
 #        return hash((self.plant_state, self.controller_state)) == hash(as)
 
         return hash(self) == hash(x)
 
     def __hash__(self):
 
-        # print 'abstraction_hash_invoked'
+        # print('abstraction_hash_invoked')
 
         return hash((self.plant_state, self.controller_state))
 
     def __repr__(self):
         return 'p={' + self.plant_state.__repr__() + '},c={' \
             + self.controller_state.__repr__() + '}'
-
-

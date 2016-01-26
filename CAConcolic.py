@@ -6,17 +6,15 @@ import numpy as np
 import constraints as cons
 import err
 import concreteController as cc
-import utils as U
+#import utils as U
 import state as st
-import sample as S
+#import sample as S
+import cellmanager as CM
 
 logger = logging.getLogger(__name__)
 
 
 class ControllerCollectionAbstraction:
-
-#    get_abs_state\
-#        = collections.namedtuple('abs_state_control', ['s'], verbose=False)
 
     @staticmethod
     def get_abs_state(s):
@@ -27,6 +25,15 @@ class ControllerCollectionAbstraction:
         # super(Abstraction, self).__init__()
 
         self.num_dim = num_dims
+        self.is_symbolic = False
+
+    def get_ival_cons_cell(self, cell, eps):
+        return CM.ival_constraints(cell, eps)
+
+#     def cell_id_from_concrete(self, X):
+#         # the cell is same as cell_id so...
+#         return CM.cell_from_concrete(X)
+#         # And also, an abstract state is a tuple of integers!
 
     # \alpha()
 
@@ -50,15 +57,17 @@ class ControllerCollectionAbstraction:
         return cons.IntervalCons(ival_l, ival_h)
 
     def get_reachable_abs_states(
-        self,
-        abs_state,
-        A,
-        system_params,
-        ):
-        ci_ival_cons = system_params.ci
-        pi_ival_cons = system_params.pi
-        samples = system_params.sampler.sample(abs_state, A, system_params,
-                A.num_samples)
+            self,
+            abs_state,
+            A,
+            system_params,
+            ):
+        #ci_ival_cons = system_params.ci
+        #pi_ival_cons = system_params.pi
+
+        # can have more samples than A.num_samples due to more than one pi_cell
+        # associated with abs_state
+        samples = system_params.sampler.sample(abs_state, A, system_params, A.num_samples)
 
         total_num_samples = samples.n
 
@@ -89,7 +98,6 @@ class ControllerCollectionAbstraction:
         d_array = np.repeat(d, samples.n, axis=0)
         pvt_array = np.repeat(pvt, samples.n, axis=0)
 
-        total_num_samples = samples.n
 
         # sanity check
 
@@ -149,5 +157,3 @@ class ControllerCollectionsAbstractState(object):
 
     def __repr__(self):
         return str(self.s)
-
-

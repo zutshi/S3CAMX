@@ -15,7 +15,10 @@ import heapq
 from heapq import heappush, heappop
 
 from itertools import count
-import copy
+from collections import defaultdict
+
+from blessings import Terminal
+term = Terminal()
 
 
 def graph_factory(graph_type):
@@ -286,27 +289,30 @@ class GraphNX(object):
         self,
         v1,
         v2,
-        attr_val=None,
+        ci=None,
+        pi=None,
         weight=1,
         ):
-        self.G.add_edge(v1, v2, weight=1, attr=attr_val)
+        self.G.add_edge(v1, v2, weight=1, ci=ci, pi=pi)
 
     def add_edges_from(
         self,
         edge_list,
-        attr_val=None,
+        ci=None,
+        pi=None,
         weight=1,
         ):
-        self.G.add_edges_from(edge_list, weight=1, attr=attr_val)
+        self.G.add_edges_from(edge_list, weight=1, ci=ci, pi=pi)
 
     def add_node(self, v):
         self.G.add_node(v)
 
-    def get_path_attr_list(self, path):
-        attr_list = []
+    def get_path_attr_list(self, path, attrs):
+        attr_map = defaultdict(list)
         for (v1, v2) in U.pairwise(path):
-            attr_list.append(self.G[v1][v2]['attr'])
-        return attr_list
+            for attr in attrs:
+                attr_map[attr].append(self.G[v1][v2][attr])
+        return attr_map
 
     # ###################### KSP 1 ##################################################
     # https://gist.github.com/guilhermemm/d4623c574d4bccb6bf0c
@@ -389,9 +395,15 @@ class GraphNX(object):
         else:
             G = nx.Graph(G_original)
 
-        print 'getting K:{} paths...'.format(k)
+        ######################################
+        #TODO: wrap this up somehow
+        print ''
+        print term.move_up + term.move_up
+        ######################################
+        print 'getting K:{} paths...'.format(k),
         for i in range(1, k):
-            print i, ' '
+            with term.location():
+                print i
             for j in range(len(paths[-1]) - 1):
                 spur_node = paths[-1][j]
                 root_path = (paths[-1])[:j + 1]
@@ -502,11 +514,12 @@ class GraphNX(object):
     # ################################### KSP END ###########################
 
     def get_path_generator(
-        self,
-        source_list,
-        sink_list,
-        max_depth=None,
-        ):
+            self,
+            source_list,
+            sink_list,
+            max_depth,
+            max_paths
+            ):
 
         # Create a shallow copy of the graph
 
@@ -527,9 +540,7 @@ class GraphNX(object):
 
         # increment max_depth by 2 to accommodate edges from 'super source' and
         # to 'super sink'
-
-        if max_depth is not None:
-            max_depth += 2
+        max_depth += 2
 
         # Add edges:
         #   \forall source \in source_list. super source node -> source
@@ -565,28 +576,32 @@ class GraphNX(object):
             # all_simple_paths
             #
 
-            K = 100
+            #K = 100
+            K = max_paths
             (len_list, path_list) = self.k_shortest_paths(H,
-                    dummy_super_source_node, dummy_super_sink_node, k=K)
+                                                          dummy_super_source_node,
+                                                          dummy_super_sink_node,
+                                                          k=K)
 
             # path_list = self.ksp_gregBern(H, dummy_super_source_node,
             #                                              dummy_super_sink_node,
             #                                              k=K)
 
-            for i in path_list:
-
-            # using somple paths
+            # using simple paths
             # for i in nx.all_simple_paths(H, dummy_super_source_node,
             #                             dummy_super_sink_node,
             #                             cutoff=max_depth):
 
             # using all sohrtest paths
             # for i in nx.all_shortest_paths(H, dummy_super_source_node, dummy_super_sink_node):
-
                 # Remove the first (super source)
                 # and the last element (super sink)
 
-                yield i[1:-1]
+            for p in path_list:
+                l = len(p)
+                #print l, max_depth
+                if l <= max_depth:
+                    yield p[1:-1]
 
         # return lambda: [yield i[1:-1] for i in nx.all_simple_paths(H,
         # dummy_super_source_node, dummy_super_sink_node)]

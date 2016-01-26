@@ -1,11 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 import logging
 import z3
 
 import c_info
 import err
+
+from utils import print
 
 logger = logging.getLogger(__name__)
 
@@ -81,9 +85,9 @@ class Z(Solver):
             cons_list = map((lambda x, c: x == c), x, val)
         else:
             raise err.Fatal('unhandled type: {}'.format(type(x)))
-        # loop sentinel
-        if cons_list == []:
-            cons_list = True
+#        # loop sentinel
+#        if cons_list == []:
+#            cons_list = True
         return z3.And(cons_list)
 
     def RealVector(self, s_str, length):
@@ -104,13 +108,11 @@ class Z(Solver):
                     c_upper_bound = z3.Concat(x[INT_SIZE * i + 3],
                                               x[INT_SIZE * i + 2],
                                               x[INT_SIZE * i + 1],
-                                              x[INT_SIZE * i + 0]) \
-                                    <= ic.h[i]
+                                              x[INT_SIZE * i + 0]) <= ic.h[i]
                     c_lower_bound = z3.Concat(x[INT_SIZE * i + 3],
                                               x[INT_SIZE * i + 2],
                                               x[INT_SIZE * i + 1],
-                                              x[INT_SIZE * i + 0]) \
-                                    >= ic.l[i]
+                                              x[INT_SIZE * i + 0]) >= ic.l[i]
                     cons_list.append(c_upper_bound)
                     cons_list.append(c_lower_bound)
             else:
@@ -120,9 +122,6 @@ class Z(Solver):
                       + map((lambda x, c: x >= c), x, ic.l)
         else:
             raise err.Fatal('unhandled type: {}'.format(type(x)))
-#         # Loop Sentinel
-#         if cons_list == []:
-#             cons_list = True
         return z3.And(cons_list)
 
     # TODO: fix the function call!
@@ -166,18 +165,18 @@ class Z(Solver):
 
         normCons = []
 
-    #  print '---------------- sampling ----------------'
-    #  print surface2Sample
-    #  print '------------------------------------------'
+    #  print('---------------- sampling ----------------')
+    #  print(surface2Sample)
+    #  print('------------------------------------------')
 
         s.add(surface2Sample)
         for i in range(num_points):
 
-            # print U.decorate(str(normCons))
+            # print(U.decorate(str(normCons)))
 
             s.add(normCons)
 
-            # print U.decorate(str(s))
+            # print(U.decorate(str(s)))
             # ##!!##logger.debug(str(s))
 
             if s.check() == z3.sat:
@@ -202,7 +201,7 @@ class Z(Solver):
                     # ##!!##logger.debug('!!!!!!!!!! no more samples possible !!!!!!!!!!!')
                     # ##!!##logger.debug('max samples: {}'.format(i))
 
-                    print 'max samples: {}'.format(i)
+                    print('max samples: {}'.format(i))
                     break
 
         return samplesDict
@@ -237,16 +236,16 @@ class Z(Solver):
                 elif check_res == z3.unsat:
                     return {}, 0
                 else: # check_res == z3.unknown:
-                    print s.reason_unknown()
+                    print(s.reason_unknown())
                     raise err.Fatal('unhandled: z3 unkown!')
             else:
                 raise e
 
         # normCons = z3.BoolVal(True)
 
-    #  print '---------------- sampling ----------------'
-    #  print surface2Sample
-    #  print '------------------------------------------'
+    #  print('---------------- sampling ----------------')
+    #  print(surface2Sample)
+    #  print('------------------------------------------')
 
         num_actual_samples += 1
         # sample first constraint
@@ -288,11 +287,11 @@ class Z(Solver):
                 else:
                     # ##!!##logger.debug('!!!!!!!!!! no more samples possible !!!!!!!!!!!')
                     # ##!!##logger.debug('max samples: {}'.format(i))
-                    print 'max samples: {}'.format(i)
+                    print('max samples: {}'.format(i))
                 break
 
             else:
-                print s.reason_unknown()
+                print(s.reason_unknown())
                 raise err.Fatal('unhandled: z3 unkown!')
         if loop_will_exeute:
             s.pop()
@@ -324,18 +323,18 @@ class Z(Solver):
 
         normCons = []
 
-    #  print '---------------- sampling ----------------'
-    #  print surface2Sample
-    #  print '------------------------------------------'
+    #  print('---------------- sampling ----------------')
+    #  print(surface2Sample)
+    #  print('------------------------------------------')
 
         s.add(surface2Sample)
         for i in range(num_points):
 
-            # print U.decorate(str(normCons))
+            # print(U.decorate(str(normCons)))
 
             s.add(normCons)
 
-            #print U.decorate(str(s))
+            #print(U.decorate(str(s)))
             # ##!!##logger.debug(str(s))
 
             if s.check() == z3.sat:
@@ -360,7 +359,7 @@ class Z(Solver):
                     # ##!!##logger.debug('!!!!!!!!!! no more samples possible !!!!!!!!!!!')
                     # ##!!##logger.debug('max samples: {}'.format(i))
 
-                    print 'max samples: {}'.format(i)
+                    print('max samples: {}'.format(i))
                     break
 
         return samplesDict
@@ -423,11 +422,11 @@ def z3val2pyval(val):
 
 
 def z3real2pyfloat(r):
-    ################# slow!
+    # ############### slow!
     #n = float(r.numerator().as_long())
     #d = float(r.denominator().as_long())
     #return n/d
-    ################# optimized, a magnitude faster
+    # ############### optimized, a magnitude faster
     return float(r.as_decimal(REAL2FLOAT_PRECISION).replace('?', ''))
 
 
@@ -455,10 +454,10 @@ def model2var_realVec(model, outputVarList, var2dim_dict):
         # Is this handling correct?
         x_arr = [z3.RealVal(0) if x is None else x for x in x_arr]
         x_arr = [z3val2pyval(x) for x in x_arr]
-        #print str(output_arr)
-        #print x_arr
+        #print(str(output_arr))
+        #print(x_arr)
         sample_dict[str(output_arr)] = x_arr
-    #print sample_dict
+    #print(sample_dict)
     #exit()
     return sample_dict
 
@@ -502,14 +501,14 @@ def get_norm_cons_bvArray(varValList, var2dim_dict, minDist):
     for (var, val) in varValList:
         n = var2dim_dict[str(var)]
         for i in range(n):
-            c_upper_bound = -z3.Concat(var[INT_SIZE * i + 3], var[INT_SIZE * i
-                                       + 2], var[INT_SIZE * i + 1],
-                                       var[INT_SIZE * i + 0]) + val[i] \
-                >= minDist
-            c_lower_bound = z3.Concat(var[INT_SIZE * i + 3], var[INT_SIZE * i
-                                      + 2], var[INT_SIZE * i + 1],
-                                      var[INT_SIZE * i + 0]) - val[i] \
-                >= minDist
+            c_upper_bound = -z3.Concat(var[INT_SIZE * i + 3],
+                                       var[INT_SIZE * i + 2],
+                                       var[INT_SIZE * i + 1],
+                                       var[INT_SIZE * i + 0]) + val[i] >= minDist
+            c_lower_bound = z3.Concat(var[INT_SIZE * i + 3],
+                                      var[INT_SIZE * i + 2],
+                                      var[INT_SIZE * i + 1],
+                                      var[INT_SIZE * i + 0]) - val[i] >= minDist
 
             # c_ne = z3.Concat(var[INT_SIZE * i + 3],
             #                 var[INT_SIZE * i + 2],

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+from __future__ import print_function
 import logging
 import Queue
 import numpy as np
@@ -10,22 +10,25 @@ import state as st
 import err
 import sample as SaMpLe
 import utils as U
+from utils import print
+#from utils import print
 import concreteController as cc
 
 logger = logging.getLogger(__name__)
 
 np.set_printoptions(suppress=True)
 
+
 # TODO: plant state centric....attaches other states to plant states. make it
 # neutral, gets touples of ((cons, d), s)
 
 def init(
-    A,
-    init_cons_list_plant,
-    final_cons,
-    init_d,
-    controller_init_state,
-    ):
+        A,
+        init_cons_list_plant,
+        final_cons,
+        init_d,
+        controller_init_state,
+        ):
 
     PA = A.plant_abs
     CA = A.controller_abs
@@ -33,6 +36,7 @@ def init(
     d = init_d
     pvt = (0, )
     n = 0
+
     for init_cons in init_cons_list_plant:
         plant_initial_state_list += \
             PA.get_abs_state_set_from_ival_constraints(init_cons, n, d, pvt)
@@ -64,25 +68,28 @@ def init(
 #            plant_state=plant_final_state,
 #            controller_state=controller_init_abs_state))
 
-    # print '='*80
-    # print 'all final states'
+    # print('='*80)
+    # print('all final states')
     # for ps in plant_final_state_set:
-    #    print ps
-    # print '='*80
+    #    print(ps)
+    # print('='*80)
 
-    def is_final(abs_state):
+    def is_final(_A, abs_state):
 
-#        print '----------isfinal-----------'
-#        print abs_state.plant_state.cell_id == ps.cell_id
-#        print abs_state.plant_state in plant_final_state_set
-#        print hash(abs_state.plant_state), hash(ps)
-#        print abs_state.plant_state == ps
-#        if abs_state.plant_state.cell_id == ps.cell_id:
-#            exit()
+        #print('----------isfinal-----------')
+        #print(abs_state.plant_state.cell_id == ps.cell_id)
+        #print(abs_state.plant_state in plant_final_state_set)
+        #print(hash(abs_state.plant_state), hash(ps))
+        #print(abs_state.plant_state == ps)
+        #if abs_state.plant_state.cell_id == ps.cell_id:
+            #exit()
 
         # return abs_state.plant_state in plant_final_state_set
 
-        return PA.get_ival_constraints(abs_state.plant_state) & final_cons \
+        #print('---------------------------------------------')
+        #print(_A.plant_abs.get_ival_constraints(abs_state.ps))
+        #print('---------------------------------------------')
+        return _A.plant_abs.get_ival_cons_abs_state(abs_state.plant_state) & final_cons \
             is not None
 
     # ##!!##logger.debug('{0}initial{0}\n{1}'.format('=' * 10, plant_initial_state_set))
@@ -121,8 +128,7 @@ def discover(A, system_params, budget=None):
 
             # Find all reachable abstract states using simulations
 
-            abs2rch_abs_state_dict = get_reachable_abs_states(A,
-                    system_params, [abs_state])
+            abs2rch_abs_state_dict = get_reachable_abs_states(A, system_params, [abs_state])
 
             # add the new reached states only if they have not been
             # processed before
@@ -141,15 +147,14 @@ def discover(A, system_params, budget=None):
                 # query if the reached state is a final state or not?
                 # If yes, tag it so
 
-                if system_params.is_final(rchd_abs_state):
+                if system_params.is_final(A, rchd_abs_state):
                     system_params.final_state_set.add(rchd_abs_state)
                 else:
 
-                    # print 'found a final state'
+                    # print('found a final state')
                     # exit()
 
                     Q.put(rchd_abs_state, False)
-
 
                 # moving below to the abstraction itself
                 # A.add_relation(abs_state, rchd_abs_state)
@@ -167,6 +172,7 @@ def discover(A, system_params, budget=None):
 # calling get_reachable_abs_states() on the entire group
 # This makes it potentially faster, because fewer simulator calls are
 # needed.
+
 
 def discover_batch(A, budget=None):
     Q = Queue.Queue(maxsize=0)
@@ -214,10 +220,9 @@ def discover_batch(A, budget=None):
         # ##!!##logger.debug('get_reachable_abs_states() for...\n{}'.format(abs_state_list_to_examine))
 
         if abs_state_list_to_examine:
-            abs2rch_abs_state_dict = get_reachable_abs_states(A,
-                    abs_state_list_to_examine)
+            abs2rch_abs_state_dict = get_reachable_abs_states(A, abs_state_list_to_examine)
 
-            # print abs2rch_abs_state_dict
+            # print(abs2rch_abs_state_dict)
 
             # ##!!##logger.debug('abs2rch_abs_state_dict.values()\n{}'.format(abs2rch_abs_state_dict.values()))
 
@@ -244,11 +249,9 @@ def discover_batch(A, budget=None):
             # TODO: abstract away the graph maybe??
             # Hide the call behind add_relation(A1, A2)
 
-            for (abs_state, rchd_abs_state_set) in \
-                abs2rch_abs_state_dict.iteritems():
+            for (abs_state, rchd_abs_state_set) in abs2rch_abs_state_dict.iteritems():
                 for rchd_abs_state in rchd_abs_state_set:
                     A.add_relation(abs_state, rchd_abs_state)
-
 
                     # A.G.add_edge(abs_state, rchd_abs_state)
 #                        n = self.get_n_for(abs_state) + 1
@@ -259,101 +262,77 @@ def discover_batch(A, budget=None):
     # ##!!##logger.debug('Abstraction discovery done')
     # ##!!##logger.debug('Printing Abstraction\n {}'.format(str(A)))
 
+
 def refine_state(A, RA, abs_state):
-    c = A.get_concrete_state_constraints(abs_state)
-    return RA.get_abs_state_set_from_ival_constraints(c)
+    ps = abs_state.ps
+    cs = abs_state.cs
+    ps_ival = A.plant_abs.get_ival_cons_abs_state(ps)
+    refined_ps_set = RA.plant_abs.get_abs_state_set_from_ival_constraints(ps_ival, ps.n, ps.d, ps.pvt)
+    abs_state_list = []
+    if A.controller_abs.is_symbolic:
+        for rps in refined_ps_set:
+            x_smt2 = RA.plant_abs.get_smt2_constraints(rps, cs.x)
+            cs.C = RA.controller_abs.solver.And(cs.C, x_smt2)
+            AA.AbstractState(rps, cs)
+            abs_state_list.append(abs_state)
+    else:
+        for rps in refined_ps_set:
+            AA.AbstractState(rps, cs)
+            abs_state_list.append(abs_state)
+    return abs_state_list
 
 
-# refine using entire traces
-# TODO: unattended for long......make sure its same before using it!
-
-def refine_trace_based(A):
-
-    # ##!!##logger.debug('executing trace based refinement')
-
-    # eps
-
+def refine_param_dict(A):
     new_eps = A.eps / A.refinement_factor
-
-    error_paths = A.compute_error_paths()
-
-    traversed_state_list = []
-    for path in error_paths:
-        print 'p:', path
-        traversed_state_list += path
-    if not traversed_state_list:
-        print 'No error path found!'
-        exit()
-    traversed_state_set = set(traversed_state_list)
-    print 'traversed_state_set:', traversed_state_set
-
-    init_cons_list = []
-    initial_abs_states = A.get_initial_states_from_error_paths()
-    for init_state in initial_abs_states:
-        c = A.get_concrete_state_constraints(init_state)
-        init_cons_list.append(c)
-
+    #new_pi_eps = A.pi_eps / A.refinement_factor
     param_dict = {
         'eps': new_eps,
+        #'pi_eps': new_pi_eps,
         'refinement_factor': A.refinement_factor,
         'num_samples': A.num_samples,
         'delta_t': A.delta_t,
         'N': A.N,
         'type': 'value',
         }
+    return param_dict
 
-    AA.AbstractState.clear()
-    RA = AA.GridBasedAbstraction(  # A.T,
+
+def refine_trace_based(A, error_paths, system_params):
+
+    # ##!!##logger.debug('executing trace based refinement')
+
+    traversed_state_set = set()
+    sap = A.states_along_paths(error_paths)
+    for path in sap:
+        traversed_state_set.update(path)
+
+    param_dict = refine_param_dict(A)
+
+    RA = AA.abstraction_factory(
         param_dict,
-        A.plant_sim,
-        A.delta_t,
-        A.sample,
-        init_cons_list,
-        A.final_cons,
-        A.controller_sim,
+        A.T,
         A.num_dims,
-        prog_bar=False,
+        A.controller_sym_path_obj,
+        A.min_smt_sample_dist,
+        A.plant_abstraction_type,
+        A.controller_abstraction_type
         )
 
     # split the traversed states
 
-    refined_ts_list = []
-    for ts in traversed_state_set:
-        rs = refine_state(A, RA, ts)
-        refined_ts_list += list(rs)
+    # construct a list of sets and then flatten
+    #refined_ts_list = U.flatten( [refine_state(A, RA, ts) for ts in traversed_state_set])
 
-    for a in refined_ts_list:
+    #abs2rch_abs_state_dict = get_reachable_abs_states(RA, system_params, refined_ts_list)
 
-        # set it to 0, so never will get updated
-
-        RA.set_n_for(a, 0)
-
-    abs2rch_abs_state_dict = get_reachable_abs_states(RA, refined_ts_list)
-
-    rchd_abs_state_set = set.union(*abs2rch_abs_state_dict.values())
-
-    for (abs_state, rchd_abs_state_set) in abs2rch_abs_state_dict.iteritems():
-        for rchd_abs_state in rchd_abs_state_set:
-
-            # RA.G.add_edge(abs_state, rchd_abs_state)
-
-            RA.add_relation(abs_state, rchd_abs_state)
-
-    # restore sanity ;)
-
-    RA.T = (A.T, )
     return RA
 
 
 # refine using init states
-
 def refine_init_based(A, promising_initial_abs_states,
-                      original_plant_cons_list):
+                      original_plant_cons_list):#, pi_ref, ci_ref):
 
     # ##!!##logger.debug('executing init based refinement')
-    # eps
-
-    new_eps = A.eps / A.refinement_factor
 
     # checks if the given constraint has a non empty intersection with the
     # given plant initial states. These are the actual initial plant sets
@@ -363,6 +342,7 @@ def refine_init_based(A, promising_initial_abs_states,
         for oic in original_plant_cons_list:
             if oic & ic:
                 return True
+        assert('Should never happen. Should be caught by SS.filter_invalid_abs_states')
         return False
 
     init_cons_list = []
@@ -370,18 +350,11 @@ def refine_init_based(A, promising_initial_abs_states,
     # ignore cells which have no overlap with the initial state
 
     for init_state in promising_initial_abs_states:
-        ic = A.plant_abs.get_ival_constraints(init_state.plant_state)
+        ic = A.plant_abs.get_ival_cons_abs_state(init_state.plant_state)
         if in_origianl_initial_plant_cons(ic):
             init_cons_list.append(ic)
 
-    param_dict = {
-        'eps': new_eps,
-        'refinement_factor': A.refinement_factor,
-        'num_samples': A.num_samples,
-        'delta_t': A.delta_t,
-        'N': A.N,
-        'type': 'value',
-        }
+    param_dict = refine_param_dict(A)
 
 #    AA.AbstractState.clear()
 
@@ -390,10 +363,18 @@ def refine_init_based(A, promising_initial_abs_states,
         A.T,
         A.num_dims,
         A.controller_sym_path_obj,
+        #A.ci_grid_eps/2,
         A.min_smt_sample_dist,
         A.plant_abstraction_type,
         A.controller_abstraction_type,
         )
+
+    # TODO: what a hack!
+    #pi_ref = A.plant_abs.pi_ref
+#     pi_ref.refine()
+#     ci_ref.refine()
+#     refined_abs.plant_abs.pi_ref = pi_ref
+#     refined_abs.controller_abs.ci_ref = ci_ref
 
 #    refined_abs = AA.GridBasedAbstraction(param_dict,
 #                                          A.plant_sim,
@@ -429,8 +410,7 @@ def sample_abs_state_list(A, system_params, abs_state_list):
 
         # ##!!##logger.debug('sampling({})'.format(abs_state))
 
-        samples = system_params.sampler.sample(abs_state, A, system_params,
-                A.num_samples)
+        samples = system_params.sampler.sample(abs_state, A, system_params, A.num_samples)
 
         # ##!!##logger.debug('{}'.format(samples))
 
@@ -439,7 +419,7 @@ def sample_abs_state_list(A, system_params, abs_state_list):
 
 #    # ##!!##logger.debug('{}'.format(consolidated_samples))
 
-    total_num_samples = consolidated_samples.n
+    #total_num_samples = consolidated_samples.n
 
     # ##!!##logger.debug('num_samples = {}'.format(total_num_samples))
     # ##!!##logger.debug('samples = \n{}'.format(samples))
@@ -469,26 +449,36 @@ def get_reachable_abs_states(A, system_params, abs_state_list):
 # the case when no valid abstract state is left!
 # VERY INEFFICIENT
 # Repeats some work done in random_test...
-def filter_invalid_abs_states(state_list, A, init_cons):
-    valid_state_list = []
-    for abs_state in state_list:
-        ival_cons = A.plant_abs.get_ival_constraints(abs_state.plant_state)
+def filter_invalid_abs_states(state_list, pi_seq_list, ci_seq_list, A, init_cons):
+    valid_idx_list = []
+
+    for idx, abs_state in enumerate(state_list):
+        ival_cons = A.plant_abs.get_ival_cons_abs_state(abs_state.plant_state)
 
         # ##!!##logger.debug('ival_cons: {}'.format(ival_cons))
 
         # find the intersection b/w the cell and the initial cons
-        # print 'init_cons', init_cons
+        # print('init_cons', init_cons)
 
         ic = ival_cons & init_cons
         if ic is not None:
-            valid_state_list.append(abs_state)
+            valid_idx_list.append(idx)
+            #valid_state_list.append(abs_state)
 
     # TODO: this should be logged and not printed
-    if valid_state_list == []:
+    if valid_idx_list == []:
         for abs_state in state_list:
-            ival_cons = A.plant_abs.get_ival_constraints(abs_state.plant_state)
-            print ival_cons
-    return valid_state_list
+            ival_cons = A.plant_abs.get_ival_cons_abs_state(abs_state.plant_state)
+            print(ival_cons)
+
+    valid_state_list = []
+    respective_pi_seq_list = []
+    respective_ci_seq_list = []
+    for i in valid_idx_list:
+        valid_state_list.append(state_list[i])
+        respective_pi_seq_list.append(pi_seq_list[i])
+        respective_ci_seq_list.append(ci_seq_list[i])
+    return valid_state_list, respective_pi_seq_list, respective_ci_seq_list
 
 
 def random_test(
@@ -496,9 +486,11 @@ def random_test(
         system_params,
         initial_state_list,
         ci_seq_list,
+        pi_seq_list,
         init_cons,
         init_d,
         initial_controller_state,
+        sample_ci
         ):
 
     # ##!!##logger.debug('random testing...')
@@ -507,26 +499,32 @@ def random_test(
 
     # initial_state_set = set(initial_state_list)
 
-    if A.num_dims.ci == 0:
-        pass
-    else:
-        ci_seq_array = np.array(ci_seq_list)
+    if A.num_dims.ci != 0:
+        if sample_ci:
+            ci_seq_array = np.array([np.array(ci_seq_list).T]).T
+        else:
+            ci_seq_array = np.array(ci_seq_list)
 
-        # print 'ci_seq_array', ci_seq_array
-        # print 'ci_seq_array.shape', ci_seq_array.shape
+        # print('ci_seq_array', ci_seq_array)
+        # print('ci_seq_array.shape', ci_seq_array.shape)
 
+    if A.num_dims.pi != 0:
+        pi_seq_array = np.array([np.array(pi_seq_list).T]).T
+
+    #print(ci_seq_array.shape)
+    #print(pi_seq_array.shape)
     x_array = np.empty((0.0, A.num_dims.x), dtype=float)
-    print 'checking initial states'
+    print('checking initial states')
 
     # for abs_state in initial_state_set:
 
     for abs_state in initial_state_list:
-        ival_cons = A.plant_abs.get_ival_constraints(abs_state.plant_state)
+        ival_cons = A.plant_abs.get_ival_cons_abs_state(abs_state.plant_state)
 
         # ##!!##logger.debug('ival_cons: {}'.format(ival_cons))
 
         # find the intersection b/w the cell and the initial cons
-        # print 'init_cons', init_cons
+        # print('init_cons', init_cons)
 
         ic = ival_cons & init_cons
         if ic is not None:
@@ -549,29 +547,29 @@ def random_test(
             # ignore the state as it is completely outside the initial
             # constraints
 
-            pass
+    # print(x_array)
+    # print(x_array.shape)
 
-    # print x_array
-    # print x_array.shape
-
+    print(x_array.shape)
     num_samples = len(x_array)
     if num_samples == 0:
-        print initial_state_list
-        print 'no valid sample found during random testing. STOP'
+        print(initial_state_list)
+        print('no valid sample found during random testing. STOP')
         return False
     else:
 
         # ##!!##logger.debug('num_samples = 0')
 
-        print 'simulating {} samples'.format(num_samples)
+        print('simulating {} samples'.format(num_samples))
 
     s_array = np.tile(initial_controller_state, (num_samples, 1))
 
-    if system_params.pi is not None:
-        pi_array = SaMpLe.sample_ival_constraints(system_params.pi,
-                num_samples)
-    else:
-        pi_array = None
+#     if system_params.pi is not None:
+#         pi_array = SaMpLe.sample_ival_constraints(system_params.pi, num_samples)
+#         print(pi_array)
+#         exit()
+#     else:
+#         pi_array = None
 
     t_array = np.tile(0.0, (num_samples, 1))
 
@@ -592,26 +590,54 @@ def random_test(
     if len(x_array) != len(s_array):
         raise err.Fatal('internal: how is len(x_array) != len(s_array)?')
 
+    def property_checker(t, Y): return Y in system_params.final_cons
+
+    # while(simTime < A.T):
     sim_num = 0
     simTime = 0.0
     i = 0
-
-    # while(simTime < A.T):
-
     while sim_num < A.N:
-
         if A.num_dims.ci == 0:
             ci_array = np.zeros((num_samples, 0))
         else:
-            ci_array = ci_seq_array[:, i, :]
-            ci_array = np.repeat(ci_array, A.num_samples, axis=0)
+            if sample_ci:
+                print 
+                ci_cons_list = list(ci_seq_array[:, i, :])
+                ci_cons_list = [ci_cons.tolist()[0] for ci_cons in ci_cons_list]
 
-            # print 'ci_array', ci_array
-            # print 'shape(ci_array) =', ci_array.shape
-            # print 'shape(x_array) =', x_array.shape
-            # print ci_seq_array
-            # print ci_array
-        # ##!!##logger.debug('{}'.format(ci_array))
+                ci_lb_list = [np.tile(ci_cons.l, (A.num_samples, 1)) for ci_cons in ci_cons_list]
+                ci_ub_list = [np.tile(ci_cons.h, (A.num_samples, 1)) for ci_cons in ci_cons_list]
+
+                ci_cons_lb = reduce(lambda acc_arr, arr: np.concatenate((acc_arr, arr)), ci_lb_list)
+                ci_cons_ub = reduce(lambda acc_arr, arr: np.concatenate((acc_arr, arr)), ci_ub_list)
+
+                random_arr = np.random.rand(num_samples, A.num_dims.ci)
+
+                ci_array = ci_cons_lb + random_arr * (ci_cons_ub - ci_cons_lb)
+            else:
+                ci_array = ci_seq_array[:, i, :]
+                ci_array = np.repeat(ci_array, A.num_samples, axis=0)
+
+        if A.num_dims.pi == 0:
+            pi_array = np.zeros((num_samples, 0))
+        else:
+            pi_cons_list = list(pi_seq_array[:, i, :])
+            pi_cons_list = [pi_cons.tolist()[0] for pi_cons in pi_cons_list]
+            #print(pi_cons_list)
+            #pi_cons_list = map(A.plant_abs.get_ival_cons_pi_cell, pi_cells)
+
+            pi_lb_list = [np.tile(pi_cons.l, (A.num_samples, 1)) for pi_cons in pi_cons_list]
+            pi_ub_list = [np.tile(pi_cons.h, (A.num_samples, 1)) for pi_cons in pi_cons_list]
+
+            pi_cons_lb = reduce(lambda acc_arr, arr: np.concatenate((acc_arr, arr)), pi_lb_list)
+            pi_cons_ub = reduce(lambda acc_arr, arr: np.concatenate((acc_arr, arr)), pi_ub_list)
+
+            random_arr = np.random.rand(num_samples, A.num_dims.pi)
+
+#             print('pi_cons_lb.shape:', pi_cons_lb.shape)
+#             print('pi_cons_ub.shape:', pi_cons_ub.shape)
+#             print('num_samples', num_samples)
+            pi_array = pi_cons_lb + random_arr * (pi_cons_ub - pi_cons_lb)
 
         (s_array_, u_array) = cc.compute_concrete_controller_output(
             A,
@@ -626,37 +652,38 @@ def random_test(
                                         # cont_state_array
                                         # abs_state.discrete_state
                                         # abs_state.pvt_stat
-            t_array,
-            x_array,
-            d_array,
-            p_array,
-            s_array_,
-            u_array,
-            pi_array,
-            ci_array,
-            )
+                                        t_array,
+                                        x_array,
+                                        d_array,
+                                        p_array,
+                                        s_array_,
+                                        u_array,
+                                        pi_array,
+                                        ci_array,
+                                        )
 
-        # print concrete_states
+        # print(concrete_states)
 
         property_violated_flag = [False]
-        property_checker = lambda t, Y: Y in system_params.final_cons
 
-        rchd_concrete_state_array = \
-            system_params.plant_sim.simulate(concrete_states, A.delta_t,
-                property_checker, property_violated_flag)
+        rchd_concrete_state_array = system_params.plant_sim.simulate(
+                concrete_states,
+                A.delta_t,
+                property_checker,
+                property_violated_flag)
 
         if property_violated_flag[0]:
-            print U.decorate('concretized!')
+            print(U.decorate('concretized!'))
             for (idx, xf) in enumerate(rchd_concrete_state_array.iterable()):
                 if xf.x in system_params.final_cons:
-                    print x0_array[idx, :], d0_array[idx, :], '->', '\t', xf.x, xf.d
+                    print(x0_array[idx, :], d0_array[idx, :], '->', '\t', xf.x, xf.d)
                     if A.num_dims.ci != 0:
-                        print 'ci:', ci_array[idx]
+                        print('ci:', ci_array[idx])
             res = True
             break
         else:
 
-            # print 'failed to concretize'
+            # print('failed to concretize')
 
             res = False
         i += 1
