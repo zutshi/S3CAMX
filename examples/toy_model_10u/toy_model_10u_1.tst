@@ -32,6 +32,8 @@ initial_set, error_set, ci = toy_instance.select(benchmark_id)
 # initial abstraction grid size
 grid_eps = [1.0, 1.0, 1.0, 1.0]
 
+pi_grid_eps = []
+
 # number of samples at every scatter step
 #num_samples = 1 # symex
 num_samples = 100 # ss-concrete
