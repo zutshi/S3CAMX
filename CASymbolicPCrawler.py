@@ -724,11 +724,11 @@ class ControllerSymbolicAbstraction:
             p_array = np.tile(abs_state.ps.pvt, (num_actual_samples, 1))
             pi_array = np.zeros((num_actual_samples, A.num_dims.pi))
             t = abs_state.plant_state.n * A.delta_t
-            print('t:', t)
+            #print('t:', t)
             t_array = np.tile(t, (num_actual_samples, 1))
 
             s_array = np.concatenate((si_array, sf_array), axis=1)
-            print('s:', s_array)
+            #print('s:', s_array)
             #s__array = np.concatenate((si__array, sf__array))
 
             state = st.StateArray(
