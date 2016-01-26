@@ -73,7 +73,7 @@ class StateArray(object):
                 self.pvt_states[i],
                 self.controller_extraneous_inputs[i],
                 self.controller_states[i],
-                None,
+                self.plant_extraneous_inputs[i],
                 self.controller_outputs[i],
                 )
             i += 1

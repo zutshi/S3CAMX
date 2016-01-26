@@ -28,16 +28,16 @@ logger = logging.getLogger(__name__)
 # Must include provision for states which can not be simulated for some
 # reasons...
 def simulate(system_sim, concrete_state, T):
-    (t, x, s, d, pvt, u, ci_array, pi) = get_individual_states(concrete_state)
+    (t, x, s, d, pvt, u, ci_array, pi_array) = get_individual_states(concrete_state)
     t0 = t
     tf = t + T
-    trace = system_sim(x, s, d, pvt, t0, tf, ci_array)
+    trace = system_sim(x, s, d, pvt, t0, tf, ci_array, pi_array)
     return trace
 
 
 # arguements must be numpy arrays
 # Uses the dimension info to correctly create the state array
-def get_concrete_state_obj(t0, x0, d0, pvt0, s0, ci, u):
+def get_concrete_state_obj(t0, x0, d0, pvt0, s0, ci, pi, u):
     if x0.ndim == 1:
         concrete_states = st.StateArray(
             t=np.array([t0]),
@@ -46,7 +46,7 @@ def get_concrete_state_obj(t0, x0, d0, pvt0, s0, ci, u):
             pvt=np.array([pvt0]),
             u=np.array([u]),
             s=np.array([s0]),
-            pi=0,
+            pi=np.array([pi]),
             ci=np.array([ci]),
             )
     elif x0.ndim == 2:
@@ -58,7 +58,7 @@ def get_concrete_state_obj(t0, x0, d0, pvt0, s0, ci, u):
             pvt=pvt0,
             u=u,
             s=s0,
-            pi=0,
+            pi=pi,
             ci=ci,
             )
     else:
@@ -88,7 +88,8 @@ def get_system_simulator(sys):
             x, s,
             d, pvt,
             t0, tf,
-            ci_array
+            ci_array,
+            pi_array
             ):
 
         T = tf - t0
@@ -109,23 +110,24 @@ def get_system_simulator(sys):
         #    raise e
         for i in xrange(num_segments):
             ci = ci_array[i]
-            (t_, x_, s_, d_, pvt_, u_) = step_sim(t, x, s, d, pvt, ci)
-            trace.append(t=t, x=x, s=s, d=d, u=u_, ci=ci)
+            pi = pi_array[i]
+            (t_, x_, s_, d_, pvt_, u_) = step_sim(t, x, s, d, pvt, ci, pi)
+            trace.append(t=t, x=x, s=s, d=d, u=u_, ci=ci, pi=pi)
             (t, x, s, d, pvt) = (t_, x_, s_, d_, pvt_)
 
-        trace.append(t=t, x=x, s=s, d=d, u=u_, ci=ci)
+        trace.append(t=t, x=x, s=s, d=d, u=u_, ci=ci, pi=pi)
         return trace
     return system_simulator
 
 
 def get_step_simulator(csim, psim, delta_t):
 
-    def simulate_basic(t0, x0, s0, d0, pvt0, ci):
+    def simulate_basic(t0, x0, s0, d0, pvt0, ci, pi):
 
         controller_ret_val = csim.compute(cifc.ToController(ci, s0, x0))
         s_, u = controller_ret_val.state_array, controller_ret_val.output_array
 
-        concrete_states = get_concrete_state_obj(t0, x0, d0, pvt0, s_, ci, u)
+        concrete_states = get_concrete_state_obj(t0, x0, d0, pvt0, s_, ci, pi, u)
 
         concrete_states_ = psim.simulate(concrete_states, delta_t)
 
@@ -134,13 +136,10 @@ def get_step_simulator(csim, psim, delta_t):
     return simulate_basic
 
 
-def simulate_basic(csim, psim, x0, s0, t0, tf, ci, d0, pvt0):
-
-    controller_ret_val = csim(cifc.ToController(ci, s0, x0))
-    s_, u = controller_ret_val.state_array, controller_ret_val.output_array
-
-    concrete_states = get_concrete_state_obj(t0, x0, d0, pvt0, s_, ci, u)
-
-    concrete_states_ = psim(concrete_states, tf)
-
-    return concrete_states_
+# UNUSED?
+# def simulate_basic(csim, psim, x0, s0, t0, tf, ci, d0, pvt0):
+#     controller_ret_val = csim(cifc.ToController(ci, s0, x0))
+#     s_, u = controller_ret_val.state_array, controller_ret_val.output_array
+#     concrete_states = get_concrete_state_obj(t0, x0, d0, pvt0, s_, ci, u)
+#     concrete_states_ = psim(concrete_states, tf)
+#     return concrete_states_

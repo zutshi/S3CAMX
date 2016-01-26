@@ -118,6 +118,8 @@ ci = <[[0.0], [0.0]]>
 ########################
 # initial abstraction grid size
 grid_eps = <[0.0, 0.0, 0.0]>
+# initial abstraction pi grid size
+pi_grid_eps = <[0.0, 0.0]>
 
 # number of samples at every scatter step
 num_samples = <0>
@@ -125,7 +127,7 @@ num_samples = <0>
 # maximum iteration before SS iter outs.
 MAX_ITER = <0>
 
-# minDist=0.05
+min_smt_sample_dist = <0.5>
 ########################
 
 # initial controller states which are C ints
@@ -153,9 +155,9 @@ initial_pvt_states = []
 ################
 ## Plant ##
 # is the plant simulator implemented in Python(python) or Matlab(matlab)?
-plant_description = <['python', 'matlab']>
+plant_description = <'python'/'matlab'>
 # relative/absolute path for the simulator file containing sim()
-plant_path = <['*.py', '*.m']>
+plant_path = <'*.py'/'*.m'>
 
 ## Controller ##
 # relative/absolute path for the controller .so
@@ -198,7 +200,7 @@ typedef struct{
     double* x_arr;
 }INPUT_VAL;
 
-void* controller(INPUT_VAL* input, RETURN_VAL* ret_val)
+void* controller(INPUT_VAL* input, RETURN_VAL* ret_val);
 void controller_init();
 '''
 

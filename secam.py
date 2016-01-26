@@ -1,11 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-
-import matplotlib
+#import matplotlib
 # Force GTK3 backend. By default GTK2 gets loaded and conflicts with
 # graph-tool
-matplotlib.use('GTK3Agg')
+#matplotlib.use('GTK3Agg')
 #global plt
 import matplotlib.pyplot as plt
 
@@ -30,18 +29,23 @@ import traces
 import example_list as egl
 import plothelper as ph
 import plot_hack
+import wmanager
+#import utils as U
+from utils import print
+
+#matplotlib.use('GTK3Agg')
 
 #precision=None, threshold=None, edgeitems=None, linewidth=None, suppress=True, nanstr=None, infstr=None, formatter=Nonu)
 np.set_printoptions(suppress=True)
 
 ###############################
-## terminal color printing compatibility for windows
-## https://pypi.python.org/pypi/colorama/0.2.4
+# terminal color printing compatibility for windows
+# https://pypi.python.org/pypi/colorama/0.2.4
 
-## from colorama import init
-## init()
+# from colorama import init
+# init()
 
-## use this when we add windows portability
+# use this when we add windows portability
 ###############################
 
 # start logger
@@ -69,6 +73,8 @@ class SystemParams:
             pi,
             sampler,
             final_cons,
+            pi_ref,
+            ci_ref
             ):
 
         self.initial_state_set = initial_state_set
@@ -80,6 +86,8 @@ class SystemParams:
         self.pi = pi
         self.sampler = sampler
         self.final_cons = final_cons
+        self.pi_ref = pi_ref
+        self.ci_ref = ci_ref
         return
 
 
@@ -153,7 +161,6 @@ def create_abstraction(sys, prop, opts):
         sampler = sample.IntervalConcolic(concolic_engine)
     elif METHOD == 'concrete':
         sampler = sample.IntervalSampler()
-        sampler = sample.IntervalSampler()
         controller_abstraction_type = 'concrete'
         controller_sym_path_obj = None
 
@@ -219,6 +226,12 @@ def falsify(sys, prop, opts, current_abs, sampler):
     initial_controller_state = prop.initial_controller_state
     MAX_ITER = prop.MAX_ITER
 
+    #TODO: hack to make random_test sample ci_cells when doing
+    # ss-concrete. It is false if ss-symex (and anything else) is
+    # asked for, because then ci_seq consists if concrete values. Can
+    # also be activated for symex as an option, but to be done later.
+    sample_ci = opts.METHOD == 'concrete'
+
     # options
     plot = opts.plot
 
@@ -229,8 +242,8 @@ def falsify(sys, prop, opts, current_abs, sampler):
 
     original_plant_cons_list = init_cons_list
 
-    i = 1
-    while i <= MAX_ITER:
+    pi_ref = wmanager.WMap(pi, sys.pi_grid_eps)
+    ci_ref = wmanager.WMap(ci, sys.ci_grid_eps) if sample_ci else None
 
 #            f1 = plt.figure()
 ##
@@ -243,8 +256,154 @@ def falsify(sys, prop, opts, current_abs, sampler):
 ##
 ##            f1.suptitle('abstraction')
 
-        print('iteration:', i)
+    if opts.refine == 'init':
+        refine_init(
+            current_abs,
+            init_cons_list,
+            final_cons,
+            initial_discrete_state,
+            initial_controller_state,
+            plant_sim,
+            controller_sim,
+            ci,
+            pi,
+            sampler,
+            plot,
+            init_cons,
+            original_plant_cons_list,
+            MAX_ITER,
+            sample_ci,
+            pi_ref,
+            ci_ref)
+    # seed 4567432
+    elif opts.refine == 'trace':
+        refine_trace(
+            current_abs,
+            init_cons_list,
+            final_cons,
+            initial_discrete_state,
+            initial_controller_state,
+            plant_sim,
+            controller_sim,
+            ci,
+            pi,
+            sampler,
+            plot,
+            init_cons,
+            original_plant_cons_list)
+    else:
+        raise err.Fatal('internal')
 
+
+def refine_trace(
+        current_abs,
+        init_cons_list,
+        final_cons,
+        initial_discrete_state,
+        initial_controller_state,
+        plant_sim,
+        controller_sim,
+        ci,
+        pi,
+        sampler,
+        plot,
+        init_cons,
+        original_plant_cons_list):
+
+    (initial_state_set, final_state_set, is_final) = \
+        SS.init(current_abs, init_cons_list, final_cons,
+                initial_discrete_state, initial_controller_state)
+
+    system_params = SystemParams(
+        initial_state_set,
+        final_state_set,
+        is_final,
+        plant_sim,
+        controller_sim,
+        ci,
+        pi,
+        sampler,
+        final_cons,
+        )
+
+    SS.discover(current_abs, system_params)
+
+    if plot:
+        plt.autoscale()
+        plt.show()
+
+    while True:
+
+        if not system_params.final_state_set:
+            print('did not find any abstract counter example!', file=SYS.stderr)
+            return True
+        else:
+            print('analyzing graph...')
+        (promising_initial_states, ci_seq_list) = \
+            current_abs.get_initial_states_from_error_paths(initial_state_set, final_state_set)
+
+        # ##!!##logger.debug('promising initial states: {}'.format(promising_initial_states))
+
+        print('begin random testing!')
+        if plot:
+            f2 = plt.figure()
+            f2.suptitle('random testing')
+
+
+        # TODO: ugly...should it be another function?
+        # Read the TODO above the function definition for more details
+        valid_promising_initial_state_list = SS.filter_invalid_abs_states(
+                promising_initial_states,
+                current_abs,
+                init_cons)
+        if valid_promising_initial_state_list == []:
+            print('no valid sample found during random testing. STOP', file=SYS.stderr)
+            return True
+
+        done = SS.random_test(
+            current_abs,
+            system_params,
+            valid_promising_initial_state_list,
+            ci_seq_list,
+            init_cons,
+            initial_discrete_state,
+            initial_controller_state,
+            )
+        if plot:
+            plt.show()
+        if done:
+            print('Concretized', file=SYS.stderr)
+            return True
+        current_abs = SS.refine_trace_based(
+                current_abs,
+                current_abs.compute_error_paths(initial_state_set, final_state_set),
+                system_params)
+        #init_cons_list = [current_abs.plant_abs.get_ival_constraints(i) for i in valid_promising_initial_state_list]
+
+
+# returns a True when its done
+def refine_init(
+        current_abs,
+        init_cons_list,
+        final_cons,
+        initial_discrete_state,
+        initial_controller_state,
+        plant_sim,
+        controller_sim,
+        ci,
+        pi,
+        sampler,
+        plot,
+        init_cons,
+        original_plant_cons_list,
+        MAX_ITER,
+        sample_ci,
+        pi_ref,
+        ci_ref):
+
+    i = 1
+    while i <= MAX_ITER:
+        print('iteration:', i)
         # TODO: temp function ss.init()
 
         (initial_state_set, final_state_set, is_final) = \
@@ -261,6 +420,8 @@ def falsify(sys, prop, opts, current_abs, sampler):
             pi,
             sampler,
             final_cons,
+            pi_ref,
+            ci_ref
             )
         SS.discover(current_abs, system_params)
 
@@ -272,11 +433,21 @@ def falsify(sys, prop, opts, current_abs, sampler):
 
         if not system_params.final_state_set:
             print('did not find any abstract counter example!', file=SYS.stderr)
-            return
-        else:
-            print('analyzing graph...')
-        (promising_initial_states, ci_seq_list) = \
-            current_abs.get_initial_states_from_error_paths(initial_state_set, final_state_set)
+            return False
+
+        print('analyzing graph...')
+        pi_ref.cleanup()
+        if ci_ref is not None:
+            ci_ref.cleanup()
+        # creates a new pi_ref, ci_ref
+        (promising_initial_states,
+            ci_seq_list,
+            pi_seq_list) = current_abs.get_initial_states_from_error_paths(initial_state_set,
+                                                                           final_state_set,
+                                                                           pi_ref,
+                                                                           ci_ref,
+                                                                           pi,
+                                                                           ci)
 
         # ##!!##logger.debug('promising initial states: {}'.format(promising_initial_states))
 
@@ -285,39 +456,50 @@ def falsify(sys, prop, opts, current_abs, sampler):
             f2 = plt.figure()
             f2.suptitle('random testing')
 
+        print(len(promising_initial_states), len(ci_seq_list), len(pi_seq_list))
+        #U.pause()
         # TODO: ugly...should it be another function?
         # Read the TODO above the function definition for more details
-        valid_promising_initial_state_list = SS.filter_invalid_abs_states(
-                promising_initial_states,
-                current_abs,
-                init_cons)
+        (valid_promising_initial_state_list,
+            pi_seq_list, ci_seq_list) = SS.filter_invalid_abs_states(
+                        promising_initial_states,
+                        pi_seq_list,
+                        ci_seq_list,
+                        current_abs,
+                        init_cons)
+        print(len(valid_promising_initial_state_list), len(ci_seq_list), len(pi_seq_list))
+        #U.pause()
         if valid_promising_initial_state_list == []:
             print('no valid sample found during random testing. STOP', file=SYS.stderr)
-            return
+            return False
         done = SS.random_test(
             current_abs,
             system_params,
             valid_promising_initial_state_list,
             ci_seq_list,
+            pi_seq_list,
             init_cons,
             initial_discrete_state,
             initial_controller_state,
+            sample_ci
             )
         if plot:
             ph.figure_for_paper(plt.gca(), plot_hack.LINE_LIST)
             plt.show()
         if done:
             print('Concretized', file=SYS.stderr)
-            return
+            return True
 
         (current_abs, init_cons_list) = SS.refine_init_based(
                 current_abs,
-                promising_initial_states,
-                original_plant_cons_list)
+                promising_initial_states, # should it not be valid_promising_initial_state_list?
+                original_plant_cons_list)#, pi_ref, ci_ref)
+        pi_ref.refine()
+        if ci_ref is not None:
+            ci_ref.refine()
         i += 1
-
-    print('Failed: MAX iterations {} exceeded.format(MAX_ITER)', file=SYS.stderr)
-
+    print('Failed: MAX iterations {} exceeded'.format(MAX_ITER), file=SYS.stderr)
+    # raise an exception maybe?
 
 def dump_trace(trace_list):
     print('dumping trace[0]')
@@ -355,10 +537,11 @@ def main():
     LIST_OF_SYEMX_ENGINES = ['klee', 'pathcrawler']
     LIST_OF_CONTROLLER_REPRS = ['smt2', 'trace']
     LIST_OF_TRACE_STRUCTS = ['list', 'tree']
+    LIST_OF_REFINEMENTS = ['init', 'trace']
 
     usage = '%(prog)s <filename>'
     parser = argparse.ArgumentParser(description='S3CAM', usage=usage)
-    parser.add_argument('-f','--filename', default=None, metavar='file_path.tst')
+    parser.add_argument('-f', '--filename', default=None, metavar='file_path.tst')
 
     #parser.add_argument('--run-benchmarks', action="store_true", default=False,
     #                    help='run pacakged benchmarks')
@@ -390,6 +573,9 @@ def main():
 
     parser.add_argument('-t', '--trace-struct', type=str, metavar='struct', default='tree',
                         choices=LIST_OF_TRACE_STRUCTS, help='structure for cntrl-rep')
+
+    parser.add_argument('--refine', type=str, metavar='method', default='init',
+                        choices=LIST_OF_REFINEMENTS, help='Refinement method')
 
 #    argcomplete.autocomplete(parser)
     args = parser.parse_args()
@@ -446,6 +632,7 @@ def main():
         raise err.Fatal('no options passed. Check usage.')
     opts.plot = args.plot
     opts.dump_trace = args.dump
+    opts.refine = args.refine
 
     sys, prop = loadsystem.parse(filepath)
     # TAG:MSH

@@ -42,57 +42,48 @@ def simulator_factory(
 
     # ##!!##logger.debug('requested simulator creation')
 
-    if config_dict['type'] == 'string':
-        try:
-            sim_type = config_dict['plant_description']
-            if sim_type == 'matlab':
-                logger.info('creating matlab simulator')
+    sim_type = config_dict['plant_description']
+    if sim_type == 'matlab':
+        logger.info('creating matlab simulator')
 
-                # get the m_file's path
+        # get the m_file's path
 
-                m_file_path = config_dict['plant_path']
-                abs_m_file_path = fp.construct_path(m_file_path, benchmark_os_path)
-                if fp.validate_file_names([abs_m_file_path]):
+        m_file_path = config_dict['plant_path']
+        abs_m_file_path = fp.construct_path(m_file_path, benchmark_os_path)
+        if fp.validate_file_names([abs_m_file_path]):
 
-                    # return MatlabSim(m_file_path, benchmark_os_path, parallel)
+            # return MatlabSim(m_file_path, benchmark_os_path, parallel)
 
-                    return MEngPy(m_file_path, benchmark_os_path, parallel, sim_args)
-                else:
-                    raise err.FileNotFound('file does not exist: ' + m_file_path)
-            elif sim_type == 'simulink':
-                return SimulinkSim()
-            elif sim_type == 'python':
-                logger.info('creating Native Python simulator')
+            return MEngPy(m_file_path, benchmark_os_path, parallel, sim_args)
+        else:
+            raise err.FileNotFound('file does not exist: ' + m_file_path)
+    elif sim_type == 'simulink':
+        return SimulinkSim()
+    elif sim_type == 'python':
+        logger.info('creating Native Python simulator')
 
-                # get the file path
+        # get the file path
 
-                python_file_path = config_dict['plant_path']
-                #(module_name, file_ext) = python_file_path.split('.')
-                (module_name, file_ext) = fp.split_filename_ext(python_file_path)
-                if file_ext != 'py':
-                    raise err.Fatal('Python file extension py expected, found: {}'.format(file_ext))
-                module_path = fp.construct_path(python_file_path, benchmark_os_path)
-                if fp.validate_file_names([module_path]):
-                    return NativeSim(module_name, module_path, plt, plant_pvt_init_data, parallel)
-                else:
-                    raise err.FileNotFound('file does not exist: ' + python_file_path)
-            elif sim_type == 'test':
-                return TestSim(test_params)
-            else:
-                raise err.Fatal('unknown sim type : {}'.format(sim_type))
-
-            # Make the accessed data as None, so presence of spurious data can be detected in a
-            # sanity check
-
-            config_dict['sim_type'] = None
-            config_dict['plant_path'] = None
-        except KeyError, key:
-            raise err.Fatal('expected abstraction parameter undefined: {}'.format(key))
+        python_file_path = config_dict['plant_path']
+        #(module_name, file_ext) = python_file_path.split('.')
+        (module_name, file_ext) = fp.split_filename_ext(python_file_path)
+        if file_ext != 'py':
+            raise err.Fatal('Python file extension py expected, found: {}'.format(file_ext))
+        module_path = fp.construct_path(python_file_path, benchmark_os_path)
+        if fp.validate_file_names([module_path]):
+            return NativeSim(module_name, module_path, plt, plant_pvt_init_data, parallel)
+        else:
+            raise err.FileNotFound('file does not exist: ' + python_file_path)
+    elif sim_type == 'test':
+        return TestSim(test_params)
     else:
-        raise err.Fatal('unhandled non string type config_dict!')
+        raise err.Fatal('unknown sim type : {}'.format(sim_type))
 
-        # for attr in config_dict:
-        #    setattr(self, attr, config_dict[attr])
+    # Make the accessed data as None, so presence of spurious data can be detected in a
+    # sanity check
+
+#     config_dict['sim_type'] = None
+#     config_dict['plant_path'] = None
 
 
 class Simulator(object):
@@ -182,14 +173,13 @@ class NativeSim(Simulator):
         i = 0
 
         for state in sim_states.iterable():
-            dummy_val = 0.0
             (t, X, D, pvt) = self.sim(
                 (state.t, state.t + T),
                 state.x,
                 state.d,
                 state.pvt,
                 state.u,
-                dummy_val,
+                state.pi,
                 property_checker,
                 property_violated_flag,
                 )
@@ -312,6 +302,7 @@ class MEngPy(Simulator):
         m_p = matlab.double(sim_states.pvt_states.tolist())
         m_u = matlab.double(sim_states.controller_outputs.tolist())
         #m_p = matlab.double([0.0] * sim_states.cont_states.shape[0])
+        m_pi = matlab.double(sim_states.plant_extraneous_inputs.tolist())
         #m_pc = matlab.double([property_check])
         m_pc = property_check
 
@@ -325,7 +316,7 @@ class MEngPy(Simulator):
                 m_d,
                 m_p,
                 m_u,
-                m_p,
+                m_pi,
                 m_pc,
                 )
         else:
@@ -337,7 +328,7 @@ class MEngPy(Simulator):
                 m_d,
                 m_p,
                 m_u,
-                m_p,
+                m_pi,
                 m_pc,
                 )
 

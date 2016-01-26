@@ -1,9 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import itertools
 
 # Test for hashability of abstract state
 
+from __future__ import print_function
+import __builtin__
+import itertools
+import inspect
 import collections
 from subprocess import call
 import subprocess
@@ -11,6 +14,7 @@ import sys
 from blessings import Terminal
 
 import err
+import fileOps as fops
 
 
 def pairwise(iterable):
@@ -46,7 +50,7 @@ def strict_call_get_op(*args, **kwargs):
 #        print term.red(error_msg)
 
         error_msg = e.output.decode('utf-8')
-        print term.red(error_msg)
+        print(term.red(error_msg))
 
         # print term.red(str(e.output))
 
@@ -183,3 +187,59 @@ def group_list(lst, num_e_list):
     # get the slice list
     slice_list = [slice(s, e) for s, e in pairwise(idx_list)]
     return [lst[s] for s in slice_list]
+
+
+def bounded_iter(iter_obj, MAX):
+    for i in range(MAX):
+        yield iter_obj.next()
+
+
+def while_max_iter(MAX):
+    ctr = [0]
+
+    def f(cond):
+        ctr[0] += 1
+        #if ctr > MAX: return False else: return cond
+        return not(ctr[0] > MAX) and cond
+    return f
+
+
+#################### Unfinished
+class PrintSteady():
+    def __init__(self):
+        self.t = Terminal()
+        print('')
+        print(self.t.move_up + self.t.move_up)
+
+    def p(self, msg):
+        with self.t.location():
+            print(str(msg))
+
+
+def demo_print_steady():
+    import time
+    print('num:', end='')
+    for i in range(10):
+            PrintSteady(str(i))
+            time.sleep(0.1)
+    print('')
+#################### /Unfinished
+
+
+def pause(msg=''):
+    prompt = 'press enter to continue...'
+    if msg != '':
+        prompt = '{}: {}'.format(msg, prompt)
+    raw_input(prompt)
+
+
+def print(*args, **kwargs):
+    """custom print() function."""
+    callers_frame_idx = 1
+    (frame, filename, lineno,
+     function_name, lines, index) = inspect.getouterframes(
+                                         inspect.currentframe())[callers_frame_idx]
+    #frameinfo = inspect.getframeinfo(inspect.currentframe())
+    basename = fops.get_file_name_from_path(filename)
+    __builtin__.print('{}:{}::'.format(basename, lineno), end='')
+    return __builtin__.print(*args, **kwargs)
