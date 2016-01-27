@@ -244,5 +244,6 @@ def print(*args, **kwargs):
                                              inspect.currentframe())[callers_frame_idx]
         #frameinfo = inspect.getframeinfo(inspect.currentframe())
         basename = fops.get_file_name_from_path(filename)
-        __builtin__.print('{}:{}::'.format(basename, lineno), end='')
+        f = kwargs.get('file', sys.stdout)
+        __builtin__.print('{}:{}::'.format(basename, lineno), end='', file=f)
     return __builtin__.print(*args, **kwargs)
