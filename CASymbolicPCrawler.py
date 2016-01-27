@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import logging
 import numpy as np
+from blessings import Terminal
 
 # import matplotlib
 # matplotlib.use('GTK3Agg')
@@ -17,6 +18,8 @@ import state as st
 import utils
 from utils import print
 import err
+
+term = Terminal()
 
 # import controlifc as cifc
 
@@ -724,7 +727,13 @@ class ControllerSymbolicAbstraction:
             p_array = np.tile(abs_state.ps.pvt, (num_actual_samples, 1))
             pi_array = np.zeros((num_actual_samples, A.num_dims.pi))
             t = abs_state.plant_state.n * A.delta_t
-            #print('t:', t)
+            ######################################
+            #TODO: wrap this up somehow
+            print()
+            print(term.move_up + term.move_up)
+            ######################################
+            with term.location():
+                print('t:', t)
             t_array = np.tile(t, (num_actual_samples, 1))
 
             s_array = np.concatenate((si_array, sf_array), axis=1)
