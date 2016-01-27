@@ -153,12 +153,23 @@ def parse(file_path):
             pvt=0,
             )
 
-        # TODO: ci_grid_eps is not mandatory!
-        if len(sut.ci_grid_eps) == 0:
-            sut.ci_grid_eps = None
+        if not hasattr(sut, 'ci_grid_eps') or len(sut.ci_grid_eps) == 0:
+            sut.ci_grid_eps = []
 
-        if len(sut.pi_grid_eps) == 0:
-            sut.pi_grid_eps = None
+#         if hasattr(sut, 'ci_grid_eps'):
+#             if len(sut.ci_grid_eps) == 0:
+#                 sut.ci_grid_eps = None
+#         else:
+#             sut.ci_grid_eps = None
+
+        if not hasattr(sut, 'pi_grid_eps') or len(sut.pi_grid_eps) == 0:
+            sut.pi_grid_eps = []
+
+#         if hasattr(sut, 'pi_grid_eps'):
+#             if len(sut.pi_grid_eps) == 0:
+#                 sut.pi_grid_eps = None
+#         else:
+#             sut.pi_grid_eps = None
 
         if num_dims.ci == 0:
             ci = None
@@ -170,10 +181,10 @@ def parse(file_path):
         else:
             pi = cns.IntervalCons(np.array(sut.pi[0]), np.array(sut.pi[1]))
 
-        assert((pi is None and sut.pi_grid_eps is None) or
-               (pi is not None and sut.pi_grid_eps is not None))
-        assert((ci is None and sut.ci_grid_eps is None) or
-               (ci is not None and sut.ci_grid_eps is not None))
+        assert((pi is None and sut.pi_grid_eps == []) or
+               (pi is not None and sut.pi_grid_eps != []))
+        assert((ci is None and sut.ci_grid_eps == []) or
+               (ci is not None and sut.ci_grid_eps != []))
 
         if pi is not None:
             assert(len(sut.pi[0]) == len(sut.pi_grid_eps))
