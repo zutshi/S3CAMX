@@ -272,6 +272,8 @@ class GraphNX(object):
 
         self.maxVertices = 0
 
+        self.ctr = 0
+
         # create a Di-graph if not created already
 
         if G is None:
@@ -285,23 +287,19 @@ class GraphNX(object):
     def nodes(self):
         return self.G.nodes()
 
-    def add_edge(
-        self,
-        v1,
-        v2,
-        ci=None,
-        pi=None,
-        weight=1,
-        ):
+    def add_edge(self, v1, v2, ci=None, pi=None, weight=1):
         self.G.add_edge(v1, v2, weight=1, ci=ci, pi=pi)
 
-    def add_edges_from(
-        self,
-        edge_list,
-        ci=None,
-        pi=None,
-        weight=1,
-        ):
+        self.ctr += 1
+
+        if self.ctr % 1000 == 0:
+            with term.location(x=100, y=term.height-10):
+                print(term.green('nodes={}, edges={}'
+                                 .format(
+                                    self.G.number_of_nodes(),
+                                    self.G.number_of_edges())))
+
+    def add_edges_from(self, edge_list, ci=None, pi=None, weight=1):
         self.G.add_edges_from(edge_list, weight=1, ci=ci, pi=pi)
 
     def add_node(self, v):

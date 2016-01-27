@@ -235,11 +235,14 @@ def pause(msg=''):
 
 def print(*args, **kwargs):
     """custom print() function."""
-    callers_frame_idx = 1
-    (frame, filename, lineno,
-     function_name, lines, index) = inspect.getouterframes(
-                                         inspect.currentframe())[callers_frame_idx]
-    #frameinfo = inspect.getframeinfo(inspect.currentframe())
-    basename = fops.get_file_name_from_path(filename)
-    __builtin__.print('{}:{}::'.format(basename, lineno), end='')
+    # A hack. Look inside and if args is empty, do not do anything,
+    # just call the default print function.
+    if args:
+        callers_frame_idx = 1
+        (frame, filename, lineno,
+         function_name, lines, index) = inspect.getouterframes(
+                                             inspect.currentframe())[callers_frame_idx]
+        #frameinfo = inspect.getframeinfo(inspect.currentframe())
+        basename = fops.get_file_name_from_path(filename)
+        __builtin__.print('{}:{}::'.format(basename, lineno), end='')
     return __builtin__.print(*args, **kwargs)

@@ -1,15 +1,20 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 import logging
 import numpy as np
+from blessings import Terminal
 
 import constraints as cons
 import err
 import concreteController as cc
-#import utils as U
+from utils import print
 import state as st
 #import sample as S
 import cellmanager as CM
+
+term = Terminal()
 
 logger = logging.getLogger(__name__)
 
@@ -122,6 +127,14 @@ class ControllerCollectionAbstraction:
 
         # print s_array_, u_array
         # print samples.ci_array
+
+        ######################################
+        #TODO: wrap this up somehow
+        print()
+        print(term.move_up + term.move_up)
+        ######################################
+        with term.location():
+            print('t:', t_array.T)
 
         state = st.StateArray(
             t=t_array,
