@@ -30,9 +30,12 @@ def sample_init_UR(sys, prop, num_samples):
 
     x_array = sample_ival_constraints(init_cons, num_samples)
 
-    ci_lb = prop.ci.l
-    ci_ub = prop.ci.h
-    ci_array = ci_lb + (ci_ub - ci_lb) * np.random.random((num_samples, num_segments, num_dims.ci))
+    if prop.ci is not None:
+        ci_lb = prop.ci.l
+        ci_ub = prop.ci.h
+        ci_array = ci_lb + (ci_ub - ci_lb) * np.random.random((num_samples, num_segments, num_dims.ci))
+    else:
+        ci_array = np.empty((num_samples, num_segments, num_dims.ci))
 
     if prop.pi is not None:
         pi_lb = prop.pi.l
