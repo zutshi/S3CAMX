@@ -427,8 +427,8 @@ def refine_init(
 
         if plot:
             #plt.autoscale()
-            ph.figure_for_paper(plt.gca(), plot_hack.LINE_LIST)
-            plot_hack.LINE_LIST = []
+            #ph.figure_for_paper(plt.gca(), plot_hack.LINE_LIST)
+            #plot_hack.LINE_LIST = []
             plt.show()
 
         if not system_params.final_state_set:
@@ -484,7 +484,7 @@ def refine_init(
             sample_ci
             )
         if plot:
-            ph.figure_for_paper(plt.gca(), plot_hack.LINE_LIST)
+            #ph.figure_for_paper(plt.gca(), plot_hack.LINE_LIST)
             plt.show()
         if done:
             print('Concretized', file=SYS.stderr)
