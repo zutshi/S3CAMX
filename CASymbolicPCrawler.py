@@ -276,7 +276,6 @@ class ControllerSymbolicAbstraction:
         #print(var_list)
         #print('='*20, 'sampling', '='*20)
         #print(abs_state.C)
-
         sample_dict, num_actual_samples = self.solver.sample_scalars(
             solver,
             num_req_samples,
