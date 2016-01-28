@@ -89,7 +89,7 @@ Download [get-pip.py](https://bootstrap.pypa.io/get-pip.py) and install using <b
     - Install or upgrade matplotlib <br>
 `sudo -H pip install matplotlib --upgrade`
     - In the case of unresolved dependencies try to install the commonly missing packages: libfreetpy and libpng <br>
-`sudo apt-get install libpng-dev libfreetype6-dev` <br>
+`sudo apt-get install libpng-dev libfreetype6-dev libxft-dev` <br>
 Else, use the below for an exhaustive resolution <br>
 `sudo apt-get build-dep python-matplotlib`
 

@@ -18,7 +18,6 @@ def sampler_factory():
 
 
 def sample_init_UR(sys, prop, num_samples):
-    raise NotImplementedError('may contain errors, proceed with caution')
     num_segments = int(np.ceil(prop.T / sys.delta_t))
     init_cons = prop.init_cons
     init_controller_state = prop.initial_controller_state
