@@ -616,7 +616,7 @@ def random_test(
                 ci_array = ci_cons_lb + random_arr * (ci_cons_ub - ci_cons_lb)
             else:
                 ci_array = ci_seq_array[:, i, :]
-                ci_array = np.repeat(ci_array, A.num_samples, axis=0)
+                ci_array = np.repeat(ci_array, A.plant_abs.num_samples, axis=0)
 
         if A.num_dims.pi == 0:
             pi_array = np.zeros((num_samples, 0))

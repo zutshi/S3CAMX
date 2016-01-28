@@ -303,11 +303,16 @@ class TopLevelAbs:
             missing_input_len = self.N - len(ci_seq)
             # row, column
             r, c_ci = missing_input_len, ci_dim
-            #FIXME: default random values
+            #FIXME: was default random values for no good reason..?  changed to 0
             if ci_ref is not None:
                 ci_seq_list[idx] = ci_seq + [ci_cons] * missing_input_len
             else:
-                ci_seq_list[idx] = ci_seq + list(np.random.uniform(ci_cons.l, ci_cons.h, (r, c_ci)))
+                # why is the below generating random values?
+                #ci_seq_list[idx] = ci_seq + list(np.random.uniform(ci_cons.l, ci_cons.h, (r, c_ci)))
+                # replaced with 0s. Also helps in fixing the issue
+                # when ci = [[],[]] and hence ci_cons = None and
+                # ci_cons.l/h is undefined
+                ci_seq_list[idx] = ci_seq + list(np.zeros((r, c_ci)))
             #pi_seq_list[idx] = pi_seq + list(np.random.uniform(pi_cons.l, pi_cons.h, (r, c_pi)))
             pi_seq_list[idx] = pi_seq + [pi_cons] * missing_input_len
 

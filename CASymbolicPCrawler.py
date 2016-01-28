@@ -614,7 +614,7 @@ class ControllerSymbolicAbstraction:
         # Need to be made a class or something
         ci = [self.path_var_dict['iv_input_arr__'+str(i)] for i in range(self.num_dims.ci)]
         ci_ival_cons = system_params.ci
-        ci_smt = self.solver.ic2smt(ci_ival_cons, ci)
+        ci_smt = self.solver.ic2smt(ci_ival_cons, ci) if ci_ival_cons is not None else self.solver.TRUE
         # print(ci_smt)
 
         #x = self.controller_sym_path_obj.x
@@ -633,7 +633,7 @@ class ControllerSymbolicAbstraction:
         self.controller_sym_path_obj.set_global_cons(C_subs, ci_smt, X_smt)
         ##self.controller_sym_path_obj.unset_global_cons()
 
-        num_req_samples = A.num_samples
+        num_req_samples = A.plant_abs.num_samples
 
         #print(C_subs)
         #print(ci_smt)
@@ -726,7 +726,7 @@ class ControllerSymbolicAbstraction:
             d_array = np.tile(abs_state.ps.d, (num_actual_samples, 1))
             p_array = np.tile(abs_state.ps.pvt, (num_actual_samples, 1))
             pi_array = np.zeros((num_actual_samples, A.num_dims.pi))
-            t = abs_state.plant_state.n * A.delta_t
+            t = abs_state.plant_state.n * A.plant_abs.delta_t
             ######################################
             #TODO: wrap this up somehow
             print()
