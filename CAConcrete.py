@@ -72,7 +72,7 @@ class ControllerCollectionAbstraction:
 
         # can have more samples than A.num_samples due to more than one pi_cell
         # associated with abs_state
-        samples = system_params.sampler.sample(abs_state, A, system_params, A.num_samples)
+        samples = system_params.sampler.sample(abs_state, A, system_params, A.plant_abs.num_samples)
 
         total_num_samples = samples.n
 
@@ -103,16 +103,12 @@ class ControllerCollectionAbstraction:
         d_array = np.repeat(d, samples.n, axis=0)
         pvt_array = np.repeat(pvt, samples.n, axis=0)
 
-
         # sanity check
-
-        if len(d_array) == total_num_samples and len(pvt_array) \
-            == total_num_samples and len(x_array) == total_num_samples \
-            and len(s_array) == total_num_samples and len(t_array) \
-            == total_num_samples:
-            pass
-        else:
-            raise err.Fatal('sanity_check fails')
+        assert(len(d_array) == total_num_samples)
+        assert(len(pvt_array) == total_num_samples)
+        assert(len(x_array) == total_num_samples)
+        assert(len(s_array) == total_num_samples)
+        assert(len(t_array) == total_num_samples)
 
         # print x_array, s_array
 

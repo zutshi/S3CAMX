@@ -90,7 +90,7 @@ num_control_inputs = 1
 # Reference signal \in [0.0, 4.0]
 # Disturbances ... add later
 #ci = [[-0.5], [-0.0]]
-ci = [[0.0], [-0.0]]
+ci = [[], []]
 #.65
 #.6
 pi = [[],[]]

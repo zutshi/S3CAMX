@@ -18,6 +18,7 @@ def sampler_factory():
 
 
 def sample_init_UR(sys, prop, num_samples):
+    raise NotImplementedError('may contain errors, proceed with caution')
     num_segments = int(np.ceil(prop.T / sys.delta_t))
     init_cons = prop.init_cons
     init_controller_state = prop.initial_controller_state
@@ -137,7 +138,7 @@ class IntervalSampler(Sampler):
         random_arr = np.random.rand(n, A.num_dims.x)
         x_array = plant_state_ival_cons.l \
             + random_arr * (plant_state_ival_cons.h - plant_state_ival_cons.l)
-        t_array = np.tile(abstract_state.plant_state.n * A.delta_t, (n, 1))
+        t_array = np.tile(abstract_state.plant_state.n * A.plant_abs.delta_t, (n, 1))
 
         s = \
             A.controller_abs.get_concrete_states_from_abs_state(abstract_state.controller_state)
@@ -219,7 +220,7 @@ class IntervalConcolic(Sampler):
 
         test_cases = self.CE.get_test_cases(plant_state_ival_cons,
                 controller_state_ival_cons, ci_ival_cons)
-        t_array = np.tile(abstract_state.plant_state.n * A.delta_t,
+        t_array = np.tile(abstract_state.plant_state.n * A.plant_abs.delta_t,
                           (test_cases.n, 1))
 
         # TODO: get this from reg sampler
@@ -294,7 +295,7 @@ class Concolic(Sampler):
 
         test_cases = self.CE.get_test_cases(plant_state_ival_cons,
                 controller_state_ival_cons, ci_ival_cons)
-        t_array = np.tile(abstract_state.plant_state.n * A.delta_t,
+        t_array = np.tile(abstract_state.plant_state.n * A.plant_abs.delta_t,
                           (test_cases.n, 1))
 
         # TODO: get this from reg sampler

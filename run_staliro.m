@@ -44,7 +44,7 @@ systems_to_run = {'/home/zutshi/work/RA/cpsVerification/HyCU/symbSplicing/splici
 
 % read example_list and get system details
 
-egl = py.example_list.get_example_list();
+egl = py.list_examples.get_example_list();
 eg_cell_array = {};
 for eg = egl
     eg_cell_array = [eg_cell_array struct(eg{1})];

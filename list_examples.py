@@ -1,6 +1,5 @@
 from __future__ import print_function
 
-import configparser as cp
 import fileOps as f
 import err
 
@@ -9,40 +8,19 @@ import logging
 #EXAMPLE_LIST_FN = 'example_list'
 
 example_list_str = \
-'''0_vanDerPol = ./examples/vanderpol_python/
-1_vanDerPol = ./examples/vanderpol_m_file/
-2_dc = ./examples/dc_controller_hand_coded/
-3_dci = ./examples/dc_controller_hand_coded_input/
-4_ex1a = ./examples/ex1a/
-5_ex1b = ./examples/ex1b/
-6_AbstractFuelControl = ./examples/abstractFuelControl/
-7_AbstractFuelControl = ./examples/abstractFuelControlCombined/
-8_fuzzy_invp = ./examples/fuzzy_invp/
-9_heater = ./examples/heater/
-10_GIF = ./examples/GI_fisher/'''
+    '''0_vanDerPol = ./examples/vanderpol_python/
+    1_vanDerPol = ./examples/vanderpol_m_file/
+    2_dc = ./examples/dc_controller_hand_coded/
+    3_dci = ./examples/dc_controller_hand_coded_input/
+    4_ex1a = ./examples/ex1a/
+    5_ex1b = ./examples/ex1b/
+    6_AbstractFuelControl = ./examples/abstractFuelControl/
+    7_AbstractFuelControl = ./examples/abstractFuelControlCombined/
+    8_fuzzy_invp = ./examples/fuzzy_invp/
+    9_heater = ./examples/heater/
+    10_GIF = ./examples/GI_fisher/'''
 
 logger = logging.getLogger(__name__)
-
-
-def get_example_list_old():
-
-    ## ##!!##logger.debug('reading example listing: {}'.format(EXAMPLE_LIST_FN))
-    example_dict = cp.parse_config(example_list_str)
-
-    # TODO: Remedy below hack
-    # Ugly hack: parse_config() adds type = string
-    # To fix it, we just delete it.
-
-    del example_dict['type']
-    example_list = [0] * len(example_dict)
-    for (k, v) in example_dict.iteritems():
-        d = {}
-        (n, k) = k.split('_', 1)  # split only on the first '_'
-        d['filename'] = k + '.tst'
-        d['path'] = v
-        d['description'] = v + k
-        example_list[int(n)] = d
-    return example_list
 
 
 def get_example_list():

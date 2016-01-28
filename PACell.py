@@ -37,32 +37,18 @@ class PlantAbstraction:
         #return PlantAbstractState(cell_id, pi_cells_id, n, d, pvt)
         return PlantAbstractState(cell_id, n, d, pvt)
 
-    def __init__(
-            self,
-            T,
-            N,
-            num_dims,
-            delta_t,
-            eps,
-            refinement_factor,
-            num_samples,
-            smt_solver, #TAG:Z3_IND - Add solver param
-            ):
+    def __init__(self, config, smt_solver):
 
             # init_cons_list, final_cons, controller_sim, num_dims, delta_t, prog_bar=False):
         # super(Abstraction, self).__init__()
 
-        self.num_dims = num_dims
-
         # self.G = g.Graph()
 
-        self.T = T
-        self.N = N
-        self.scale = None
-        self.eps = eps
-        self.delta_t = delta_t
-        self.refinement_factor = refinement_factor
-        self.num_samples = num_samples
+        self.N = config.N
+        self.eps = config.eps
+        self.delta_t = config.delta_t
+        self.refinement_factor = config.refinement_factor
+        self.num_samples = config.num_samples
         # TAG:Z3_IND - get the solver from the passed in args
         #self.solver = smt.smt_solver_factory('z3')
         self.solver = smt_solver
@@ -319,6 +305,18 @@ class PlantAbstraction:
     def draw_2d(self):
         raise err.Fatal('unimplemented')
 
+    def __str__(self):
+        s = [
+              'new abstraction created',
+              'eps: {}'.format(self.eps),
+              'num_samples: {}'.format(self.num_samples),
+              'refine: {}'.format(self.refinement_factor),
+              'deltaT: {}'.format(self.delta_t),
+              'num traces: {}'.format(self.N),
+              '=' * 50,
+             ]
+        return '\n'.join(s)
+
 
 # Abs state is an object  (cell_id, n, d, p)
 
@@ -333,6 +331,14 @@ class PlantAbstractState(object):
             pvt,
             ):
 
+        # get new distance/position from the initial state
+        # THINK:
+        # n can be calculated in two ways
+        #   - only in the abstraction world: [current implementation]
+        #       Completely independant of the simulated times
+        #       i.e. if A1->A2, then A2.n = A1.n + 1
+        #   - get it from simulation trace:
+        #       n = int(np.floor(t/self.delta_t))
         self.cell_id = cell_id
 #         self.pi_cells_id = pi_cells_id
         self.n = n

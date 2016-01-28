@@ -17,7 +17,7 @@ import time
 import sys as SYS
 import tqdm
 
-import abstraction
+import abstractioncomposable as AA
 import sample
 import fileOps as fp
 import concolicexec as CE
@@ -26,7 +26,7 @@ import scattersim as SS
 import err
 import loadsystem
 import traces
-import example_list as egl
+import list_examples as eg
 import plothelper as ph
 import plot_hack
 import wmanager
@@ -198,7 +198,7 @@ def create_abstraction(sys, prop, opts):
     # flexible structure should be created which can be filled by the
     # CAsymbolic abstraction module and supplied as a substructure. I guess the
     # idea is that an abstraction module should be 'pluggable'.
-    current_abs = abstraction.abstraction_factory(
+    current_abs = AA.abstraction_factory(
         plant_config_dict,
         T,
         num_dims,
@@ -585,7 +585,7 @@ def main():
         print('No file to test. Please use --help')
         exit()
         print('No arguments passed. Loading list of packaged benchmarks!')
-        example_list = egl.get_example_list()
+        example_list = eg.get_example_list()
         print('select from a list of examples')
         for (idx, example) in enumerate(example_list):
             print('({}) {}'.format(idx, example_list[idx]['description']))

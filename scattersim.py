@@ -5,7 +5,7 @@ import logging
 import Queue
 import numpy as np
 
-import abstraction as AA
+import abstractioncomposable as AA
 import state as st
 import err
 import sample as SaMpLe
@@ -282,16 +282,14 @@ def refine_state(A, RA, abs_state):
     return abs_state_list
 
 
-def refine_param_dict(A):
-    new_eps = A.eps / A.refinement_factor
-    #new_pi_eps = A.pi_eps / A.refinement_factor
+def refine_param_dict(PA):
+    new_eps = PA.eps / PA.refinement_factor
     param_dict = {
         'eps': new_eps,
-        #'pi_eps': new_pi_eps,
-        'refinement_factor': A.refinement_factor,
-        'num_samples': A.num_samples,
-        'delta_t': A.delta_t,
-        'N': A.N,
+        'refinement_factor': PA.refinement_factor,
+        'num_samples': PA.num_samples,
+        'delta_t': PA.delta_t,
+        'N': PA.N,
         'type': 'value',
         }
     return param_dict
@@ -306,7 +304,7 @@ def refine_trace_based(A, error_paths, system_params):
     for path in sap:
         traversed_state_set.update(path)
 
-    param_dict = refine_param_dict(A)
+    param_dict = refine_param_dict(A.plant_abs)
 
     RA = AA.abstraction_factory(
         param_dict,
@@ -354,7 +352,7 @@ def refine_init_based(A, promising_initial_abs_states,
         if in_origianl_initial_plant_cons(ic):
             init_cons_list.append(ic)
 
-    param_dict = refine_param_dict(A)
+    param_dict = refine_param_dict(A.plant_abs)
 
 #    AA.AbstractState.clear()
 
@@ -531,7 +529,9 @@ def random_test(
 
             # scatter the continuous states
 
-            x_samples = SaMpLe.sample_ival_constraints(ic, A.num_samples)
+            x_samples = SaMpLe.sample_ival_constraints(
+                    ic,
+                    A.plant_abs.num_samples)
 
             # ##!!##logger.debug('ic: {}'.format(ic))
             # ##!!##logger.debug('samples: {}'.format(x_samples))
@@ -668,7 +668,7 @@ def random_test(
 
         rchd_concrete_state_array = system_params.plant_sim.simulate(
                 concrete_states,
-                A.delta_t,
+                A.plant_abs.delta_t,
                 property_checker,
                 property_violated_flag)
 
@@ -691,8 +691,8 @@ def random_test(
 
         # increment simulation time
 
-        simTime += A.delta_t
-        t_array += A.delta_t
+        simTime += A.plant_abs.delta_t
+        t_array += A.plant_abs.delta_t
         concrete_states = rchd_concrete_state_array
         x_array = concrete_states.cont_states
         s_array = concrete_states.controller_states
