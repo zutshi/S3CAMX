@@ -33,6 +33,8 @@ import wmanager
 #import utils as U
 from utils import print
 
+import joblib as jb
+
 #matplotlib.use('GTK3Agg')
 
 #precision=None, threshold=None, edgeitems=None, linewidth=None, suppress=True, nanstr=None, infstr=None, formatter=Nonu)
@@ -104,6 +106,11 @@ def check_prop_violation(trace, prop):
 
 
 def simulate(sys, prop, opts):
+    trace_list = par_sim(sys, prop, opts)
+    return trace_list
+
+
+def non_par_sim(sys, prop, opts):
     num_samples = opts.num_sim_samples
     num_violations = 0
 
@@ -122,6 +129,45 @@ def simulate(sys, prop, opts):
                 sat_x[0, :],    # the first violating state
                 sat_t[0],       # corresponding time instant
                 num_violations), file=SYS.stderr)
+
+    print('number of violations: {}'.format(num_violations))
+    return trace_list
+
+
+def par_sim_doesntwork(sys, prop, opts):
+    num_samples = opts.num_sim_samples
+
+    concrete_states = sample.sample_init_UR(sys, prop, num_samples)
+
+    sys_sim = simsys.get_system_simulator(sys)
+
+    def sim(i):
+        trace = simsys.simulate(sys_sim, concrete_states[i], prop.T)
+        sat_x, sat_t = check_prop_violation(trace, prop)
+        vio = sat_x.size != 0
+        return (trace, vio)
+
+    # [(trace, vio), ... , ...]
+    tv_list = jb.Parallel(n_jobs=1)(jb.delayed(sim)(i) for i in range(num_samples))
+
+    num_violations = reduce(lambda x, y: x + y[1], tv_list, 0)
+    trace_list = [tv_list[i][0] for i in tv_list]
+
+    print('number of violations: {}'.format(num_violations))
+    return trace_list
+
+
+def par_sim(sys, prop, opts):
+    num_samples = opts.num_sim_samples
+
+    concrete_states = sample.sample_init_UR(sys, prop, num_samples)
+
+    sys_sim = simsys.get_system_simulator(sys)
+
+    # [(trace, vio), ... , ...]
+    trace_list = jb.Parallel(n_jobs=1)(jb.delayed(simsys.simulate)(sys_sim, i, prop.T) for i in concrete_states)
+    sat_xt = [check_prop_violation(trace, prop) for trace in trace_list]
+    num_violations = sum([1 if sat_x.size != 0 else 0 for (sat_x, sat_t) in sat_xt])
 
     print('number of violations: {}'.format(num_violations))
     return trace_list
