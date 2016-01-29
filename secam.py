@@ -153,29 +153,6 @@ def non_par_sim(sys, prop, opts):
     return trace_list
 
 
-def sim_test_simulate_system(sys, prop, opts):
-    num_samples = opts.num_sim_samples
-    num_violations = 0
-
-    concrete_states = sample.sample_init_UR(sys, prop, num_samples)
-    trace_list = []
-
-    for i in tqdm.trange(num_samples):
-        trace = simsys.simulate_system(sys, concrete_states[i], prop.T)
-        trace_list.append(trace)
-        sat_x, sat_t = check_prop_violation(trace, prop)
-        if sat_x.size != 0:
-            num_violations += 1
-            print('x0={} -> x={}, t={}...num_vio_counter={}'.format(
-                trace.x_array[0, :],
-                sat_x[0, :],    # the first violating state
-                sat_t[0],       # corresponding time instant
-                num_violations), file=SYS.stderr)
-
-    print('number of violations: {}'.format(num_violations))
-    return trace_list
-
-
 def par_sim(sys, prop, opts):
     num_samples = opts.num_sim_samples
 
