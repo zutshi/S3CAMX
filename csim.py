@@ -21,6 +21,8 @@ import collections
 
 logger = logging.getLogger(__name__)
 
+DYNAMIC = True
+
 
 # ###################################################
 # Low level INTERFACE to C controller
@@ -28,8 +30,11 @@ logger = logging.getLogger(__name__)
 # TODO:
 # Make proper meta class interface
 def InputValCT_meta(num_dims):#num_inputs, num_states, num_x):
-    # TODO: above classes ar eonw being dynamically created to circumvent the
+    # TODO: above classes are now being dynamically created to circumvent the
     # error: _Attributeerror _fields_ is final
+    # The error occurs when the code is run with S-Taliro. Matlab
+    # instnatiates secam only once and calls different systems.
+    # There is no provision to reload modules yet.
     # Make sure we udnerstand if this is OK, and clean up.
 
     InputValCT = type('InputValCT', (ct.Structure,), {})
@@ -104,6 +109,74 @@ def RetValCT_meta(num_dims):#num_states, num_outputs):
     return RetValCT
 
 
+# Older Static interface
+# NOTE:
+# Was re-introduced in order to parallelize computations which
+# required pickling which requires a custom definition of __reduce__
+# for dynamic classes. That was not very clear and hence static
+# classes were reintroduced. But it was later apparent that function
+# pointers can not be pickled and hence the effort was abandoned. Code
+# is retained for reference only.
+
+class InputValCT(ct.Structure):
+    pass
+
+
+def ivct_setup(num_dims):
+    InputValCT._fields_ = [('input_arr', ct.POINTER(ct.c_double * num_dims.ci)),
+                           ('int_state_arr', ct.POINTER(ct.c_int * num_dims.si)),
+                           ('float_state_arr', ct.POINTER(ct.c_double * num_dims.sf)),
+                           ('x_arr', ct.POINTER(ct.c_double * num_dims.x))]
+
+
+def ivct(to_controller_data, num_dims):
+    # split_controller_state
+    int_state_array, float_state_array = (
+        to_controller_data.state_array[0:num_dims.si],
+        to_controller_data.state_array[num_dims.si:])
+
+    c_input_array = get_double_array_from_double_list(to_controller_data.input_array)
+    int_state_array = map(int, int_state_array)
+    c_int_state_array = get_int_array_from_int_list(int_state_array)
+    c_float_state_array = get_double_array_from_double_list(float_state_array)
+    c_x_array = get_double_array_from_double_list(to_controller_data.x_array)
+
+    p_c_input_array = ct.pointer(c_input_array)
+    p_c_int_state_array = ct.pointer(c_int_state_array)
+    p_c_float_state_array = ct.pointer(c_float_state_array)
+    p_c_x_array = ct.pointer(c_x_array)
+    return InputValCT(p_c_input_array, p_c_int_state_array, p_c_float_state_array, p_c_x_array)
+
+
+class RetValCT(ct.Structure):
+    @property
+    def from_controller(self):
+        int_state_array = [i for i in self.int_state_arr.contents]
+        float_state_array = [i for i in self.float_state_arr.contents]
+        # combine_controller_state
+        state_array = int_state_array + float_state_array
+        output_array = [i for i in self.output_arr.contents]
+        return cifc.FromController(state_array, output_array)
+
+
+def rvct_setup(num_dims):
+
+    RetValCT._fields_ = [('int_state_arr', ct.POINTER(ct.c_int * num_dims.si)),
+                         ('float_state_arr', ct.POINTER(ct.c_double * num_dims.sf)),
+                         ('output_arr', ct.POINTER(ct.c_double * num_dims.u))]
+
+
+def rvct(num_dims):
+    c_int_state_array = get_int_array_from_int_list([0] * num_dims.si)
+    c_float_state_array = get_double_array_from_double_list([0] * num_dims.sf)
+    c_output_array = get_double_array_from_double_list([0] * num_dims.u)
+
+    p_c_int_state_array = ct.pointer(c_int_state_array)
+    p_c_float_state_array = ct.pointer(c_float_state_array)
+    p_c_output_array = ct.pointer(c_output_array)
+    return RetValCT(p_c_int_state_array, p_c_float_state_array, p_c_output_array)
+
+
 def wrap_controller_scaleNround(controller_call_fun, cf):
 
     def wraped_call(tcd):
@@ -162,6 +235,7 @@ class ControllerSO(Controller):
         self.num_outputs = num_dims.u
         self.num_x = num_dims.x
         self.num_inputs = num_dims.ci
+        self.num_dims = num_dims
 
         # TODO: Can also use os along with platform?
 
@@ -175,13 +249,19 @@ class ControllerSO(Controller):
         ct.cdll.LoadLibrary(lib_path)
         self.lib = ct.CDLL(lib_path)
 
-        self.RetValCT = RetValCT_meta(num_dims)#self.num_states, self.num_outputs)
-        self.InputValCT = InputValCT_meta(num_dims)#self.num_inputs, self.num_states, self.num_x)
+        if DYNAMIC:
+            self.InputValCT = InputValCT_meta(num_dims)
+            self.RetValCT = RetValCT_meta(num_dims)
+            # Set arguement types
 
-        # Set arguement types
+            self.lib.controller.argtypes = [ct.POINTER(self.InputValCT), ct.POINTER(self.RetValCT)]
+            self.call = self.call_dynamic
+        else:
+            ivct_setup(num_dims)
+            rvct_setup(num_dims)
+            self.lib.controller.argtypes = [ct.POINTER(InputValCT), ct.POINTER(RetValCT)]
+            self.call = self.call_static
 
-        self.lib.controller.argtypes = [ct.POINTER(self.InputValCT),
-                ct.POINTER(self.RetValCT)]
 
         # Set return type
 
@@ -201,7 +281,7 @@ class ControllerSO(Controller):
     # Returns a list!
     # Ideally should be returning a numpy array
 
-    def call(self, to_controller_data):
+    def call_dynamic(self, to_controller_data):
         input_val = self.InputValCT(to_controller_data)
         ret_val = self.RetValCT()
 
@@ -209,6 +289,17 @@ class ControllerSO(Controller):
 
         ignore_void_p = self.lib.controller(ct.byref(input_val), ct.byref(ret_val))
         return ret_val.from_controller
+
+
+    def call_static(self, to_controller_data):
+        input_val = ivct(to_controller_data, self.num_dims)
+        ret_val = rvct(self.num_dims)
+
+        # call the controller function
+
+        ignore_void_p = self.lib.controller(ct.byref(input_val), ct.byref(ret_val))
+        return ret_val.from_controller
+
 
     # UPDATE: no longer used
     # Low level call

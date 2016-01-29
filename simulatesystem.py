@@ -143,3 +143,40 @@ def get_step_simulator(csim, psim, delta_t):
 #     concrete_states = get_concrete_state_obj(t0, x0, d0, pvt0, s_, ci, u)
 #     concrete_states_ = psim(concrete_states, tf)
 #     return concrete_states_
+
+
+def step_sim(sys, t0, x0, s0, d0, pvt0, ci, pi):
+    csim, psim, delta_t = sys.controller_sim, sys.plant_sim, sys.delta_t
+
+    controller_ret_val = csim.compute(cifc.ToController(ci, s0, x0))
+    s_, u = controller_ret_val.state_array, controller_ret_val.output_array
+
+    concrete_states = get_concrete_state_obj(t0, x0, d0, pvt0, s_, ci, pi, u)
+
+    concrete_states_ = psim.simulate(concrete_states, delta_t)
+
+    (t, x, s, d, pvt, u, _, _) = get_individual_states(concrete_states_)
+    return (t[0], x[0], s[0], d[0], pvt[0], u[0])
+
+
+# exactly the same as simulate, but does not use closures
+def simulate_system(sys, concrete_state, T):
+    (t, x, s, d, pvt, u, ci_array, pi_array) = get_individual_states(concrete_state)
+    t0 = t
+    tf = t + T
+
+    T = tf - t0
+    num_segments = int(np.ceil(T / sys.delta_t))
+    # num_points = num_segments + 1
+    trace = traces.Trace(sys.num_dims, num_segments + 1)
+    t = t0
+
+    for i in xrange(num_segments):
+        ci = ci_array[i]
+        pi = pi_array[i]
+        (t_, x_, s_, d_, pvt_, u_) = step_sim(sys, t, x, s, d, pvt, ci, pi)
+        trace.append(t=t, x=x, s=s, d=d, u=u_, ci=ci, pi=pi)
+        (t, x, s, d, pvt) = (t_, x_, s_, d_, pvt_)
+
+    trace.append(t=t, x=x, s=s, d=d, u=u_, ci=ci, pi=pi)
+    return trace
