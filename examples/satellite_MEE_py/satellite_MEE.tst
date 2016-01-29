@@ -52,7 +52,7 @@ MAX_ITER = 6
 ########################
 
 # Rectangularly bounded exogenous inputs to the plant (plant noise).
-pi = [[0], [0]]
+pi = [[], []]
 
 ################################
 # Unimplemented
@@ -93,6 +93,6 @@ num_control_inputs = 0
 
 # rectangular bounds on exogenous inputs to the contorller. Such as, controller
 # disturbance.
-ci = [[0.0], [0.0]]
+ci = [[], []]
 CONVERSION_FACTOR = 1.0
 refinement_factor = 2.0
