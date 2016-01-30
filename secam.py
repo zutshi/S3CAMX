@@ -124,8 +124,10 @@ def simulate(sys, prop, opts):
     CAUTION: The issue and the respective fix are not yet clearly
     understood.
     '''
-    #trace_list = sim_test_simulate_system(sys, prop, opts)
-    trace_list = par_sim(sys, prop, opts)
+    if opts.num_jobs == 0:
+        trace_list = non_par_sim(sys, prop, opts)
+    else:
+        trace_list = par_sim(sys, prop, opts)
     return trace_list
 
 
@@ -159,7 +161,10 @@ def par_sim(sys, prop, opts):
     concrete_states = sample.sample_init_UR(sys, prop, num_samples)
 
     # [(trace, vio), ... , ...]
-    trace_list = jb.Parallel(n_jobs=4)(jb.delayed(simsys.simulate_system)(sys, i, prop.T) for i in concrete_states)
+    trace_list =\
+        jb.Parallel(n_jobs=opts.num_jobs, verbose=40, pre_dispatch=100, batch_size='auto')\
+        (jb.delayed(simsys.simulate_system)(sys, i, prop.T) for i in concrete_states)
+
     sat_xt = [check_prop_violation(trace, prop) for trace in trace_list]
     num_violations = sum([1 if sat_x.size != 0 else 0 for (sat_x, sat_t) in sat_xt])
 
@@ -617,6 +622,9 @@ def main():
     parser.add_argument('--refine', type=str, metavar='method', default='init',
                         choices=LIST_OF_REFINEMENTS, help='Refinement method')
 
+    parser.add_argument('-n', '--parallel', type=int, metavar='num-jobs', default=0,
+                        help='run in parallel using n cores')
+
 #    argcomplete.autocomplete(parser)
     args = parser.parse_args()
     #print(args)
@@ -673,6 +681,7 @@ def main():
     opts.plot = args.plot
     opts.dump_trace = args.dump
     opts.refine = args.refine
+    opts.num_jobs = args.parallel
 
     sys, prop = loadsystem.parse(filepath)
     # TAG:MSH
