@@ -1,6 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+CASymbolicPCrawler.py
+---------------------
+Provides interfaces to manipulate the Controller's symbolic
+abstraction created using Pathcrawler. Uses SMT solver z3 to compute
+new reachable states.
+'''
+
 import logging
 import numpy as np
 

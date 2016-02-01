@@ -1,14 +1,10 @@
-# from blessings import Terminal
-# import time
+'''
+check_mat2py.py
+---------------
+Call it from MATLAB to check if the MATLAB -> Python interface is up
+and working.
+'''
 
-# t = Terminal()
-
-# with t.location():
-#     print ''
-#     for i in range(10):
-#         #print t.move_up + str(i)
-#         print t.move_up + str(i)
-#         time.sleep(0.2)
 
 def check():
     print 'it works!'

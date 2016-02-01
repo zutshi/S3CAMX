@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+smtSolver.py
+------------
+Abstracts away an SMT solver. Currently only gives the option of using
+z3.
+'''
+
 import logging
 import z3
 
@@ -120,6 +127,9 @@ class Z(Solver):
                       + map((lambda x, c: x >= c), x, ic.l)
         else:
             raise err.Fatal('unhandled type: {}'.format(type(x)))
+#         # Loop Sentinel
+#         if cons_list == []:
+#             cons_list = True
         return z3.And(cons_list)
 
     # TODO: fix the function call!

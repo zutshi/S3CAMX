@@ -1,13 +1,10 @@
-###############################################################################
-# File name: loadsystem.py
-# Author: Aditya
-# Python Version: 2.7
-#
-#                       #### Description ####
-# Provides a parse function and structures to load a parsed system.
-# Reads the system description from the provided .tst file,
-# and populates respective structures and returns them.
-###############################################################################
+'''
+loadsystem.py
+--------------
+Provides a parse function and structures to load a parsed system.
+Reads the system description from the provided .tst file,
+and populates respective structures and returns them.
+'''
 
 import numpy as np
 import sys as SYS

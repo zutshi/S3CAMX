@@ -1,5 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+'''
+configparser.py [DEFUNCT]
+----------------
+Parses plant config.
+'''
+
 import logging
 
 logger = logging.getLogger(__name__)

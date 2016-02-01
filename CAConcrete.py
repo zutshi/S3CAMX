@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+CAConcrete.py
+-------------
+Provides interfaces to manipulate the Controller's `concrete'
+abstraction.
+'''
+
 import logging
 import numpy as np
 

@@ -1,5 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+'''
+plothelper.py
+-------------
+Used to generate plots.
+'''
 
 import matplotlib.pyplot as plt
 from matplotlib.path import Path

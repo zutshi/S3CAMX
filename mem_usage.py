@@ -1,3 +1,9 @@
+'''
+mem_usage.py
+----------
+Memory usage profiler.
+'''
+
 def memory_usage():
     """Memory usage of the current process in kilobytes."""
     status = None

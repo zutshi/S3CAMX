@@ -1,3 +1,22 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+'''
+CSymLoader.py
+-------------
+Loads the symbolic structure for the controller using either smt2 files or
+using pathcrawler's trace. If using the trace, there is an option to load the
+trace as a constraint tree enabling incremental constraint solving or a list
+which is simpler to use. If instead only smt2 files are provided, a tree can
+NOT be constructed, leaving the default option of a list.
+Because the size of trace files can be quite large, and the current parser
+[using pyparsing], is exceptionally slow, the function also pickles the
+parsed tree/list structuresand saves it next to the trace file. This can then
+be used in for later runs.
+A modified trace file will trigger an automatic re-generation of the struct.
+This is detected by md5 hashing.
+'''
+
 import pc_trace_parser as tp
 import prep_trace as pt
 import err
@@ -5,17 +24,6 @@ import fileOps as fops
 
 import pickle
 
-# loads the symbolic structure for the controller using either smt2 files or
-# using pathcrawler's trace. If using the trace, there is an option to load the
-# trace as a constraint tree enabling incremental constraint solving or a list
-# which is simpler to use. If instead only smt2 files are provided, a tree can
-# NOT be constructed, leaving the default option of a list.
-# Because the size of trace files can be quite large, and the current parser
-# [using pyparsing], is exceptionally slow, the function also pickles the
-# parsed tree/list structuresand saves it next to the trace file. This can then
-# be used in for later runs.
-# A modified trace file will trigger an automatic re-generation of the struct.
-# This is detected by md5 hashing.
 
 
 # A thin wrapper to Add a md5 hash of the source to the object being pickled

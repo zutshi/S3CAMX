@@ -1,3 +1,5 @@
+% DEFUNCT: replaced by run_staliro.m
+
 function run_staliro_v4(num_runs)
 % filename = 'heat.tst';
 % path = '/examples/heat';

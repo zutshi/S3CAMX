@@ -1,3 +1,7 @@
+% Counterpart of matpy.py
+% Provides equivalent matlab function for converting from matlab to
+% python.
+
 %% Helper Functions
 function y = matpy()
 y.serialize_array = @serialize_array;

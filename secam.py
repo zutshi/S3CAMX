@@ -1,11 +1,28 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+'''
+secam.py
+----------
+The 'main' file.
+Imeplements both S3CAMX and S3CAM algorithms and provides an option to
+randomly simulate a system.
+
+Please type
+    ./secam.py --help
+for usage details.
+
+A convinience scrpt: run_regression.py is provided to run ./secam.py
+on the included benchmarks. It can also be used to understand the
+detailed usage.
+'''
+
 from __future__ import print_function
 
-import matplotlib
+#import matplotlib
 # Force GTK3 backend. By default GTK2 gets loaded and conflicts with
 # graph-tool
-matplotlib.use('GTK3Agg')
+#matplotlib.use('GTK3Agg')
 #global plt
 import matplotlib.pyplot as plt
 
@@ -27,9 +44,12 @@ import scattersim as SS
 import err
 import loadsystem
 import traces
-import example_list as egl
+#import example_list as egl
 import plothelper as ph
 import plot_hack
+
+#precision=None, threshold=None, edgeitems=None, linewidth=None, suppress=True, nanstr=None, infstr=None, formatter=Nonu)
+np.set_printoptions(suppress=True)
 
 ###############################
 ## terminal color printing compatibility for windows
@@ -100,7 +120,12 @@ def simulate(sys, prop, opts):
     trace_list = []
 
     sys_sim = simsys.get_system_simulator(sys)
-    for i in tqdm.trange(num_samples):
+    if opts.basic_visual:
+        range_fn = range
+    else:
+        range_fn = tqdm.trange
+
+    for i in range_fn(num_samples):
         trace = simsys.simulate(sys_sim, concrete_states[i], prop.T)
         trace_list.append(trace)
         sat_x, sat_t = check_prop_violation(trace, prop)
@@ -316,6 +341,11 @@ def falsify(sys, prop, opts, current_abs, sampler):
     print('Failed: MAX iterations {} exceeded.format(MAX_ITER)', file=SYS.stderr)
 
 
+def dump_trace(trace_list):
+    print('dumping trace[0]')
+    trace_list[0].dump_matlab()
+
+
 def run_secam(sys, prop, opts):
     MODE = opts.MODE
     plot = opts.plot
@@ -324,7 +354,9 @@ def run_secam(sys, prop, opts):
         start_time = time.time()
         trace_list = simulate(sys, prop, opts)
         if plot:
-            traces.plot_trace_list(trace_list, plt)
+            if opts.dump_trace:
+                dump_trace(trace_list)
+            traces.plot_trace_list(trace_list, plt, opts.plot_fig2)
     elif MODE == 'falsify':
         # ignore time taken to create_abstraction: mainly to ignore parsing
         # time
@@ -368,6 +400,9 @@ def main():
     parser.add_argument('-p', '--plot', action='store_true',
                         help='enable plotting')
 
+    parser.add_argument('--dump', action='store_true',
+                        help='dump trace in mat file')
+
     parser.add_argument('--seed', type=int, metavar='seed_value',
                         help='seed for the random generator')
 
@@ -378,6 +413,12 @@ def main():
     parser.add_argument('-t', '--trace-struct', type=str, metavar='struct', default='tree',
                         choices=LIST_OF_TRACE_STRUCTS, help='structure for cntrl-rep')
 
+    parser.add_argument('--basic-visual', action='store_true',
+                        help='disable curses')
+
+    parser.add_argument('--plot-fig2', action='store_true',
+                        help='plot figure 2 in the paper')
+
 #    argcomplete.autocomplete(parser)
     args = parser.parse_args()
     #print(args)
@@ -385,16 +426,16 @@ def main():
     if args.filename is None:
         print('No file to test. Please use --help')
         exit()
-        print('No arguments passed. Loading list of packaged benchmarks!')
-        example_list = egl.get_example_list()
-        print('select from a list of examples')
-        for (idx, example) in enumerate(example_list):
-            print('({}) {}'.format(idx, example_list[idx]['description']))
+        #print('No arguments passed. Loading list of packaged benchmarks!')
+        #example_list = egl.get_example_list()
+        #print('select from a list of examples')
+        #for (idx, example) in enumerate(example_list):
+        #    print('({}) {}'.format(idx, example_list[idx]['description']))
 
-        i = int(raw_input())
-        filename = example_list[i]['filename']
-        path = example_list[i]['path']
-        filepath = fp.construct_path(filename, path)
+        #i = int(raw_input())
+        #filename = example_list[i]['filename']
+        #path = example_list[i]['path']
+        #filepath = fp.construct_path(filename, path)
     else:
         filepath = args.filename
 
@@ -432,6 +473,9 @@ def main():
     else:
         raise err.Fatal('no options passed. Check usage.')
     opts.plot = args.plot
+    opts.basic_visual = args.basic_visual
+    opts.plot_fig2 = args.plot_fig2
+    opts.dump_trace = args.dump
 
     sys, prop = loadsystem.parse(filepath)
     # TAG:MSH

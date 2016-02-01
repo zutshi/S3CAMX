@@ -1,3 +1,6 @@
+% Can be used to run s-taliro on systems written using python.
+% Was used to compare with s-taliro
+
 function run_staliro(num_runs)
 % filename = 'heat.tst';
 % path = '/examples/heat';
@@ -22,8 +25,12 @@ system_details = {
 'dci.tst', './examples/dc_motor';
 'fuzzy_invp.tst', './examples/fuzzy_invp';
 'heater.tst', './examples/heater';
-'toy_model_10u.tst', './examples/toy_model_10u';
-'spi.tst', './examples/spi';
+'mrs1.tst', './examples/mrs';
+'mrs2.tst', './examples/mrs';
+'mrs3.tst', './examples/mrs';
+'spi1.tst', './examples/spi';
+'spi2.tst', './examples/spi';
+'spi3.tst', './examples/spi';
 };
 
 display 'Enter a system to test...'
@@ -234,8 +241,8 @@ function init()
 % addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/ha_robust_tester/')
 % addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/Distances/')
 % addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/s_taliro_ver1_4/auxiliary/')
-addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/')
-setup_public
+%addpath('/home/zutshi/work/RA/cpsVerification/HyCU/s_taliro/')
+staliro_add_path
 end
 
 function poly = cubeToPoly(cube)

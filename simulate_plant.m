@@ -1,3 +1,5 @@
+% Used by psim.py to call simulators written in matlab.
+
 %TAG:CLSS
 %function [ret_t, ret_X, ret_D, ret_P, pvf] = simulate_system(sim_function, t, T, initial_continuous_states, initial_discrete_states, initial_pvt_states, control_inputs, inputs, property_check)
 function ret_cell = simulate_plant(obj, t, T, initial_continuous_states, initial_discrete_states, initial_pvt_states, control_inputs, inputs, property_check)

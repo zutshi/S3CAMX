@@ -1,6 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+
+'''
+traces.py
+----------
+Defines traces or trajectories of the system. Used only for plotting
+as of now.
+'''
+
 import numpy as np
+from scipy import io
 
 ## commented off because matplotlib is not installed for python installation
 ## used with matlab
@@ -11,7 +21,6 @@ import numpy as np
 #global plt
 #import matplotlib.pyplot as plt
 
-plot_figure_for_paper = False
 
 class Trace(object):
 
@@ -94,6 +103,16 @@ class Trace(object):
     # plt.autoscale()
         plt.show()
 
+    def dump_matlab(self):
+        data = {'T': self.t_array,
+                'X': self.x_array,
+                'S': self.s_array,
+                'U': self.u_array,
+                'CI': self.ci,
+                'PI': self.pi}
+        io.savemat('mat_file.mat', data, appendmat=False, format='5',
+                   do_compression=False, oned_as='column')
+
 
     def __repr__(self):
         s = '''t
@@ -155,7 +174,7 @@ def get_plot_cmd_from_stdin():
     return corrected_plot_cmd
 
 
-def plot_trace_list(trace_list, plt):
+def plot_trace_list(trace_list, plt, plot_figure_for_paper=False):
     '''
     @type plt: matplotlib.pyplot
     '''

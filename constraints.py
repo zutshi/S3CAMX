@@ -1,6 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+constraints.py
+----------------
+Defines Interval Constraints.
+'''
+
 import logging
 import numpy as np
 import err

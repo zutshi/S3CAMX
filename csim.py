@@ -1,6 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+csim.py
+--------
+Controller Simulator.
+Provides the low level functionality to call the controller shared
+object using ctypes.
+'''
+
 import ctypes as ct
 
 # Can also use os along with platform?

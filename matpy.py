@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-###############################################################################
-# File name: matpy.py
-# Author: Aditya
-# Python Version: 2.7
-#
-#                       #### Description ####
-# Provides an interface between Python and their counterpart Matlab functions.
-# The primary reason for such a layer is the lack of Matlab R2015a support for
-# passing double array of more than 1 dim. This layer takes care of
-# serialization and de-serialization. This is done with its matlab counterpart
-# simulate_system_external.m
-###############################################################################
+'''
+matpy.py
+----------
+Provides an interface between Python and their counterpart Matlab functions.
+The primary reason for such a layer is the lack of Matlab R2015a support for
+passing double array of more than 1 dim. This layer takes care of
+serialization and de-serialization. This is done with its matlab counterpart
+simulate_system_external.m
+Provides a parse function and structures to load a parsed system.
+Reads the system description from the provided .tst file,
+and populates respective structures and returns them.
+'''
 
 import array
 import numpy as np

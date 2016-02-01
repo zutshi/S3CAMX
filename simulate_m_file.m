@@ -1,3 +1,5 @@
+% Used by psim.py to call simulators written in matlab.
+
 function funH = simulate_m_file(funID)
 delete 'log_matlab'
 diary log_matlab

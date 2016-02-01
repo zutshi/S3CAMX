@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+CASymbolicKLEE.py [DEFUNCT]
+-------------
+Provides interfaces to manipulate the Controller's concolic
+abstraction created using KLEE.
+'''
+
 import glob
 import logging
 import numpy as np

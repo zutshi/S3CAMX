@@ -1,6 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+sample.py
+----------
+Provides different sampling functions.
+'''
+
 import err
 
 import numpy as np

@@ -1,5 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+'''
+CAConcolic.py
+-------------
+Provides interfaces to manipulate the Controller's concolic
+abstraction.
+'''
+
 import logging
 import numpy as np
 

@@ -1,5 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+'''
+controlifc.py
+----------------
+Defines the low level interface to the C controller's shared object.
+'''
+
 import ctypes as ct
 import numpy as np
 

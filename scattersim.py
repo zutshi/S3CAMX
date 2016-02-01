@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+scattersim.py
+----------
+Defines the main algorithm described in the papers
+'scatter-and-simulate'.
+'''
+
 import logging
 import Queue
 import numpy as np
@@ -14,6 +21,7 @@ import concreteController as cc
 
 logger = logging.getLogger(__name__)
 
+np.set_printoptions(suppress=True)
 
 # TODO: plant state centric....attaches other states to plant states. make it
 # neutral, gets touples of ((cons, d), s)
@@ -648,7 +656,7 @@ def random_test(
             print U.decorate('concretized!')
             for (idx, xf) in enumerate(rchd_concrete_state_array.iterable()):
                 if xf.x in system_params.final_cons:
-                    print x0_array[idx, :], d0_array[idx, :], '->', xf.x, xf.d
+                    print x0_array[idx, :], d0_array[idx, :], '->', '\t', xf.x, xf.d
                     if A.num_dims.ci != 0:
                         print 'ci:', ci_array[idx]
             res = True

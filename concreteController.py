@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+concreteController.py
+---------------------
+Provides an interface to compute the concrete output of the
+controller.
+'''
+
 import numpy as np
 import logging
 import controlifc as cifc

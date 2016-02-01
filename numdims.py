@@ -1,3 +1,8 @@
+'''
+numdims.py
+----------
+Defines the Number of dimensions structure used accross the project.
+'''
 
 # TODO: consider using a named tuple instead?
 
