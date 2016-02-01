@@ -34,6 +34,14 @@ import wmanager
 from utils import print
 
 import joblib as jb
+import dask.imperative as di
+
+# Use multiprocessing scheduler
+from dask.multiprocessing import get
+
+import multiprocessing
+
+import toolz
 
 #matplotlib.use('GTK3Agg')
 
@@ -123,11 +131,35 @@ def simulate(sys, prop, opts):
     copy_reg was used to make the methods in the plant SIM classes work.
     CAUTION: The issue and the respective fix are not yet clearly
     understood.
+
+    -------------------
+
+    Three parallel backends were tried:
+        - multiprocessing processpool
+        - joblib (an interface to multiprocessing)
+        - dask
+
+        mp was 2x faster than jb. And dask is much much slower than
+        single process, but it isn't being used properly, so the
+        comparison doesn't really stand
     '''
-    if opts.num_jobs == 0:
+    if opts.par.num_jobs == 0:
         trace_list = non_par_sim(sys, prop, opts)
     else:
-        trace_list = par_sim(sys, prop, opts)
+        if opts.par.backend == 'mp':
+            # Options: thread pool and process pool
+            # Thread pool cause a segfault
+            trace_list = par_sim_processPool(sys, prop, opts)
+
+        elif opts.par.backend == 'jb':
+            trace_list = par_sim_joblib(sys, prop, opts)
+
+        elif opts.par.backend == 'ds':
+            # Options: multiple scheduler
+            # default: threaded, and multiprocessing processpool
+            trace_list = par_sim_dask(sys, prop, opts)
+        else:
+            raise NotImplementedError
     return trace_list
 
 
@@ -155,17 +187,78 @@ def non_par_sim(sys, prop, opts):
     return trace_list
 
 
-def par_sim(sys, prop, opts):
+def par_sim_joblib(sys, prop, opts):
     num_samples = opts.num_sim_samples
 
     concrete_states = sample.sample_init_UR(sys, prop, num_samples)
 
     # [(trace, vio), ... , ...]
     trace_list =\
-        jb.Parallel(n_jobs=opts.num_jobs, verbose=40, pre_dispatch=100, batch_size='auto')\
-        (jb.delayed(simsys.simulate_system)(sys, i, prop.T) for i in concrete_states)
+        jb.Parallel(n_jobs=opts.par.num_jobs, verbose=5, pre_dispatch=100, batch_size='auto')\
+        (jb.delayed(simsys.simulate_system)(sys, prop.T, i) for i in concrete_states)
 
     sat_xt = [check_prop_violation(trace, prop) for trace in trace_list]
+    num_violations = sum([1 if sat_x.size != 0 else 0 for (sat_x, sat_t) in sat_xt])
+
+    print('number of violations: {}'.format(num_violations))
+    return trace_list
+
+
+def par_sim_processPool(sys, prop, opts):
+    '''
+    Have not been well explored. It worked much better right off the
+    bat! Shoukd explore the arguements of the functions.
+    '''
+    # NOTE: Threadpool causes a segfault.
+    # Probably due to some function, possibly scipy not being
+    # threadsafe?
+    #pool = multiprocessing.pool.ThreadPool()
+    # num_jobs = 8 works slightly better than num_jobs = 4 !
+    pool = multiprocessing.pool.Pool(opts.par.num_jobs)
+    num_samples = opts.num_sim_samples
+
+    concrete_states = sample.sample_init_UR(sys, prop, num_samples)
+
+    f = toolz.partial(simsys.simulate_system, sys, prop.T)
+
+    # [(trace, vio), ... , ...]
+    trace_list = pool.map(f, concrete_states)
+
+    sat_xt = [check_prop_violation(trace, prop) for trace in trace_list]
+    num_violations = sum([1 if sat_x.size != 0 else 0 for (sat_x, sat_t) in sat_xt])
+
+    print('number of violations: {}'.format(num_violations))
+    return trace_list
+
+
+def par_sim_dask(sys, prop, opts):
+    '''
+    Doesn't seem to give much speedup. Which is kind of expected as
+    its not being used in the intended way. It demands more fine
+    grained parallelism I guess? Need to read more documentation.
+    Moreover, the default backend works fine, but the multiprocessing
+    backend enabled using 'from dask.multiprocessing import get' has
+    issues.
+        - It uses cloudpickle which for some reasons can not work
+          with cython functions (at least not right off the bat). I suspect
+          cloudpickle uses an older version of pickle which has this issue.
+        - It also does not work with .py files with Python 2.7.6.
+          Works ok with 2.7.9.
+
+    Conclusion: Works fine with default backend but slow. Not useful
+    for embarrassingly parallel jobs.
+    '''
+    num_samples = opts.num_sim_samples
+
+    concrete_states = di.value(sample.sample_init_UR(sys, prop, num_samples))
+
+    # [(trace, vio), ... , ...]
+    trace_list = [di.do(simsys.simulate_system, pure=True)(sys, prop.T, concrete_states[i]) for i in range(num_samples)]
+
+    # Use the default thread scheduler
+    sat_xt = [check_prop_violation(trace.compute(), prop) for trace in trace_list]
+    # Use the multiprocessing scheduler
+    #sat_xt = [check_prop_violation(trace.compute(get=get), prop) for trace in trace_list]
     num_violations = sum([1 if sat_x.size != 0 else 0 for (sat_x, sat_t) in sat_xt])
 
     print('number of violations: {}'.format(num_violations))
@@ -583,6 +676,7 @@ def main():
     LIST_OF_CONTROLLER_REPRS = ['smt2', 'trace']
     LIST_OF_TRACE_STRUCTS = ['list', 'tree']
     LIST_OF_REFINEMENTS = ['init', 'trace']
+    LIST_OF_PAR_BACKENDS = ['mp', 'jb', 'ds']
 
     usage = '%(prog)s <filename>'
     parser = argparse.ArgumentParser(description='S3CAM', usage=usage)
@@ -622,8 +716,12 @@ def main():
     parser.add_argument('--refine', type=str, metavar='method', default='init',
                         choices=LIST_OF_REFINEMENTS, help='Refinement method')
 
-    parser.add_argument('-n', '--parallel', type=int, metavar='num-jobs', default=0,
+    parser.add_argument('-n', '--num-parallel-jobs', type=int, metavar='num-jobs', default=0,
                         help='run in parallel using n cores')
+
+    parser.add_argument('-b', '--parallel-backend', type=str, metavar='backend', default='mp',
+                        choices=LIST_OF_PAR_BACKENDS, help='backend for parallel executions')
+
 
 #    argcomplete.autocomplete(parser)
     args = parser.parse_args()
@@ -681,7 +779,9 @@ def main():
     opts.plot = args.plot
     opts.dump_trace = args.dump
     opts.refine = args.refine
-    opts.num_jobs = args.parallel
+    opts.par = Options()
+    opts.par.num_jobs = args.num_parallel_jobs
+    opts.par.backend = args.parallel_backend
 
     sys, prop = loadsystem.parse(filepath)
     # TAG:MSH
