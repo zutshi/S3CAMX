@@ -26,4 +26,4 @@ controller_path = None
 controller_path_dir_path = None
 
 plant_description = 'python'
-plant_path = 'vanDerPol.py'
+plant_path = 'vanDerPol.so'

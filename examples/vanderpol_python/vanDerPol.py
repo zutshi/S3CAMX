@@ -78,12 +78,20 @@ class SIM(object):
         return (ret_t, ret_X, ret_D, ret_P)
 
 
-def dyn(t, X, u):
+def dyn_non_opt(t, X, u):
     x1 = X[0]
     x2 = X[1]
     y1 = x2
     y2 = 5.0 * (1 - x1 ** 2) * x2 - x1
     return np.array([y1, y2])
+
+
+def dyn(t, X, u):
+    # Bad things happen when you modify the passed in X.
+    # So, make a copy!
+    X = X.copy()
+    X[0], X[1] = (X[1], 5.0 * (1 - X[0] ** 2) * X[1] - X[0])
+    return X
 
 
 def solout_fun(property_checker, violating_state, plot_data):

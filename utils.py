@@ -12,6 +12,7 @@ from subprocess import call
 import subprocess
 import sys
 from blessings import Terminal
+import signal
 
 import err
 import fileOps as fops
@@ -247,3 +248,22 @@ def print(*args, **kwargs):
         f = kwargs.get('file', sys.stdout)
         __builtin__.print('{}:{}::'.format(basename, lineno), end='', file=f)
     return __builtin__.print(*args, **kwargs)
+
+
+class TimeoutError(Exception):
+    pass
+
+
+class timeout:
+    def __init__(self, max_time):
+        self.max_time = max_time
+
+    def handle_timeout(self, signum, frame):
+        raise TimeoutError('Timed Out: t > {}'.format(self.max_time))
+
+    def __enter__(self):
+        signal.signal(signal.SIGALRM, self.handle_timeout)
+        signal.alarm(self.max_time)
+
+    def __exit__(self, type, value, traceback):
+        signal.alarm(0)

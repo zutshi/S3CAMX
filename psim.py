@@ -67,11 +67,10 @@ def simulator_factory(
         python_file_path = config_dict['plant_path']
         #(module_name, file_ext) = python_file_path.split('.')
         (module_name, file_ext) = fp.split_filename_ext(python_file_path)
-        if file_ext != 'py':
-            raise err.Fatal('Python file extension py expected, found: {}'.format(file_ext))
+        module_type = file_ext
         module_path = fp.construct_path(python_file_path, benchmark_os_path)
         if fp.validate_file_names([module_path]):
-            return NativeSim(module_name, module_path, plt, plant_pvt_init_data, parallel)
+            return NativeSim(module_name, module_path, module_type, plt, plant_pvt_init_data, parallel)
         else:
             raise err.FileNotFound('file does not exist: ' + python_file_path)
     elif sim_type == 'test':
@@ -142,13 +141,27 @@ class NativeSim(Simulator):
             self,
             module_name,
             module_path,
+            module_type,
             plt,
             plant_pvt_init_data,
             parallel,
             ):
         super(NativeSim, self).__init__()
 
-        sim_module = imp.load_source(module_name, module_path)
+        # Can accept py, pyc or so
+        if module_type == 'py':
+            sim_module = imp.load_source(module_name, module_path)
+        elif module_type == 'pyc':
+            print('warning, not sure if this will work, trying...')
+            imp.load_source(module_name, module_path)
+            # If the above gives an error, perhaps load_compiled() can
+            # be used
+            #imp.load_compiled()
+        elif module_type == 'so':
+            sim_module = imp.load_dynamic(module_name, module_path)
+        else:
+            raise err.Fatal('Unknown Python module type: {}'.format(module_type))
+
         self.sim_obj = sim_module.SIM(plt, plant_pvt_init_data)
         self.sim = self.sim_obj.sim
 
