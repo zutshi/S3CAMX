@@ -160,7 +160,7 @@ def step_sim(sys, t0, x0, s0, d0, pvt0, ci, pi):
 
 
 # exactly the same as simulate, but does not use closures
-def simulate_system(sys, concrete_state, T):
+def simulate_system(sys, T, concrete_state):
     (t, x, s, d, pvt, u, ci_array, pi_array) = get_individual_states(concrete_state)
     t0 = t
     tf = t + T
