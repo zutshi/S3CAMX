@@ -93,7 +93,7 @@ function [tt, times, YY, YY_, Y, L, CLG, GRD, simParams] = pidSimulationWrapper(
 	simParams.controllerStartTime = D(3);
 	simParams.totalSimulationTime = totTime;
 	simParams.ctrlTimePeriod = 5;
-    simParams.startingGlucose = inps(11,1);
+    simParams.startingGlucose = XX(:,1); %inps(11,1);
     %%simParams.cgmNoisePattern = inps(12:111,1);
     %%simParams.cgmNoisePattern=zeros(100,1);
 	[tt, times, YY, YY_] = simulatePIDSystem(simParams,params);
@@ -149,11 +149,11 @@ function [tt, times, YY, YY_] = simulatePIDSystem(simParams,params)
     else
         fprintf('\nClosed Loop');
         %3. Simulate in closed loop.
-        curGs     = XX(:,2);
+        curGs     = D(14);
         curTime   = timeElapsed;
         ctrlState = initializePIDState(curGs, simParams.openLoopBasal, simParams.ctrlTimePeriod, params);
         times(1,1) = t_start;
-        iValues(1,1) = XX(:,3);
+        iValues(1,1) = D(15);
         
         while(curTime <= T_end)             % while(curTime < simParams.totalSimulationTime)
             curGs = curGs -20 + 40* rand(1,1);   % adding noise randomly in the range of [-20,20]
@@ -186,13 +186,17 @@ function [tt, times, YY, YY_] = simulatePIDSystem(simParams,params)
     gsValues = gsValues (1:sz,:);
     iValues  = iValues(1:sz,:);
     intrnlValues      = intrnlValues(1:sz,:);
-    hyperGlycemiaTime = computeTimeInHyperGlycemia(times,gValues);
-    YY_ = [gValues gsValues iValues intrnlValues hyperGlycemiaTime];
+    hyperGlycemiaTime = 0; %computeTimeInHyperGlycemia(times,gValues);
+    YY_ = gValues;
     
     tt = T_end;
-    YY = YY_(end,:)     %YY = [YY_(end,:) curState];
+    YY = YY_(end,:);    %YY = [YY_(end,:) curState];
     
     D(:,4:13) = curState;
+    D(14) = gsValues(end,:);
+    D(15) = iValues(end,:);
+    D(16) = intrnlValues(end,:);
+    D(17) = hyperGlycemiaTime(end,:);
     
 end		% end of simulatePIDSystem()
 
