@@ -1,17 +1,17 @@
 function [tt,YY,D,P,prop_violated_flag] = artificial_pancreas(t_start,T_end,XX,D,P,~,~,~)
 
 inps = [
-8.17
-245.4769
-271.822
-0.007
-6.8088
-0.0094
-19.8721
-0.007
-0.9881
-49.0398
-122.0649
+16.2854
+223.926
+290.6167
+5.198
+-4.6859
+0.0098
+14.6155
+0.0045
+0.8987
+52.1305
+86.0444
     ];
 
 prop_violated_flag = 0;
@@ -166,7 +166,7 @@ function [tt, times, YY, YY_] = simulatePIDSystem(simParams,params)
             clBasal.times=[curTime; curTime + simParams.ctrlTimePeriod];
             clBasal.values=[bValue; bValue];
             
-            [tcl, gOut,gsOut,curState] = simDallaManModel(XX(:,6:15), curTime, curTime + simParams.ctrlTimePeriod, mealRA, clBasal, insulinBolus, params);
+            [tcl, gOut,gsOut,curState] = simDallaManModel(D(:,4:13), curTime, curTime + simParams.ctrlTimePeriod, mealRA, clBasal, insulinBolus, params);
 
             newSz = size(tcl,1);
             times(sz+1:sz+newSz,:) = tcl;
@@ -190,8 +190,10 @@ function [tt, times, YY, YY_] = simulatePIDSystem(simParams,params)
     YY_ = [gValues gsValues iValues intrnlValues hyperGlycemiaTime];
     
     tt = T_end;
-    YY = [YY_(end,:) curState];
-
+    YY = YY_(end,:)     %YY = [YY_(end,:) curState];
+    
+    D(:,4:13) = curState;
+    
 end		% end of simulatePIDSystem()
 
 
