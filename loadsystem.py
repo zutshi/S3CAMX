@@ -37,7 +37,9 @@ class System(object):
     def __init__(self, controller_path, num_dims, plant_config_dict,
                  delta_t, controller_path_dir_path, controller_object_str,
                  path, plant_pvt_init_data, min_smt_sample_dist,
-                 ci_grid_eps, pi_grid_eps):
+                 ci_grid_eps, pi_grid_eps, comp_scheme):
+
+        self.comp_scheme = comp_scheme
         self.controller_path = controller_path
         self.controller_object_str = controller_object_str
         self.num_dims = num_dims
@@ -162,10 +164,9 @@ def parse(file_path):
 
         if hasattr(sut, 'plant_composition'):
             # composition analyses
-            comp_analyses = True
             comp_scheme = sut.plant_composition
         else:
-            comp_analyses = False
+            comp_scheme = None
 
         if num_dims.ci == 0:
             ci = None
@@ -229,7 +230,7 @@ def parse(file_path):
                      delta_t, controller_path_dir_path,
                      controller_object_str, path, plant_pvt_init_data,
                      sut.min_smt_sample_dist, sut.ci_grid_eps,
-                     sut.pi_grid_eps)
+                     sut.pi_grid_eps, comp_scheme)
         prop = Property(T, init_cons_list, init_cons, final_cons, ci,
                         pi, initial_discrete_state, initial_controller_state,
                         MAX_ITER, num_segments)

@@ -381,6 +381,278 @@ def refine_trace(
         #init_cons_list = [current_abs.plant_abs.get_ival_constraints(i) for i in valid_promising_initial_state_list]
 
 
+# # returns a True when its done
+# def refine_init_composable(
+#         current_abs,
+#         init_cons_list,
+#         final_cons,
+#         initial_discrete_state,
+#         initial_controller_state,
+#         plant_sim,
+#         controller_sim,
+#         ci,
+#         pi,
+#         sampler,
+#         plot,
+#         init_cons,
+#         original_plant_cons_list,
+#         MAX_ITER,
+#         sample_ci,
+#         pi_ref,
+#         ci_ref,
+#         num_systems):
+
+#     i = 1
+#     while i <= MAX_ITER:
+#         print('iteration:', i)
+#         # TODO: temp function ss.init()
+
+#         sys_init = [SS.init(current_abs[k],
+#                             init_cons_list[k],
+#                             final_cons[k],
+#                             initial_discrete_state[k],
+#                             initial_controller_state[k]) for k in range(num_systems)]
+
+#         system_params_list = [SystemParams(
+#             sys_init[k][0], # initial_state_set,
+#             sys_init[k][1], # final_state_set,
+#             sys_init[k][2], # is_final,
+#             plant_sim,
+#             controller_sim,
+#             ci,
+#             pi,
+#             sampler,
+#             final_cons,
+#             pi_ref,
+#             ci_ref
+#             ) for k in range(num_systems)]
+
+
+#         for k in range(num_systems):
+#             SS.discover(current_abs[k], system_params_list[k])
+
+#         if plot:
+#             #plt.autoscale()
+#             #ph.figure_for_paper(plt.gca(), plot_hack.LINE_LIST)
+#             #plot_hack.LINE_LIST = []
+#             plt.show()
+
+#         for k in range(num_systems):
+#             if not system_params_list[k].final_state_set:
+#                 print('did not find any abstract counter example!', file=SYS.stderr)
+#                 return False
+
+#         print('analyzing graphs...')
+#         for k in range(num_systems):
+#             pi_ref[k].cleanup()
+#             if ci_ref[k] is not None:
+#                 ci_ref[k].cleanup()
+#             # creates a new pi_ref, ci_ref
+#             (promising_initial_states, ci_seq_list, pi_seq_list)\
+#                 = current_abs.get_initial_states_from_error_paths(
+#                         initial_state_set,
+#                         final_state_set,
+#                         pi_ref,
+#                         ci_ref,
+#                         pi,
+#                         ci)
+
+#         print('begin random testing!')
+#         if plot:
+#             f2 = plt.figure()
+#             f2.suptitle('random testing')
+
+#         print(len(promising_initial_states), len(ci_seq_list), len(pi_seq_list))
+#         #U.pause()
+#         # TODO: ugly...should it be another function?
+#         # Read the TODO above the function definition for more details
+#         (valid_promising_initial_state_list,
+#             pi_seq_list, ci_seq_list) = SS.filter_invalid_abs_states(
+#                         promising_initial_states,
+#                         pi_seq_list,
+#                         ci_seq_list,
+#                         current_abs,
+#                         init_cons)
+#         print(len(valid_promising_initial_state_list), len(ci_seq_list), len(pi_seq_list))
+#         #U.pause()
+#         if valid_promising_initial_state_list == []:
+#             print('no valid sample found during random testing. STOP', file=SYS.stderr)
+#             return False
+#         done = SS.random_test(
+#             current_abs,
+#             system_params,
+#             valid_promising_initial_state_list,
+#             ci_seq_list,
+#             pi_seq_list,
+#             init_cons,
+#             initial_discrete_state,
+#             initial_controller_state,
+#             sample_ci
+#             )
+#         if plot:
+#             #ph.figure_for_paper(plt.gca(), plot_hack.LINE_LIST)
+#             plt.show()
+#         if done:
+#             print('Concretized', file=SYS.stderr)
+#             return True
+
+#         (current_abs, init_cons_list) = SS.refine_init_based(
+#                 current_abs,
+#                 promising_initial_states, # should it not be valid_promising_initial_state_list?
+#                 original_plant_cons_list)#, pi_ref, ci_ref)
+#         pi_ref.refine()
+#         if ci_ref is not None:
+#             ci_ref.refine()
+#         i += 1
+#     print('Failed: MAX iterations {} exceeded'.format(MAX_ITER), file=SYS.stderr)
+#     # raise an exception maybe?
+
+
+def step1(current_abs, init_cons_list, final_cons,
+          initial_discrete_state, initial_controller_state, plant_sim,
+          controller_sim, ci, pi, sampler, pi_ref, ci_ref, plot):
+    # TODO: temp function ss.init()
+
+    (initial_state_set, final_state_set, is_final) = \
+        SS.init(current_abs, init_cons_list, final_cons,
+                initial_discrete_state, initial_controller_state)
+
+    system_params = SystemParams(
+        initial_state_set,
+        final_state_set,
+        is_final,
+        plant_sim,
+        controller_sim,
+        ci,
+        pi,
+        sampler,
+        final_cons,
+        pi_ref,
+        ci_ref
+        )
+    SS.discover(current_abs, system_params)
+    if plot: plt.show()
+    return initial_state_set, final_state_set, system_params
+
+
+def step2(pi_ref, ci_ref, current_abs, pi, ci, initial_state_set, final_state_set, init_cons, plot):
+
+    pi_ref.cleanup()
+    if ci_ref is not None:
+        ci_ref.cleanup()
+    # creates a new pi_ref, ci_ref
+    (promising_initial_states,
+        ci_seq_list,
+        pi_seq_list) = current_abs.get_initial_states_from_error_paths(initial_state_set,
+                                                                       final_state_set,
+                                                                       pi_ref,
+                                                                       ci_ref,
+                                                                       pi,
+                                                                       ci)
+
+    # ##!!##logger.debug('promising initial states: {}'.format(promising_initial_states))
+
+    print('begin random testing!')
+    if plot:
+        f2 = plt.figure()
+        f2.suptitle('random testing')
+
+    print(len(promising_initial_states), len(ci_seq_list), len(pi_seq_list))
+    #U.pause()
+    # TODO: ugly...should it be another function?
+    # Read the TODO above the function definition for more details
+    (valid_promising_initial_state_list,
+        pi_seq_list, ci_seq_list) = SS.filter_invalid_abs_states(
+                    promising_initial_states,
+                    pi_seq_list,
+                    ci_seq_list,
+                    current_abs,
+                    init_cons)
+    print(len(valid_promising_initial_state_list), len(ci_seq_list), len(pi_seq_list))
+    return (promising_initial_states, valid_promising_initial_state_list, ci_seq_list, pi_seq_list)
+
+
+def step3(current_abs, promising_initial_states, original_plant_cons_list, ci_ref, pi_ref):
+
+    (current_abs, init_cons_list) = SS.refine_init_based(
+            current_abs,
+            promising_initial_states, # should it not be valid_promising_initial_state_list?
+            original_plant_cons_list)#, pi_ref, ci_ref)
+    pi_ref.refine()
+    if ci_ref is not None:
+        ci_ref.refine()
+    return current_abs, init_cons_list
+
+
+# returns a True when its done
+def refine_init_composable(
+        current_abs,
+        init_cons_list,
+        final_cons,
+        initial_discrete_state,
+        initial_controller_state,
+        plant_sim,
+        controller_sim,
+        ci,
+        pi,
+        sampler,
+        plot,
+        init_cons,
+        original_plant_cons_list,
+        MAX_ITER,
+        sample_ci,
+        pi_ref,
+        ci_ref):
+
+    i = 1
+    while i <= MAX_ITER:
+        print('iteration:', i)
+        system_params, initial_state_set, final_state_set\
+            = step1(current_abs, init_cons_list, final_cons,
+                    initial_discrete_state, initial_controller_state,
+                    plant_sim, controller_sim, ci, pi, sampler, pi_ref,
+                    ci_ref, plot)
+
+        if not system_params.final_state_set:
+            print('did not find any abstract counter example!', file=SYS.stderr)
+            return False
+
+        print('analyzing graph...')
+        (promising_initial_states, valid_promising_initial_state_list,
+         ci_seq_list, pi_seq_list)\
+            = step2(pi_ref, ci_ref, current_abs, pi, ci,
+                    initial_state_set, final_state_set, init_cons,
+                    plot)
+
+        if valid_promising_initial_state_list == []:
+            print('no valid sample found during random testing. STOP', file=SYS.stderr)
+            return False
+
+        done = SS.random_test(
+            current_abs,
+            system_params,
+            valid_promising_initial_state_list,
+            ci_seq_list,
+            pi_seq_list,
+            init_cons,
+            initial_discrete_state,
+            initial_controller_state,
+            sample_ci
+            )
+        if plot:
+            plt.show()
+        if done:
+            print('Concretized', file=SYS.stderr)
+            return True
+
+        (current_abs, init_cons_list)\
+            = step3(current_abs, promising_initial_states,
+                    original_plant_cons_list, ci_ref, pi_ref)
+        i += 1
+    print('Failed: MAX iterations {} exceeded'.format(MAX_ITER), file=SYS.stderr)
+    # raise an exception maybe?
+
+
 # returns a True when its done
 def refine_init(
         current_abs,
@@ -501,6 +773,7 @@ def refine_init(
     print('Failed: MAX iterations {} exceeded'.format(MAX_ITER), file=SYS.stderr)
     # raise an exception maybe?
 
+
 def dump_trace(trace_list):
     print('dumping trace[0]')
     trace_list[0].dump_matlab()
@@ -552,10 +825,12 @@ def main():
                         help='scatter & simulate')
     parser.add_argument('--ss-concolic', action="store_true",
                         help='scatter & simulate with concolic execution using KLEE')
-    parser.add_argument('-x', '--ss-symex', type=str, metavar='engine', choices=LIST_OF_SYEMX_ENGINES,
+    parser.add_argument('-x', '--ss-symex', type=str,
+                        metavar='engine', choices=LIST_OF_SYEMX_ENGINES,
                         help='SS + SymEx with static paths')
 
-    parser.add_argument('-r', '--cntrl-rep', type=str, metavar='repr', choices=LIST_OF_CONTROLLER_REPRS,
+    parser.add_argument('-r', '--cntrl-rep', type=str, metavar='repr',
+                        choices=LIST_OF_CONTROLLER_REPRS,
                         help='Controller Representation')
 
     parser.add_argument('-p', '--plot', action='store_true',
@@ -576,6 +851,8 @@ def main():
 
     parser.add_argument('--refine', type=str, metavar='method', default='init',
                         choices=LIST_OF_REFINEMENTS, help='Refinement method')
+
+    parser.add_argument('--decompose', action='store_true', help='Refinement method')
 
 #    argcomplete.autocomplete(parser)
     args = parser.parse_args()
@@ -633,8 +910,10 @@ def main():
     opts.plot = args.plot
     opts.dump_trace = args.dump
     opts.refine = args.refine
+    opts.decompose = args.decompose
 
     sys, prop = loadsystem.parse(filepath)
+    assert(not(sys.comp_scheme is None and args.ss_symex is not None))
     # TAG:MSH
     matlab_engine = args.meng
     sys.init_sims(plt, psim_args=matlab_engine)
