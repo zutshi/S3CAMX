@@ -44,7 +44,8 @@ MAX_ITER = 2
 ########################
 
 # Rectangularly bounded exogenous inputs to the plant (plant noise).
-pi = [[], []]
+pi = [[-20.0], [20.0]]
+pi_grid_eps = [5.0]
 
 
 ################################
@@ -88,3 +89,4 @@ num_control_inputs = 0
 # rectangular bounds on exogenous inputs to the contorller. Such as, controller
 # disturbance.
 ci = [[], []]
+ci_grid_eps = []
