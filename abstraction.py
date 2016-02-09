@@ -414,16 +414,17 @@ class TopLevelAbs:
 #                     + list(np.random.random((num_of_missing_pi_tail, pi_dim)))
 
         for (idx, (ci_seq, pi_seq)) in enumerate(zip(ci_seq_list, pi_seq_list)):
-            missing_input_len = self.N - len(ci_seq)
+            missing_ci_len = self.N - len(ci_seq)
+            missing_pi_len = self.N - len(pi_seq)
             # row, column
-            r, c_ci = missing_input_len, ci_dim
+            r, c_ci = missing_ci_len, ci_dim
             #FIXME: default random values
             if ci_ref is not None:
-                ci_seq_list[idx] = ci_seq + [ci_cons] * missing_input_len
+                ci_seq_list[idx] = ci_seq + [ci_cons] * missing_ci_len
             else:
                 ci_seq_list[idx] = ci_seq + list(np.random.uniform(ci_cons.l, ci_cons.h, (r, c_ci)))
             #pi_seq_list[idx] = pi_seq + list(np.random.uniform(pi_cons.l, pi_cons.h, (r, c_pi)))
-            pi_seq_list[idx] = pi_seq + [pi_cons] * missing_input_len
+            pi_seq_list[idx] = pi_seq + [pi_cons] * missing_pi_len
 
         print('path states, min_len:{}, max_len:{}'.format(min_len, max_len))
 
