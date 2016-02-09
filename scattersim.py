@@ -601,7 +601,7 @@ def random_test(
             ci_array = np.zeros((num_samples, 0))
         else:
             if sample_ci:
-                print 
+                print
                 ci_cons_list = list(ci_seq_array[:, i, :])
                 ci_cons_list = [ci_cons.tolist()[0] for ci_cons in ci_cons_list]
 
