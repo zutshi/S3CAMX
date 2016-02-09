@@ -159,6 +159,7 @@ class GraphGT(object):
         pos = gt.arf_layout(g, max_iter=0)
         gt.graph_draw(g, pos=pos, vertex_text=self.G.vertex_index)
         time.sleep(1000)
+        print 'exiting'
         exit()
 
         gt.graph_draw(self.G, vertex_text=self.G.vertex_index)
