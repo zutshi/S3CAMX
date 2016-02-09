@@ -14,11 +14,11 @@ plant_pvt_init_data = None
 T = 720.0
 
 # Rectangular bounds on initial plant states X0[0, :] <= X <= X0[1, :]
-# [starting_glucose]
-initial_set = [[80.0], [160.0]]
+# [gValues gsValues iValues]
+initial_set = [[80.0, 90.0, 0.0], [160.0, 150.0, 1.0]]
 
 # Unsafe Boxed Region
-error_set = [[0], [70]]
+error_set = [[0, -inf, -inf], [70, inf, inf]]
 
 ############################
 # Results Scratchpad:
@@ -31,7 +31,7 @@ error_set = [[0], [70]]
 # Abstraction Params
 ########################
 # initial abstraction grid size
-grid_eps = [1.0]
+grid_eps = [50.0, 50.0, 50.0]
 
 
 # number of samples at every scatter step
@@ -51,8 +51,8 @@ pi = [[], []]
 # Unimplemented
 ################################
 # Initial plant discrete state: List all states
-# [TotalTime, TimeElapsed, ControllerStartTime, DallaMan_curState(:,1:10), gsValues, iValues, internalValues, hyperGlycemiaTime]
-initial_discrete_state = [T, 0.0, 40.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+# [TotalTime, TimeElapsed, ControllerStartTime, DallaMan_curState(:,1:10), isPIDInitialized, PID_ctrlState[10x1 stct]]
+initial_discrete_state = [T, 0.0, 40.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 # Initial pvt simulator state, associated with with an execution trace.
 initial_pvt_states = []
 ################################
@@ -88,4 +88,3 @@ num_control_inputs = 0
 # rectangular bounds on exogenous inputs to the contorller. Such as, controller
 # disturbance.
 ci = [[], []]
-

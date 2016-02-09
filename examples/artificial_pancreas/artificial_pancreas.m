@@ -17,70 +17,32 @@ inps = [
 prop_violated_flag = 0;
 
 totTime = D(1);
-t_start
-T_end
+% t_start
+% T_end
+
 % Time Elapsed; cumulated
 timeElapsed = D(2);
+
+% Update time elapsed for the next iteration
 D(2) = D(2)+(T_end-t_start);
+
+%Controller Start Time
 D(3) = inps(10,1);
+
+isPIDInitialized = D(14);
 
 % Random Number Generator For Noise
 rng('shuffle','twister');
 
-% TO_CHECK: Problem copying the values this way! Why? 
-% params = load ('d1.mat');
-
-params.weight = 102.3200;
-params.EGPb	= 2.2758;
-params.Fcns	= 1;
-params.Gb	= 138.5600;
-params.Gpb	= 265.3701;
-params.Gtb	= 162.4571;
-params.HEb	= 0.6000;
-params.Ib	= 100.2500;
-params.Ilb	= 3.2076;
-params.Ipb	= 5.5043;
-params.Km0	= 253.5200;
-params.Ts	= 10;
-params.Vg	= 1.9152;
-params.Vi	= 0.0549;
-params.Vm0	= 3.2667;
-params.Vmx	= 0.0313;
-params.b	= 0.7039;
-params.d	= 0.2106;
-params.f	= 0.9000;
-params.kp1	= 4.7314;
-params.kp2	= 0.0047;
-params.kp3	= 0.0121;
-params.isc1ss = 72.4342;
-params.isc2ss = 141.1538;
-params.k1	= 0.0581;
-params.k2	= 0.0871;
-params.ka1	= 0.0019;
-params.ka2	= 0.0078;
-params.kabs	= 0.0891;
-params.kd	= 0.0152;
-params.ke1	= 5.0000e-04;
-params.ke2	= 339;
-params.ki	= 0.0046;
-params.kmax	= 0.0461;
-params.kmin	= 0.0038;
-params.ksc	= 0.0766;
-params.m1	= 0.1545;
-params.m2	= 0.2250;
-params.m30	= 0.2317;
-params.m4	= 0.0900;
-params.m5	= 0.0273;
-params.p2u	= 0.0278;
-params.u2ss	= 1.2386;
-params.Sb	= 1.2386;
-params.m6	= 0.6339;
+%Load Patient Parameters from the external file
+patientParams = load ('d1.mat');
+params = patientParams.params;
 
 [tt, times, YY, YY_] = pidSimulationWrapper(params,totTime);
 
 if any(YY_(:,1) < 70.0)
-    YY_
-  prop_violated_flag = 1
+%     YY_
+    prop_violated_flag = 1
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -93,7 +55,7 @@ function [tt, times, YY, YY_, Y, L, CLG, GRD, simParams] = pidSimulationWrapper(
 	simParams.controllerStartTime = D(3);
 	simParams.totalSimulationTime = totTime;
 	simParams.ctrlTimePeriod = 5;
-    simParams.startingGlucose = XX(:,1); %inps(11,1);
+    simParams.startingGlucose = XX(:,1); %inps(11,1); 
     %%simParams.cgmNoisePattern = inps(12:111,1);
     %%simParams.cgmNoisePattern=zeros(100,1);
 	[tt, times, YY, YY_] = simulatePIDSystem(simParams,params);
@@ -129,7 +91,7 @@ function [tt, times, YY, YY_] = simulatePIDSystem(simParams,params)
         openLoopBasal.times  = [0; simParams.controllerStartTime];
         openLoopBasal.values = [simParams.openLoopBasal; 0];
 
-        [t0, gOutOrig, gsOutOrig, curState] = simDallaManModel(startState, 0, T_end, mealRA, openLoopBasal, insulinBolus, params);
+        [t0, gOutOrig, gsOutOrig, curState] = simDallaManModel(startState, t_start, T_end, mealRA, openLoopBasal, insulinBolus, params);
 
         % Initialize the outputs 
         times        = [];
@@ -149,13 +111,37 @@ function [tt, times, YY, YY_] = simulatePIDSystem(simParams,params)
     else
         fprintf('\nClosed Loop');
         %3. Simulate in closed loop.
-        curGs     = D(14);
+        curGs     = XX(:,2);
         curTime   = timeElapsed;
-        ctrlState = initializePIDState(curGs, simParams.openLoopBasal, simParams.ctrlTimePeriod, params);
+        if (isPIDInitialized == 0)
+            ctrlState = initializePIDState(curGs, simParams.openLoopBasal, simParams.ctrlTimePeriod, params);
+            D(15) = ctrlState.oldG;
+            D(16) = ctrlState.Kp;
+            D(17) = ctrlState.Td;
+            D(18) = ctrlState.Ti;
+            D(19) = ctrlState.insulinMax;
+            D(20) = ctrlState.I;
+            D(21) = ctrlState.target;
+            D(22) = ctrlState.dt;
+            D(23) = ctrlState.iMax;
+            D(24) = ctrlState.gamma;
+            isPIDInitialized = 1;
+        else
+            ctrlState.oldG  = D(15); 
+            ctrlState.Kp    = D(16);
+            ctrlState.Td    = D(17);
+            ctrlState.Ti    = D(18);
+            ctrlState.insulinMax = D(19);
+            ctrlState.I      = D(20);
+            ctrlState.target = D(21);
+            ctrlState.dt     = D(22);
+            ctrlState.iMax   = D(23);
+            ctrlState.gamma     = D(24);
+        end
         times(1,1) = t_start;
-        iValues(1,1) = D(15);
+        iValues(1,1) = XX(:,3);
         
-        while(curTime <= T_end)             % while(curTime < simParams.totalSimulationTime)
+        while(curTime < T_end)            % BUG FIXED! % while(curTime < simParams.totalSimulationTime)
             curGs = curGs -20 + 40* rand(1,1);   % adding noise randomly in the range of [-20,20]
             %% Run the controller
             IpPred =  computeInsulinOnBoard(insulinBolus, times(1:sz,:), iValues(1:sz,:), curTime);
@@ -180,23 +166,22 @@ function [tt, times, YY, YY_] = simulatePIDSystem(simParams,params)
         end
     end
     
+    D(14) = isPIDInitialized;
+    
     times    = times(1:sz,:);
     
     gValues  = gValues(1:sz,:);
     gsValues = gsValues (1:sz,:);
     iValues  = iValues(1:sz,:);
     intrnlValues      = intrnlValues(1:sz,:);
-    hyperGlycemiaTime = 0; %computeTimeInHyperGlycemia(times,gValues);
-    YY_ = gValues;
+    hyperGlycemiaTime = computeTimeInHyperGlycemia(times,gValues);
+    YY_ = [gValues gsValues iValues];
     
-    tt = T_end;
-    YY = YY_(end,:);    %YY = [YY_(end,:) curState];
+    tt = times(end,:);  %T_end
+    
+    YY = YY_(end,:);     %YY = [YY_(end,:) curState];
     
     D(:,4:13) = curState;
-    D(14) = gsValues(end,:);
-    D(15) = iValues(end,:);
-    D(16) = intrnlValues(end,:);
-    D(17) = hyperGlycemiaTime(end,:);
     
 end		% end of simulatePIDSystem()
 

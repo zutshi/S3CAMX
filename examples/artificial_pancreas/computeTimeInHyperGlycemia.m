@@ -13,7 +13,7 @@ function hyperTime = computeTimeInHyperGlycemia(T,G)
               tHyper = T(i);
            else
               inHyper=1;
-              assert(tHyper > 0);
+              %assert(tHyper > 0);
               hyperTime(i,1) = T(i) - tHyper;
            end
         else
