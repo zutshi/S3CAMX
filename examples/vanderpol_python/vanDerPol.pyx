@@ -37,9 +37,9 @@ class SIM(object):
         pass
 
     def sim(*args):
-        return sim_pyodeint(*args)
+        #return sim_pyodeint(*args)
         #return sim_scipy_odeint(*args)
-        #return sim_scipy_integrate_ode(*args)
+        return sim_scipy_integrate_ode(*args)
 
 
 # uses pyodeint
