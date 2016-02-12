@@ -30,6 +30,7 @@ import list_examples as eg
 import plothelper as ph
 import plot_hack
 import wmanager
+import closestpair as CP
 #import utils as U
 from utils import print
 
@@ -257,24 +258,45 @@ def falsify(sys, prop, opts, current_abs, sampler):
 ##            f1.suptitle('abstraction')
 
     if opts.refine == 'init':
-        refine_init(
-            current_abs,
-            init_cons_list,
-            final_cons,
-            initial_discrete_state,
-            initial_controller_state,
-            plant_sim,
-            controller_sim,
-            ci,
-            pi,
-            sampler,
-            plot,
-            init_cons,
-            original_plant_cons_list,
-            MAX_ITER,
-            sample_ci,
-            pi_ref,
-            ci_ref)
+        if opts.decompose:
+            print('Attempting compositional analyses...')
+            refine_init_composable(
+                current_abs,
+                init_cons_list,
+                final_cons,
+                initial_discrete_state,
+                initial_controller_state,
+                plant_sim,
+                controller_sim,
+                ci,
+                pi,
+                sampler,
+                plot,
+                init_cons,
+                original_plant_cons_list,
+                MAX_ITER,
+                sample_ci,
+                pi_ref,
+                ci_ref)
+        else:
+            refine_init(
+                current_abs,
+                init_cons_list,
+                final_cons,
+                initial_discrete_state,
+                initial_controller_state,
+                plant_sim,
+                controller_sim,
+                ci,
+                pi,
+                sampler,
+                plot,
+                init_cons,
+                original_plant_cons_list,
+                MAX_ITER,
+                sample_ci,
+                pi_ref,
+                ci_ref)
     # seed 4567432
     elif opts.refine == 'trace':
         refine_trace(
@@ -508,7 +530,7 @@ def refine_trace(
 #     # raise an exception maybe?
 
 
-def step1(current_abs, init_cons_list, final_cons,
+def discover(current_abs, init_cons_list, final_cons,
           initial_discrete_state, initial_controller_state, plant_sim,
           controller_sim, ci, pi, sampler, pi_ref, ci_ref, plot):
     # TODO: temp function ss.init()
@@ -535,7 +557,7 @@ def step1(current_abs, init_cons_list, final_cons,
     return initial_state_set, final_state_set, system_params
 
 
-def step2(pi_ref, ci_ref, current_abs, pi, ci, initial_state_set, final_state_set, init_cons, plot):
+def get_init_states(pi_ref, ci_ref, current_abs, pi, ci, initial_state_set, final_state_set, init_cons, plot):
 
     pi_ref.cleanup()
     if ci_ref is not None:
@@ -572,7 +594,7 @@ def step2(pi_ref, ci_ref, current_abs, pi, ci, initial_state_set, final_state_se
     return (promising_initial_states, valid_promising_initial_state_list, ci_seq_list, pi_seq_list)
 
 
-def step3(current_abs, promising_initial_states, original_plant_cons_list, ci_ref, pi_ref):
+def refinement_step(current_abs, promising_initial_states, original_plant_cons_list, ci_ref, pi_ref):
 
     (current_abs, init_cons_list) = SS.refine_init_based(
             current_abs,
@@ -582,6 +604,12 @@ def step3(current_abs, promising_initial_states, original_plant_cons_list, ci_re
     if ci_ref is not None:
         ci_ref.refine()
     return current_abs, init_cons_list
+
+
+def search_final_states():
+    cp = CP.CP()
+    cp.get_closest()
+    return
 
 
 # returns a True when its done
@@ -608,10 +636,14 @@ def refine_init_composable(
     while i <= MAX_ITER:
         print('iteration:', i)
         system_params, initial_state_set, final_state_set\
-            = step1(current_abs, init_cons_list, final_cons,
+            = discover(current_abs, init_cons_list, final_cons,
                     initial_discrete_state, initial_controller_state,
                     plant_sim, controller_sim, ci, pi, sampler, pi_ref,
                     ci_ref, plot)
+
+        # get the graph from every system and process it to search for
+        # final states
+        search_final_states()
 
         if not system_params.final_state_set:
             print('did not find any abstract counter example!', file=SYS.stderr)
@@ -620,7 +652,7 @@ def refine_init_composable(
         print('analyzing graph...')
         (promising_initial_states, valid_promising_initial_state_list,
          ci_seq_list, pi_seq_list)\
-            = step2(pi_ref, ci_ref, current_abs, pi, ci,
+            = get_init_states(pi_ref, ci_ref, current_abs, pi, ci,
                     initial_state_set, final_state_set, init_cons,
                     plot)
 
@@ -646,7 +678,7 @@ def refine_init_composable(
             return True
 
         (current_abs, init_cons_list)\
-            = step3(current_abs, promising_initial_states,
+            = refinement_step(current_abs, promising_initial_states,
                     original_plant_cons_list, ci_ref, pi_ref)
         i += 1
     print('Failed: MAX iterations {} exceeded'.format(MAX_ITER), file=SYS.stderr)
@@ -914,6 +946,8 @@ def main():
 
     sys, prop = loadsystem.parse(filepath)
     assert(not(sys.comp_scheme is None and args.ss_symex is not None))
+    # opts.decompose => sys.comp_scheme is not None
+    assert(not opts.decompose or sys.comp_scheme is not None)
     # TAG:MSH
     matlab_engine = args.meng
     sys.init_sims(plt, psim_args=matlab_engine)
