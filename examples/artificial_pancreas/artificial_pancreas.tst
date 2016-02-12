@@ -18,7 +18,7 @@ T = 720.0
 initial_set = [[80.0, 90.0, 0.0], [160.0, 150.0, 1.0]]
 
 # Unsafe Boxed Region
-error_set = [[0, -inf, -inf], [70, inf, inf]]
+error_set = [[0, -inf, -inf], [75, inf, inf]]
 
 ############################
 # Results Scratchpad:

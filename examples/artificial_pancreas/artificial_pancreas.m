@@ -40,7 +40,7 @@ params = patientParams.params;
 
 [tt, times, YY, YY_] = pidSimulationWrapper(params,totTime);
 
-if any(YY_(:,1) < 70.0)
+if any(YY_(:,1) < 75.0)
 %     YY_
     prop_violated_flag = 1;
 end
