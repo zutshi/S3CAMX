@@ -1,17 +1,17 @@
 function [tt,YY,D,P,prop_violated_flag] = artificial_pancreas(t_start,T_end,XX,D,P,~,I,~)
 
 inps = [
-16.2854
-223.926
-290.6167
-5.198
--4.6859
-0.0098
-14.6155
-0.0045
-0.8987
-52.1305
-86.0444
+29.4881
+249.3545
+295.7785
+1.2403
+-5.1326
+0.0077
+14.7322
+0.003
+0.9654
+53.0687
+155.6477
     ];
 
 prop_violated_flag = 0;
@@ -42,7 +42,7 @@ params = patientParams.params;
 
 if any(YY_(:,1) < 70.0)
 %     YY_
-    prop_violated_flag = 1
+    prop_violated_flag = 1;
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,7 +80,7 @@ function [tt, times, YY, YY_] = simulatePIDSystem(simParams,params)
     
     %Switch between open-loop and closed-loop
     if timeElapsed < simParams.controllerStartTime
-        fprintf('\nOpen Loop');
+%         fprintf('\nOpen Loop');
         %2. Simulate until the start of the controller.
         GStart      = simParams.startingGlucose;
         params.Gb   = GStart;
@@ -109,7 +109,7 @@ function [tt, times, YY, YY_] = simulatePIDSystem(simParams,params)
         intrnlValues = zeros(sz,1);
         
     else
-        fprintf('\nClosed Loop');
+%         fprintf('\nClosed Loop');
         %3. Simulate in closed loop.
         curGs     = XX(:,2);
         curTime   = timeElapsed;

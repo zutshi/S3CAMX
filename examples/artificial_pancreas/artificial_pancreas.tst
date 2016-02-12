@@ -89,7 +89,4 @@ num_control_inputs = 0
 # rectangular bounds on exogenous inputs to the contorller. Such as, controller
 # disturbance.
 ci = [[], []]
-<<<<<<< HEAD
-=======
 ci_grid_eps = []
->>>>>>> 45f97683ef34877111e50a2386fc37a4aab85418
