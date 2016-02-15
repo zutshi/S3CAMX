@@ -11,6 +11,7 @@ import err
 import sample as SaMpLe
 import utils as U
 from utils import print
+import traces
 #from utils import print
 import concreteController as cc
 
@@ -497,6 +498,7 @@ def random_test(
 
     A.prog_bar = False
 
+    res = []
     # initial_state_set = set(initial_state_list)
 
     if A.num_dims.ci != 0:
@@ -514,6 +516,7 @@ def random_test(
     #print(ci_seq_array.shape)
     #print(pi_seq_array.shape)
     x_array = np.empty((0.0, A.num_dims.x), dtype=float)
+
     print('checking initial states')
 
     # for abs_state in initial_state_set:
@@ -562,6 +565,8 @@ def random_test(
 
         print('simulating {} samples'.format(num_samples))
 
+    trace_list = [traces.Trace(A.num_dims, A.N) for i in range(num_samples)]
+
     s_array = np.tile(initial_controller_state, (num_samples, 1))
 
 #     if system_params.pi is not None:
@@ -601,7 +606,6 @@ def random_test(
             ci_array = np.zeros((num_samples, 0))
         else:
             if sample_ci:
-                print
                 ci_cons_list = list(ci_seq_array[:, i, :])
                 ci_cons_list = [ci_cons.tolist()[0] for ci_cons in ci_cons_list]
 
@@ -672,20 +676,21 @@ def random_test(
                 property_checker,
                 property_violated_flag)
 
+        for kdx, rchd_state in enumerate(rchd_concrete_state_array.iterable()):
+            trace = trace_list[kdx]
+            trace.append(rchd_state.s, rchd_state.u, rchd_state.x, rchd_state.ci, rchd_state.pi, rchd_state.t, rchd_state.d)
+
         if property_violated_flag[0]:
             print(U.decorate('concretized!'))
             for (idx, xf) in enumerate(rchd_concrete_state_array.iterable()):
                 if xf.x in system_params.final_cons:
+                    res.append(idx)
                     print(x0_array[idx, :], d0_array[idx, :], '->', '\t', xf.x, xf.d)
-                    if A.num_dims.ci != 0:
-                        print('ci:', ci_array[idx])
-            res = True
+                    #if A.num_dims.ci != 0:
+                    #    print('ci:', ci_array[idx])
+                    #if A.num_dims.pi != 0:
+                    #    print('pi:', pi_array[idx])
             break
-        else:
-
-            # print('failed to concretize')
-
-            res = False
         i += 1
         sim_num += 1
 
@@ -701,7 +706,7 @@ def random_test(
 
         # u_array =
 
-    return res
+    return map(trace_list.__getitem__, res)
 
 
 def check_sat_any(x_array, cons):

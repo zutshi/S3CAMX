@@ -274,7 +274,8 @@ def falsify(sys, prop, opts, current_abs, sampler):
             MAX_ITER,
             sample_ci,
             pi_ref,
-            ci_ref)
+            ci_ref,
+            opts)
     # seed 4567432
     elif opts.refine == 'trace':
         refine_trace(
@@ -399,7 +400,8 @@ def refine_init(
         MAX_ITER,
         sample_ci,
         pi_ref,
-        ci_ref):
+        ci_ref,
+        opts):
 
     i = 1
     while i <= MAX_ITER:
@@ -472,7 +474,7 @@ def refine_init(
         if valid_promising_initial_state_list == []:
             print('no valid sample found during random testing. STOP', file=SYS.stderr)
             return False
-        done = SS.random_test(
+        res = SS.random_test(
             current_abs,
             system_params,
             valid_promising_initial_state_list,
@@ -486,8 +488,12 @@ def refine_init(
         if plot:
             #ph.figure_for_paper(plt.gca(), plot_hack.LINE_LIST)
             plt.show()
-        if done:
+        if res:
             print('Concretized', file=SYS.stderr)
+            fp.append_data(opts.op_fname,
+                           '{0} Concrete Traces({2}) for: {1} {0}\n'.
+                           format('='*20, opts.sys_path, len(res)))
+            fp.append_data(opts.op_fname, '{}\n'.format(res))
             return True
 
         (current_abs, init_cons_list) = SS.refine_init_based(
@@ -577,6 +583,9 @@ def main():
     parser.add_argument('--refine', type=str, metavar='method', default='init',
                         choices=LIST_OF_REFINEMENTS, help='Refinement method')
 
+    parser.add_argument('-o', '--output', type=str, default='vio.log',
+                        help='violation log')
+
 #    argcomplete.autocomplete(parser)
     args = parser.parse_args()
     #print(args)
@@ -633,6 +642,8 @@ def main():
     opts.plot = args.plot
     opts.dump_trace = args.dump
     opts.refine = args.refine
+    opts.op_fname = args.output
+    opts.sys_path = filepath
 
     sys, prop = loadsystem.parse(filepath)
     # TAG:MSH

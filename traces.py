@@ -105,15 +105,8 @@ class Trace(object):
         io.savemat('mat_file.mat', data, appendmat=False, format='5',
                    do_compression=False, oned_as='column')
 
-
     def __repr__(self):
-        s = '''t
-, {}, x
-{}, s
-{}, u
-{}, ci
-{}, pi
-{}'''.format(
+        s = '''t:{},\nx:{},\ns:{},\nu:{},\nci:{},\npi:{}'''.format(
             self.t_array,
             self.x_array,
             self.s_array,
