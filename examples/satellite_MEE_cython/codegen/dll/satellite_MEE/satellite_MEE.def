@@ -1,0 +1,20 @@
+DLL {
+	global:
+		emxInitArray_real_T;
+		emxCreate_real_T;
+		emxCreateWrapper_real_T;
+		emxCreateND_real_T;
+		emxCreateWrapperND_real_T;
+		emxDestroyArray_real_T;
+		satellite_MEE;
+		emxEnsureCapacity;
+		emxFree_int32_T;
+		emxFree_real_T;
+		emxInit_int32_T;
+		emxInit_real_T;
+		emxInit_real_T1;
+		satellite_MEE_initialize;
+		satellite_MEE_terminate;
+	local:
+		*;
+};
