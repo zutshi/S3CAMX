@@ -601,12 +601,11 @@ def random_test(
             ci_array = np.zeros((num_samples, 0))
         else:
             if sample_ci:
-                print 
                 ci_cons_list = list(ci_seq_array[:, i, :])
                 ci_cons_list = [ci_cons.tolist()[0] for ci_cons in ci_cons_list]
 
-                ci_lb_list = [np.tile(ci_cons.l, (A.num_samples, 1)) for ci_cons in ci_cons_list]
-                ci_ub_list = [np.tile(ci_cons.h, (A.num_samples, 1)) for ci_cons in ci_cons_list]
+                ci_lb_list = [np.tile(ci_cons.l, (A.plant_abs.num_samples, 1)) for ci_cons in ci_cons_list]
+                ci_ub_list = [np.tile(ci_cons.h, (A.plant_abs.num_samples, 1)) for ci_cons in ci_cons_list]
 
                 ci_cons_lb = reduce(lambda acc_arr, arr: np.concatenate((acc_arr, arr)), ci_lb_list)
                 ci_cons_ub = reduce(lambda acc_arr, arr: np.concatenate((acc_arr, arr)), ci_ub_list)
@@ -626,8 +625,8 @@ def random_test(
             #print(pi_cons_list)
             #pi_cons_list = map(A.plant_abs.get_ival_cons_pi_cell, pi_cells)
 
-            pi_lb_list = [np.tile(pi_cons.l, (A.num_samples, 1)) for pi_cons in pi_cons_list]
-            pi_ub_list = [np.tile(pi_cons.h, (A.num_samples, 1)) for pi_cons in pi_cons_list]
+            pi_lb_list = [np.tile(pi_cons.l, (A.plant_abs.num_samples, 1)) for pi_cons in pi_cons_list]
+            pi_ub_list = [np.tile(pi_cons.h, (A.plant_abs.num_samples, 1)) for pi_cons in pi_cons_list]
 
             pi_cons_lb = reduce(lambda acc_arr, arr: np.concatenate((acc_arr, arr)), pi_lb_list)
             pi_cons_ub = reduce(lambda acc_arr, arr: np.concatenate((acc_arr, arr)), pi_ub_list)

@@ -18,6 +18,7 @@ class Trace(object):
 
     def __init__(self, num_dims, num_points):
         self.idx = 0
+        self.n = num_points
         self.t_array = np.empty(num_points)
         self.x_array = np.empty((num_points, num_dims.x))
         self.s_array = np.empty((num_points, num_dims.s))
@@ -226,17 +227,38 @@ def plot_trace_list(trace_list, plt):
             print('plotted {} sims'.format(ctr_total))
             ph.figure_for_paper(ax, line_list)
     else:
-        for i in range(NUM_PLOTS):
-            plt.figure()
-            ax = plt.gca()
-            plt.title('x{}'.format(i))
-            for trace in trace_list:
-                x_array = trace.x_array
-                t_array = trace.t_array
-                ax.plot(t_array, x_array[:, i])
-            plt.show()
+        # reg plotting: uncomment!
 
+#         for i in range(NUM_PLOTS):
+#             plt.figure()
+#             ax = plt.gca()
+#             plt.title('x{}'.format(i))
+#             for trace in trace_list:
+#                 x_array = trace.x_array
+#                 t_array = trace.t_array
+#                 ax.plot(t_array, x_array[:, i])
+#             plt.show()
 
+# temp plotting for decomposed sys
+#         plt.figure()
+#         ax = plt.gca()
+#         plt.title('x{}'.format(1))
+#         for trace in trace_list:
+#             x_array = trace.x_array
+#             t_array = trace.t_array
+#             ax.plot(x_array[:, 0], x_array[:, 1])
+#             ax.plot(x_array[:, 2], x_array[:, 3])
+#         plt.show()
+
+# temp plotting for decomposed sys- part 2
+        plt.figure()
+        ax = plt.gca()
+        plt.title('x{}'.format(1))
+        for trace in trace_list:
+            x_array = trace.x_array
+            t_array = trace.t_array
+            ax.plot(x_array[:, 0], x_array[:, 1], '-o')
+        plt.show()
 
 def plot_trace_list_sat(trace_list, plt):
     '''

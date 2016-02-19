@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import logging
 import numpy as np
-from blessings import Terminal
+from blessed import Terminal
 
 # import matplotlib
 # matplotlib.use('GTK3Agg')

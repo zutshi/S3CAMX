@@ -1,6 +1,6 @@
 
 # sampling time
-delta_t = 0.2
+delta_t = 0.1
 
 # pvt simulator state required for initializing the simulator
 plant_pvt_init_data = None
@@ -10,9 +10,10 @@ plant_pvt_init_data = None
 #############################
 
 # Time Horizon
-T = 1.0
+T = 2.0
 
-plant_composition = [2, 2]
+# sys_k = [x_k, d_k, pvt_k, ci_k, pi_k]
+plant_composition = [[2,1,0,1,1],[2,1,0,1,1]]
 
 # Rectangular bounds on initial plant states X0[0, :] <= X <= X0[1, :]
 initial_set = [[0.0, 0.0, 2.0, 2.0], [1.0, 1.0, 3.0, 3.0]]
@@ -22,7 +23,7 @@ error_set = [[2.0, 2.0, 4.0, 4.0], [3.0, 3.0, 5.0, 5.0]]
 
 # rectangular bounds on exogenous inputs to the contorller. Such as, controller
 # disturbance.
-ci = [[],[]]
+ci = [[1,2],[1,2]]
 ############################
 
 # Results Scratchpad:
@@ -35,10 +36,12 @@ ci = [[],[]]
 # Abstraction Params
 ########################
 # initial abstraction grid size
-grid_eps = [1, 1, 1, 1]
+grid_eps = [.1, .2, .1, .2]
+ci_grid_eps = [1, 2]
+pi_grid_eps = [1, 2]
 
 # number of samples at every scatter step
-num_samples = 2
+num_samples = 1
 
 # maximum iteration before SS iter outs.
 MAX_ITER = 5
@@ -59,9 +62,9 @@ num_control_inputs = 0
 # Unimplemented
 ################################
 # Initial plant discrete state: List all states
-initial_discrete_state = [0]
+initial_discrete_state = [0,0]
 # Rectangularly bounded exogenous inputs to the plant (plant noise).
-pi = [[], []]
+pi = [[1,2], [1,2]]
 # Initial pvt simulator state, associated with with an execution trace.
 initial_pvt_states = []
 ################################

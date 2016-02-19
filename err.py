@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 
-import blessings
+import blessed
 
-term = blessings.Terminal()
+term = blessed.Terminal()
 
 
 class Fatal(Exception):
@@ -23,11 +23,11 @@ def error(msg):
 
 
 def warn(msg):
-    print term.red('WARNING: ' + msg)
+    print term.red_on_white('WARNING: ' + msg)
 
 
 def warn_severe(msg):
-    print term.red('WARNING: ' + msg)
+    print term.red_on_white('WARNING: ' + msg)
     # forces the user to take heed!
     raw_input('please acknowledge by pressing enter')
 

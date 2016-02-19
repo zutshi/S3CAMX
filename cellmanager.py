@@ -1,6 +1,10 @@
+from __future__ import print_function
+
 import numpy as np
 import constraints as cons
 import itertools
+
+from utils import print
 
 
 # TODO: change cons to cons_object which has cons in addition to all states

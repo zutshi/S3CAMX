@@ -18,20 +18,23 @@ import sys as SYS
 import tqdm
 
 import abstractioncomposable as AA
+#import abstraction as AA
 import sample
 import fileOps as fp
 import concolicexec as CE
 import simulatesystem as simsys
-import scattersim as SS
+import scattersimcomposable as SS
 import err
 import loadsystem
+import loaddecomposedsystem
 import traces
 import list_examples as eg
 import plothelper as ph
 import plot_hack
 import wmanager
+import checkprop as chkp
 import closestpair as CP
-#import utils as U
+import utils as U
 from utils import print
 
 #matplotlib.use('GTK3Agg')
@@ -92,11 +95,6 @@ class SystemParams:
         return
 
 
-
-def sanity_check_input(sys, prop, opts):
-    return
-
-
 # TODO: make a module of its own once we add more general property using
 # monitors...
 def check_prop_violation(trace, prop):
@@ -104,9 +102,14 @@ def check_prop_violation(trace, prop):
     return trace.x_array[idx], trace.t_array[idx]
 
 
-def simulate(sys, prop, opts):
+def simulate(sys_list, prop_list, opts):
     num_samples = opts.num_sim_samples
     num_violations = 0
+
+    if opts.decompose:
+        err.warn_severe('ignoring decomposition rules!')
+    sys = sys_list[0]
+    prop = prop_list[0]
 
     concrete_states = sample.sample_init_UR(sys, prop, num_samples)
     trace_list = []
@@ -211,21 +214,28 @@ def create_abstraction(sys, prop, opts):
     return current_abs, sampler
 
 
-#def falsify(sut, init_cons, final_cons, plant_sim, controller_sim, init_cons_list, ci, pi, current_abs, sampler):
-def falsify(sys, prop, opts, current_abs, sampler):
+def falsify(sys_list, prop_list, opts):
+
+    current_abs_sampler = [create_abstraction(sys, prop, opts)
+                            for sys, prop in zip(sys_list, prop_list)]
+
+    current_abs = [i[0] for i in current_abs_sampler]
+    sampler = [i[1] for i in current_abs_sampler]
+
     # sys
-    controller_sim = sys.controller_sim
-    plant_sim = sys.plant_sim
+    controller_sim = [sys.controller_sim for sys in sys_list]
+    plant_sim = [sys.plant_sim for sys in sys_list]
 
     # prop
-    init_cons_list = prop.init_cons_list
-    init_cons = prop.init_cons
-    final_cons = prop.final_cons
-    ci = prop.ci
-    pi = prop.pi
-    initial_discrete_state = prop.initial_discrete_state
-    initial_controller_state = prop.initial_controller_state
-    MAX_ITER = prop.MAX_ITER
+    init_cons_list = [prop.init_cons_list for prop in prop_list]
+    init_cons = [prop.init_cons for prop in prop_list]
+    final_cons = [prop.final_cons for prop in prop_list]
+    ci = [prop.ci for prop in prop_list]
+    pi = [prop.pi for prop in prop_list]
+    initial_discrete_state = [tuple(prop.initial_discrete_state) for prop in prop_list]
+    initial_controller_state = [np.array(prop.initial_controller_state)
+                                for prop in prop_list]
+    MAX_ITER = [prop.MAX_ITER for prop in prop_list]
 
     #TODO: hack to make random_test sample ci_cells when doing
     # ss-concrete. It is false if ss-symex (and anything else) is
@@ -236,15 +246,13 @@ def falsify(sys, prop, opts, current_abs, sampler):
     # options
     plot = opts.plot
 
-    initial_discrete_state = tuple(initial_discrete_state)
-    initial_controller_state = np.array(initial_controller_state)
-
     # make a copy of the original initial plant constraints
 
     original_plant_cons_list = init_cons_list
 
-    pi_ref = wmanager.WMap(pi, sys.pi_grid_eps)
-    ci_ref = wmanager.WMap(ci, sys.ci_grid_eps) if sample_ci else None
+    pi_ref = [wmanager.WMap(pii, sys.pi_grid_eps) for sys, pii in zip(sys_list, pi)]
+    ci_ref = [wmanager.WMap(cii, sys.ci_grid_eps)
+              if sample_ci else None for sys, cii in zip(sys_list, ci)]
 
 #            f1 = plt.figure()
 ##
@@ -279,24 +287,42 @@ def falsify(sys, prop, opts, current_abs, sampler):
                 pi_ref,
                 ci_ref)
         else:
+#             print(current_abs[0])
+#             print(init_cons_list[0])
+#             print(final_cons[0])
+#             print(initial_discrete_state[0])
+#             print(initial_controller_state[0])
+#             print(plant_sim[0])
+#             print(controller_sim[0])
+#             print(ci[0])
+#             print(pi[0])
+#             print(sampler[0])
+#             print(plot)
+#             print(init_cons[0])
+#             print(original_plant_cons_list[0])
+#             print(MAX_ITER[0])
+#             print(sample_ci)
+#             print(pi_ref[0])
+#             print(ci_ref[0])
+
             refine_init(
-                current_abs,
-                init_cons_list,
-                final_cons,
-                initial_discrete_state,
-                initial_controller_state,
-                plant_sim,
-                controller_sim,
-                ci,
-                pi,
-                sampler,
+                current_abs[0],
+                init_cons_list[0],
+                final_cons[0],
+                initial_discrete_state[0],
+                initial_controller_state[0],
+                plant_sim[0],
+                controller_sim[0],
+                ci[0],
+                pi[0],
+                sampler[0],
                 plot,
-                init_cons,
-                original_plant_cons_list,
-                MAX_ITER,
+                init_cons[0],
+                original_plant_cons_list[0],
+                MAX_ITER[0],
                 sample_ci,
-                pi_ref,
-                ci_ref)
+                pi_ref[0],
+                ci_ref[0])
     # seed 4567432
     elif opts.refine == 'trace':
         refine_trace(
@@ -315,6 +341,113 @@ def falsify(sys, prop, opts, current_abs, sampler):
             original_plant_cons_list)
     else:
         raise err.Fatal('internal')
+
+# def falsify(sys, prop, opts):
+
+#     current_abs, sampler = create_abstraction(sys, prop, opts)
+
+#     # sys
+#     controller_sim = sys.controller_sim
+#     plant_sim = sys.plant_sim
+
+#     # prop
+#     init_cons_list = prop.init_cons_list
+#     init_cons = prop.init_cons
+#     final_cons = prop.final_cons
+#     ci = prop.ci
+#     pi = prop.pi
+#     initial_discrete_state = prop.initial_discrete_state
+#     initial_controller_state = prop.initial_controller_state
+#     MAX_ITER = prop.MAX_ITER
+
+#     #TODO: hack to make random_test sample ci_cells when doing
+#     # ss-concrete. It is false if ss-symex (and anything else) is
+#     # asked for, because then ci_seq consists if concrete values. Can
+#     # also be activated for symex as an option, but to be done later.
+#     sample_ci = opts.METHOD == 'concrete'
+
+#     # options
+#     plot = opts.plot
+
+#     initial_discrete_state = tuple(initial_discrete_state)
+#     initial_controller_state = np.array(initial_controller_state)
+
+#     # make a copy of the original initial plant constraints
+
+#     original_plant_cons_list = init_cons_list
+
+#     pi_ref = wmanager.WMap(pi, sys.pi_grid_eps)
+#     ci_ref = wmanager.WMap(ci, sys.ci_grid_eps) if sample_ci else None
+
+# #            f1 = plt.figure()
+# ##
+# ##            plt.grid(True)
+# ##
+# ##            ax = f1.gca()
+# ##           eps = current_abs.plant_abs.eps
+# ##            #ax.set_xticks(np.arange(0, 2, eps[0]))
+# ##            #ax.set_yticks(np.arange(0, 20, eps[1]))
+# ##
+# ##            f1.suptitle('abstraction')
+
+#     if opts.refine == 'init':
+#         if opts.decompose:
+#             print('Attempting compositional analyses...')
+#             refine_init_composable(
+#                 current_abs,
+#                 init_cons_list,
+#                 final_cons,
+#                 initial_discrete_state,
+#                 initial_controller_state,
+#                 plant_sim,
+#                 controller_sim,
+#                 ci,
+#                 pi,
+#                 sampler,
+#                 plot,
+#                 init_cons,
+#                 original_plant_cons_list,
+#                 MAX_ITER,
+#                 sample_ci,
+#                 pi_ref,
+#                 ci_ref)
+#         else:
+#             refine_init(
+#                 current_abs,
+#                 init_cons_list,
+#                 final_cons,
+#                 initial_discrete_state,
+#                 initial_controller_state,
+#                 plant_sim,
+#                 controller_sim,
+#                 ci,
+#                 pi,
+#                 sampler,
+#                 plot,
+#                 init_cons,
+#                 original_plant_cons_list,
+#                 MAX_ITER,
+#                 sample_ci,
+#                 pi_ref,
+#                 ci_ref)
+#     # seed 4567432
+#     elif opts.refine == 'trace':
+#         refine_trace(
+#             current_abs,
+#             init_cons_list,
+#             final_cons,
+#             initial_discrete_state,
+#             initial_controller_state,
+#             plant_sim,
+#             controller_sim,
+#             ci,
+#             pi,
+#             sampler,
+#             plot,
+#             init_cons,
+#             original_plant_cons_list)
+#     else:
+#         raise err.Fatal('internal')
 
 
 def refine_trace(
@@ -554,7 +687,7 @@ def discover(current_abs, init_cons_list, final_cons,
         )
     SS.discover(current_abs, system_params)
     if plot: plt.show()
-    return initial_state_set, final_state_set, system_params
+    return system_params
 
 
 def get_init_states(pi_ref, ci_ref, current_abs, pi, ci, initial_state_set, final_state_set, init_cons, plot):
@@ -575,9 +708,9 @@ def get_init_states(pi_ref, ci_ref, current_abs, pi, ci, initial_state_set, fina
     # ##!!##logger.debug('promising initial states: {}'.format(promising_initial_states))
 
     print('begin random testing!')
-    if plot:
-        f2 = plt.figure()
-        f2.suptitle('random testing')
+    #if plot:
+    #    f2 = plt.figure()
+    #    f2.suptitle('random testing')
 
     print(len(promising_initial_states), len(ci_seq_list), len(pi_seq_list))
     #U.pause()
@@ -606,12 +739,6 @@ def refinement_step(current_abs, promising_initial_states, original_plant_cons_l
     return current_abs, init_cons_list
 
 
-def search_final_states():
-    cp = CP.CP()
-    cp.get_closest()
-    return
-
-
 # returns a True when its done
 def refine_init_composable(
         current_abs,
@@ -632,54 +759,79 @@ def refine_init_composable(
         pi_ref,
         ci_ref):
 
+    num_sys = len(current_abs)
+
     i = 1
     while i <= MAX_ITER:
         print('iteration:', i)
-        system_params, initial_state_set, final_state_set\
-            = discover(current_abs, init_cons_list, final_cons,
-                    initial_discrete_state, initial_controller_state,
-                    plant_sim, controller_sim, ci, pi, sampler, pi_ref,
-                    ci_ref, plot)
+
+#         print(current_abs)
+#         print(init_cons_list[0][0])
+#         print(final_cons[0])
+#         print(initial_discrete_state,initial_controller_state,plant_sim)
+#         print(controller_sim,ci,pi,sampler)
+#         print(pi_ref,ci_ref)
+        l_system_params = []
+        for j in range(num_sys):
+            args = (current_abs[j], init_cons_list[j], final_cons[j],
+                    initial_discrete_state[j],
+                    initial_controller_state[j], plant_sim[j],
+                    controller_sim[j], ci[j], pi[j], sampler[j],
+                    pi_ref[j], ci_ref[j], plot)
+            l_system_params.append(discover(*args))
 
         # get the graph from every system and process it to search for
         # final states
-        search_final_states()
-
-        if not system_params.final_state_set:
+        l_closest_nodes = chkp.search_final_abs_states(current_abs)
+        if not l_closest_nodes:
             print('did not find any abstract counter example!', file=SYS.stderr)
             return False
+        else:
+            # assign final states
+            for closest_nodes, system_params in zip(l_closest_nodes, l_system_params):
+                system_params.final_state_set = set(closest_nodes)
 
         print('analyzing graph...')
-        (promising_initial_states, valid_promising_initial_state_list,
-         ci_seq_list, pi_seq_list)\
-            = get_init_states(pi_ref, ci_ref, current_abs, pi, ci,
-                    initial_state_set, final_state_set, init_cons,
-                    plot)
+        ret_vals = [get_init_states(pi_ref[j], ci_ref[j],
+                                    current_abs[j], pi[j], ci[j],
+                                    l_system_params[j].initial_state_set,
+                                    l_system_params[j].final_state_set,
+                    init_cons[j], plot) for j in range(num_sys)]
 
-        if valid_promising_initial_state_list == []:
-            print('no valid sample found during random testing. STOP', file=SYS.stderr)
-            return False
+        promising_S0, valid_promising_S0, ci_seq_list, pi_seq_list = zip(*ret_vals)
+        #for promising_S0, valid_promising_S0, ci_seq_list, pi_seq_list in ret_vals:
+        err.warn('assumes all systems should return a violation. Could also be any!')
+        for j in range(num_sys):
+            if valid_promising_S0[j] == []:
+                print('no valid sample found during random testing. STOP', file=SYS.stderr)
+                return False
 
-        done = SS.random_test(
-            current_abs,
-            system_params,
-            valid_promising_initial_state_list,
-            ci_seq_list,
-            pi_seq_list,
-            init_cons,
-            initial_discrete_state,
-            initial_controller_state,
-            sample_ci
-            )
-        if plot:
-            plt.show()
-        if done:
+        l_traces = [SS.random_test_composable(current_abs[j],
+                                              l_system_params[j],
+                                              valid_promising_S0[j],
+                                              ci_seq_list[j],
+                                              pi_seq_list[j],
+                                              init_cons[j],
+                                              initial_discrete_state[j],
+                                              initial_controller_state[j],
+                                              sample_ci)
+                    for j in range(num_sys)]
+
+        violating_trace_pairs = chkp.search_final_concrete_states(l_traces)
+        if violating_trace_pairs:
             print('Concretized', file=SYS.stderr)
+            if plot:
+                #for vio_pairs in violating_trace_pairs:
+                    #traces.plot_trace_list(vio_pairs, plt)
+                tl1, tl2 = zip(*violating_trace_pairs)
+                traces.plot_trace_list(tl1+tl2, plt)
             return True
+        err.warn_severe('Falied to concretize, refining')
 
-        (current_abs, init_cons_list)\
-            = refinement_step(current_abs, promising_initial_states,
-                    original_plant_cons_list, ci_ref, pi_ref)
+        for j in range(num_sys):
+            (current_abs[j], init_cons_list[j])\
+                = refinement_step(current_abs[j], promising_S0[j],
+                                  original_plant_cons_list[j], ci_ref[j], pi_ref[j])
         i += 1
     print('Failed: MAX iterations {} exceeded'.format(MAX_ITER), file=SYS.stderr)
     # raise an exception maybe?
@@ -811,13 +963,13 @@ def dump_trace(trace_list):
     trace_list[0].dump_matlab()
 
 
-def run_secam(sys, prop, opts):
+def run_secam(sys_list, prop_list, opts):
     MODE = opts.MODE
     plot = opts.plot
 
     if MODE == 'simulate':
         start_time = time.time()
-        trace_list = simulate(sys, prop, opts)
+        trace_list = simulate(sys_list, prop_list, opts)
         if plot:
             if opts.dump_trace:
                 dump_trace(trace_list)
@@ -825,9 +977,8 @@ def run_secam(sys, prop, opts):
     elif MODE == 'falsify':
         # ignore time taken to create_abstraction: mainly to ignore parsing
         # time
-        current_abs, sampler = create_abstraction(sys, prop, opts)
         start_time = time.time()
-        falsify(sys, prop, opts, current_abs, sampler)
+        falsify(sys_list, prop_list, opts)
     else:
         raise err.Fatal('bad MODE supplied: {}'.format(MODE))
 
@@ -872,11 +1023,11 @@ def main():
                         help='dump trace in mat file')
 
     parser.add_argument('--seed', type=int, metavar='seed_value',
-                        help='seed for the random generator')
+                        default=None, help='seed for the random generator')
 
     # TAG:MSH
     parser.add_argument('--meng', type=str, metavar='engine_name',
-                        help='Shared Matlab Engine name')
+                        default=None, help='Shared Matlab Engine name')
 
     parser.add_argument('-t', '--trace-struct', type=str, metavar='struct', default='tree',
                         choices=LIST_OF_TRACE_STRUCTS, help='structure for cntrl-rep')
@@ -945,12 +1096,30 @@ def main():
     opts.decompose = args.decompose
 
     sys, prop = loadsystem.parse(filepath)
+
     assert(not(sys.comp_scheme is None and args.ss_symex is not None))
     # opts.decompose => sys.comp_scheme is not None
     assert(not opts.decompose or sys.comp_scheme is not None)
+
     # TAG:MSH
     matlab_engine = args.meng
-    sys.init_sims(plt, psim_args=matlab_engine)
+
+    if opts.decompose:
+        sys_list, prop_list = loaddecomposedsystem.decompose(sys, prop)
+        print('system:', sys_list)
+        print()
+        print('property:', prop_list)
+
+        # Matlab SIM() is unsopported for compositional analyses
+        # Should work in theory but have to work out the details
+        assert(matlab_engine is None)
+        for idx, sys_i in enumerate(sys_list):
+            sys_i.init_sims(plt, psim_args=idx)
+        # opts.decompose => sys/prop is actually sys_list/prop_list
+    else:
+        sys.init_sims(plt, psim_args=matlab_engine)
+        sys_list = [sys]
+        prop_list = [prop]
 
     if opts.plot:
         pass
@@ -962,8 +1131,9 @@ def main():
         #matplotlib.use('GTK3Agg')
         #global plt
         #import matplotlib.pyplot as plt
-    sanity_check_input(sys, prop, opts)
-    run_secam(sys, prop, opts)
+
+    #sanity_check_input(sys, prop, opts)
+    run_secam(sys_list, prop_list, opts)
     # ##!!##logger.debug('execution ends')
 
 if __name__ == '__main__':

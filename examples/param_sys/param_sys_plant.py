@@ -11,7 +11,14 @@ import matplotlib.pyplot as PLT
 
 class SIM(object):
     def __init__(self, plt, pvt_init_data):
-        pass
+
+        self.sims = [self.sim1, self.sim2]
+
+    def sim1(self, TT, X0, D, P, U, I, property_checker, property_violated_flag):
+        return self.sim_(TT, X0, D, P, U, I, property_checker, property_violated_flag, dyn1)
+
+    def sim2(self, TT, X0, D, P, U, I, property_checker, property_violated_flag):
+        return self.sim_(TT, X0, D, P, U, I, property_checker, property_violated_flag, dyn2)
 
     def sim(self, TT, X0, D, P, U, I, property_checker, property_violated_flag):
         # atol = 1e-10
@@ -95,15 +102,10 @@ class SIM(object):
 
         return (ret_t, ret_X, ret_D, ret_P)
 
-    def sim1(self, TT, X0, D, P, U, I, property_checker, property_violated_flag):
-        return self.sim_(self, TT, X0, D, P, U, I, property_checker, property_violated_flag, dyn1)
 
-    def sim2(self, TT, X0, D, P, U, I, property_checker, property_violated_flag):
-        return self.sim_(self, TT, X0, D, P, U, I, property_checker, property_violated_flag, dyn2)
-
-
-A = np.matrix([[1, 2], [2, 3]])
-AA = lg.block_diag(A, A)
+A1 = np.matrix([[1, -10], [1, 1]])
+A2 = np.matrix([[1, 1], [1, 1]])*0.3
+AA = lg.block_diag(A1, A2)
 
 
 def dyn(t, x, u):
@@ -119,14 +121,14 @@ def dyn(t, x, u):
 def dyn1(t, x, u):
     #u = np.matrix([u[0], 0.0]).T
     x = np.matrix(x).T
-    X_ = A*x
+    X_ = A1*x
     return np.array(X_.T)
 
 
 def dyn2(t, x, u):
     #u = np.matrix([u[0], 0.0]).T
     x = np.matrix(x).T
-    X_ = A*x
+    X_ = A2*x
     return np.array(X_.T)
 
 

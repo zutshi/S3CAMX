@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import logging
 import numpy as np
-from blessings import Terminal
+from blessed import Terminal
 
 import constraints as cons
 import err
@@ -124,12 +124,7 @@ class ControllerCollectionAbstraction:
         # print s_array_, u_array
         # print samples.ci_array
 
-        ######################################
-        #TODO: wrap this up somehow
-        print()
-        print(term.move_up + term.move_up)
-        ######################################
-        with term.location():
+        with term.location(0, term.height - 2):
             print('t:', t_array.T)
 
         state = st.StateArray(

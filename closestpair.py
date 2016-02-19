@@ -1,32 +1,18 @@
-import scipy.spatial.KDTree as kdt
+from scipy.spatial import KDTree
 # Implemented in C
-import scipy.spatial.cKDTree as cktd
-
+from scipy.spatial import cKDTree
 import numpy as np
 
-# TODO: Fix this!
-NUM_DIMS = 3
-
-class CPERROR(Exception):
+class CPerror(Exception):
     pass
 
-class CP(object):
-    def __init__(self, g1, g2):
-        num_dims = NUM_DIMS
-        raise CPERROR('Fix NUM DIMS! Communicate dimensions some how!')
+class ClosestPairs():
+    def __init__(self, data1, data2):
+        self.data1 = data1
+        self.data2 = data2
 
-        a1 = np.zeros((len(g1), num_dims), dtype=int)
-        for idx, s in enumerate(g1):
-            a1[idx] = s
-
-        a2 = np.zeros((len(g2), num_dims), dtype=int)
-        for idx, s in enumerate(g2):
-            a2[idx] = s
-
-    def get_closest(self):
-        raise NotImplementedError
-        # make two trees and generate sparse_distance_matrix?
-        # kdt.sparse_distance_matrix(other, max_distance)
-
-        # query all pairs within r distance
-        # query_pairs(self, r[, p, eps])
+    def get_closest_pairs(self, max_dist):
+        self.kdt1 = KDTree(self.data1)
+        self.kdt2 = KDTree(self.data2)
+        spm = self.kdt1.sparse_distance_matrix(self.kdt2, max_dist)
+        return spm

@@ -11,7 +11,7 @@ import collections
 from subprocess import call
 import subprocess
 import sys
-from blessings import Terminal
+from blessed import Terminal
 
 import err
 import fileOps as fops

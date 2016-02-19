@@ -23,8 +23,6 @@ import plantconfig as pc
 
 logger = logging.getLogger(__name__)
 
-comp_analyses = True
-comp_scheme = [2, 2]
 
 
 def abstraction_factory(*args, **kwargs):

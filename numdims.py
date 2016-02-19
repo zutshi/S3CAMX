@@ -1,20 +1,10 @@
-
 # TODO: consider using a named tuple instead?
+
 
 class NumDims:
 
-    def __init__(
-        self,
-        si=None,
-        sf=None,
-        s=None,
-        u=None,
-        x=None,
-        pi=None,
-        ci=None,
-        d=None,
-        pvt=None,
-        ):
+    def __init__(self, si=None, sf=None, s=None, u=None, x=None,
+                 pi=None, ci=None, d=None, pvt=None):
 
         self.si = si  # conrtoller states
         self.sf = sf  # conrtoller states
@@ -26,3 +16,9 @@ class NumDims:
         self.d = d  # discrete
         self.pvt = pvt  # pvt
         return
+
+    def __repr__(self):
+        s = 'x:{}, s:{}, si:{}, sf:{}, u:{}, d:{}, pvt:{}, ci:{}, pi:{}'.format(
+                self.x, self.s, self.si, self.sf, self.u, self.d,
+                self.pvt, self.ci, self.pi)
+        return s

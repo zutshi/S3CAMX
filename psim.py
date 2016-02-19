@@ -29,7 +29,7 @@ logger.setLevel(logging.INFO)
 COMMA = ','
 SQ = '\''
 
-
+# TODO: make sim_args **kwargs
 def simulator_factory(
         config_dict,
         benchmark_os_path,
@@ -71,7 +71,7 @@ def simulator_factory(
             raise err.Fatal('Python file extension py expected, found: {}'.format(file_ext))
         module_path = fp.construct_path(python_file_path, benchmark_os_path)
         if fp.validate_file_names([module_path]):
-            return NativeSim(module_name, module_path, plt, plant_pvt_init_data, parallel)
+            return NativeSim(module_name, module_path, plt, plant_pvt_init_data, parallel, sim_args)
         else:
             raise err.FileNotFound('file does not exist: ' + python_file_path)
     elif sim_type == 'test':
@@ -145,12 +145,16 @@ class NativeSim(Simulator):
             plt,
             plant_pvt_init_data,
             parallel,
+            sim_fn_id=None
             ):
         super(NativeSim, self).__init__()
 
         sim_module = imp.load_source(module_name, module_path)
         self.sim_obj = sim_module.SIM(plt, plant_pvt_init_data)
-        self.sim = self.sim_obj.sim
+        if sim_fn_id is None:
+            self.sim = self.sim_obj.sim
+        else:
+            self.sim = self.sim_obj.sims[sim_fn_id]
 
     def simulate(
             self,
