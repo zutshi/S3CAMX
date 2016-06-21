@@ -3,25 +3,61 @@
 import os
 import os.path as osp
 import logging
-import err
 import glob
 import stat
 import hashlib
 
+
+class FileError(Exception):
+    pass
+
 logger = logging.getLogger(__name__)
+
+DIR_MASK = 0b10
+FILE_MASK = 0b01
+
+
+def size(file_path):
+    return os.path.getsize(file_path)
+
+def delete(file_path):
+        os.remove(file_path)
+
+def enumerate_dir(root_dir, mask=0b11, filter_fun=lambda x: True, recurse=False):
+    if recurse:
+        for dirpath, dirnames, filenames in os.walk(root_dir):
+            path_list = []
+            if mask & DIR_MASK:
+                dirnames = filter(filter_fun, dirnames)
+                path_list = [os.path.join(dirpath, i) for i in dirnames]
+            if mask & FILE_MASK:
+                filenames = filter(filter_fun, filenames)
+                path_list = [os.path.join(dirpath, i) for i in filenames]
+            for i in path_list:
+                yield i
+    else:
+        for e in (i for i in os.listdir(root_dir) if filter_fun(i)):
+            yield e
 
 
 def sanitize_path(path):
     return osp.normpath(path)
 
 
+def ext_filter(file_extension):
+    def f(file_path):
+        _, file_ext = split_filename_ext(file_path)
+        return file_ext == file_extension
+    return f
+
+
 def split_filename_ext(file_path):
     filename, ext = os.path.splitext(file_path)
-    if ext[0] == '.':
-        pass
+    if ext != '':
+        assert(ext[0] == '.')
+        return filename, ext[1:]
     else:
-        raise err.Fatal('unexpected: something wrong?')
-    return filename, ext[1:]
+        return filename, ext
 
 
 def make_exec(file_path):
@@ -86,21 +122,19 @@ def get_data(filename, mode='r'):
             data = f.read()
             return data
     except (OSError, IOError), e:
-        raise err.FileNotFound(e)
+        raise FileError(e)
 
 
 def append_data(filename, data):
-    logger.info('writing file: {}'.format(filename))
-    with open(filename, 'a') as f:
-        f.write(data)
-        return
+    write_data(filename, data, mode='a')
+    return
 
 
 def write_data(filename, data, mode='w'):
     logger.info('writing file: {}'.format(filename))
     with open(filename, mode) as f:
         f.write(data)
-        return
+    return
 
 
 def get_non_blank_lines(filename):
