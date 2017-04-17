@@ -146,10 +146,12 @@ class ControllerSymbolicAbstraction:
         #self.get_reachable_abs_states = self.get_reachable_abs_states_discards_model
         self.get_reachable_abs_states = self.get_reachable_abs_states_reuses_model
         self.is_symbolic = True
+        self.id_ctr = 0
 
     def gen_id_(self):
-        for i in range(MAX_NUM_VARS_EXPECTED):
-            yield i
+        self.id_ctr += 1
+        while True:
+            yield self.id_ctr
 
     def get_new_plant_smt_var(self, cell_id):
         #x_str = X + str(cell_id)
@@ -729,11 +731,12 @@ class ControllerSymbolicAbstraction:
             t = abs_state.plant_state.n * A.delta_t
             ######################################
             #TODO: wrap this up somehow
-            print()
-            print(term.move_up + term.move_up)
+            #print()
+            #print(term.move_up + term.move_up)
             ######################################
-            with term.location():
-                print('t:', t)
+            #with term.location():
+            #    print('t:', t)
+            print('t:', t)
             t_array = np.tile(t, (num_actual_samples, 1))
 
             s_array = np.concatenate((si_array, sf_array), axis=1)

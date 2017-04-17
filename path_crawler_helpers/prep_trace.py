@@ -36,6 +36,11 @@ VAR_TYP_DICT = {'iv_input_arr': 'R',
 # ##################################
 
 
+def get_solver():
+    #return z3.Solver()
+    return z3.SolverFor('QF_NRA')
+
+
 def solverlist_to_smt2file(solver_list):
     path = OUTPUT_DIR_PATH
     # 6 digit names padded with 0
@@ -225,7 +230,7 @@ def get_z3_solver_list(paths):
     paths_z3 = py2z3.translate(e)
     solver_list = []
     for p in paths_z3.pathListZ3:
-        s = z3.Solver()
+        s = get_solver()
         s.add(p[0])
         #cc = p[0]
         op_list = p[1]
@@ -246,7 +251,7 @@ class PathObj(object):
     # remove global cons, in other words make them True
     def unset_global_cons_unused(self):
         #self.global_z3_cons = True
-        self.solver = z3.Solver()
+        self.solver = get_solver()
 
     def set_solver_unused(self, solver):
         self.solver = solver
@@ -255,7 +260,7 @@ class PathObj(object):
     # Add global constraints to the tree
     # i.e., add the constraint C to every node!
     def set_global_cons(self, *args):
-        self.solver = z3.Solver()
+        self.solver = get_solver()
         self.solver.add(z3.And(*args))
         #self.global_z3_cons = z3.And(*args)
         return
@@ -435,7 +440,7 @@ class ConsList(PathObj):
             S.push()
             S.add(c)
             if not incr:
-                S_ = z3.Solver()
+                S_ = get_solver()
                 S_.add(S.assertions())
 
             
@@ -461,6 +466,9 @@ class ConsList(PathObj):
                     print 'cons is UNSAT'
             else:
                 print S.reason_unknown()
+                print ''
+                print S
+                print ''
                 raise err.Fatal('SAT check: unkwnown. Reason above')
 
             S.pop()
@@ -471,7 +479,7 @@ class ConsList(PathObj):
     def sat_path_gen_old(self, dbg=False):
 
         for idx, c in enumerate(self.cons_list):
-            S = z3.Solver()
+            S = get_solver()
             #S.add(self.global_z3_cons)
             S.add(*self.solver.assertions())
             S.add(c)

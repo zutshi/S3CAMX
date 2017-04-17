@@ -106,6 +106,7 @@ class Trace(object):
                    do_compression=False, oned_as='column')
 
     def __repr__(self):
+        np.set_printoptions(suppress=True)
         s = '''t:{},\nx:{},\ns:{},\nu:{},\nci:{},\npi:{}'''.format(
             self.t_array,
             self.x_array,
@@ -218,7 +219,7 @@ def plot_trace_list(trace_list, plt):
                 ctr_total += 1
             print('plotted {} sims'.format(ctr_total))
             ph.figure_for_paper(ax, line_list)
-    else:
+    elif False:
         for i in range(NUM_PLOTS):
             plt.figure()
             ax = plt.gca()
@@ -226,8 +227,24 @@ def plot_trace_list(trace_list, plt):
             for trace in trace_list:
                 x_array = trace.x_array
                 t_array = trace.t_array
-                ax.plot(t_array, x_array[:, i])
+                ax.plot(t_array, x_array[:, i], '-*')
             plt.show()
+    else:
+        plt.figure()
+        ax = plt.gca()
+        for i in range(NUM_PLOTS):
+            #plt.title('x{}'.format(i))
+            for trace in trace_list:
+                x_array = trace.x_array
+                t_array = trace.t_array
+                ax.plot(t_array, x_array[:, i], '-*')
+
+        # draw grid
+        ax.set_xticks(np.arange(-10, 10, 0.1))
+        ax.set_yticks(np.arange(-10, 10., 0.1))
+        plt.grid()
+
+        plt.show()
 
 
 

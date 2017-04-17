@@ -117,11 +117,10 @@ def discover(A, system_params, budget=None):
 
         # ##!!##logger.debug('{} = Q.get()'.format(abs_state))
 
+        print('retrieving from Q:', abs_state, abs_state in examined_state_set, A.is_terminal(abs_state))
         if not (A.is_terminal(abs_state) or abs_state in examined_state_set):
 
             # ##!!##logger.debug('decided to process abs_state')
-
-            pass
 
             # Mark it as examined
 
@@ -148,8 +147,10 @@ def discover(A, system_params, budget=None):
                 # query if the reached state is a final state or not?
                 # If yes, tag it so
 
+                print('rchd:', rchd_abs_state)
                 if system_params.is_final(A, rchd_abs_state):
                     system_params.final_state_set.add(rchd_abs_state)
+                    print('tagging as final')
                 else:
 
                     # print('found a final state')
@@ -163,7 +164,7 @@ def discover(A, system_params, budget=None):
                 # A.G.add_edge(abs_state, rchd_abs_state)
 #                    n = self.get_n_for(abs_state) + 1
 #                    self.set_n_for(rchd_abs_state, n)
-
+    print('done')
     # end while loop
 
     # ##!!##logger.debug('Abstraction discovery done')
@@ -515,7 +516,7 @@ def random_test(
 
     #print(ci_seq_array.shape)
     #print(pi_seq_array.shape)
-    x_array = np.empty((0.0, A.num_dims.x), dtype=float)
+    x_array = np.empty((0, A.num_dims.x), dtype=float)
 
     print('checking initial states')
 

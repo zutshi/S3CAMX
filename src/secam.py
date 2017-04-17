@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 #import matplotlib
@@ -533,7 +533,7 @@ def run_secam(sys, prop, opts):
         raise err.Fatal('bad MODE supplied: {}'.format(MODE))
 
     stop_time = time.time()
-    print('*'*20)
+    #print('*'*20)
     print('time spent(s) = {}'.format(stop_time - start_time), file=SYS.stderr)
     return
 

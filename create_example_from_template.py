@@ -1,9 +1,6 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-import fileOps as f
+import fileops as f
 import sys
-import err
+#import err
 
 plant_str = '''
 # Must satisfy the signature
