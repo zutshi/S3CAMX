@@ -262,11 +262,13 @@ class Z(Solver):
         # NOTE: can just push() without checking, but maybe this is more efficient?
         if loop_will_exeute:
             s.push()
+        #raw_input('imax={}'.format(num_points - 1))
         for i in range(num_points - 1):
             s.add(normCons)
             check_res = s.check()
 
             if check_res == z3.sat:
+                #raw_input('paused:sat i')
                 num_actual_samples += 1
                 model = s.model()
                 sample_dict = model2var_scalar(model)
@@ -280,21 +282,26 @@ class Z(Solver):
                                        var2sample_list]
                 normCons = get_norm_cons_scalar(var_val2sample_list, minDist)
             elif check_res == z3.unsat:
-                if i == 0:
-                    pass
-                    # ##!!##logger.debug('surface is UNSAT')
-                    # # ##!!##logger.debug('unsat core:\n{}'.format(s.unsat_core))
-                else:
-                    # ##!!##logger.debug('!!!!!!!!!! no more samples possible !!!!!!!!!!!')
-                    # ##!!##logger.debug('max samples: {}'.format(i))
-                    print('max samples: {}'.format(i))
+                raw_input('maxed out: {}samples'.format(num_actual_samples))
                 break
+#                 if i == 0:
+#                     raw_input('paused:unsat i=0')
+#                     pass
+#                     # ##!!##logger.debug('surface is UNSAT')
+#                     # # ##!!##logger.debug('unsat core:\n{}'.format(s.unsat_core))
+#                 else:
+#                     raw_input('paused:unsat maxed out')
+#                     # ##!!##logger.debug('!!!!!!!!!! no more samples possible !!!!!!!!!!!')
+#                     # ##!!##logger.debug('max samples: {}'.format(i))
+#                     print('max samples: {}'.format(i))
+#                 break
 
             else:
                 print(s.reason_unknown())
                 raise err.Fatal('unhandled: z3 unkown!')
         if loop_will_exeute:
             s.pop()
+        print(num_actual_samples)
         return samplesDict, num_actual_samples
 
     def sample_realVec(

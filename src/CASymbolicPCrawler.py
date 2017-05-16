@@ -274,7 +274,7 @@ class ControllerSymbolicAbstraction:
             abs_state.ci]
 
         ###############################
-        var2sample_list = utils.flatten([abs_state.x])  # , abs_state.u]
+        var2sample_list = utils.flatten([abs_state.x, abs_state.ci])  # , abs_state.u]
         #print(var_list)
         #print('='*20, 'sampling', '='*20)
         #print(abs_state.C)
@@ -855,7 +855,9 @@ class ControllerSymbolicAbstractState(object):
 
         # print('controller_eq_invoked')
 
-        return hash(self) == hash(abs_state)
+        #Bug Fix
+        #return hash(self) == hash(abs_state)
+        return self.cpid == abs_state.cpid
 
     def __hash__(self):
 

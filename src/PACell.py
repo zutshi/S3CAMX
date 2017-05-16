@@ -345,7 +345,9 @@ class PlantAbstractState(object):
         # return hash((self.cell_id, self.n))
         # print('plant_eq_invoked')
 
-        return hash(self) == hash(x)
+        #Bug Fix
+        #return hash(self) == hash(x)
+        return self.cell_id == x.cell_id
 
     def __hash__(self):
 

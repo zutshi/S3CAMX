@@ -22,7 +22,7 @@ error_set = [[200, -INF, -INF], [INF, INF, INF]]
 # rectangular bounds on exogenous inputs to the contorller. Such as, controller
 # disturbance.
 #ci = [[-20.0, -1.6, -1.0, -1.0], [0.0, 0.0, 1.0, 1.0]]
-ci = [[-0100.0, -0100.0], [0100.0, 0100.0]]
+ci = [[-01000.0, -01000.0], [01000.0, 01000.0]]
 ############################
 
 # Results Scratchpad:
@@ -41,12 +41,12 @@ pi_grid_eps = []
 ci_grid_eps = [10]*2
 
 # number of samples at every scatter step
-num_samples = 1
+num_samples = 2
 
 # maximum iteration before SS iter outs.
 MAX_ITER = 2
 
-min_smt_sample_dist = 1
+min_smt_sample_dist = 100
 ########################
 
 # initial controller states which are C ints

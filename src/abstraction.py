@@ -249,8 +249,6 @@ class TopLevelAbs:
         reachable_state_list = \
             self.controller_abs.get_reachable_abs_states(abs_state, self, system_params)
         for (cs, c) in reachable_state_list:
-            print(cs)
-            U.pause()
 
             # reachable_plant_state_set = self.plant_abs.get_reachable_abs_states_sym(c, self, system_params)
 

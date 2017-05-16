@@ -117,7 +117,7 @@ def discover(A, system_params, budget=None):
 
         # ##!!##logger.debug('{} = Q.get()'.format(abs_state))
 
-        print('retrieving from Q:', abs_state, abs_state in examined_state_set, A.is_terminal(abs_state))
+        #print('retrieving from Q:', abs_state, abs_state in examined_state_set, A.is_terminal(abs_state))
         if not (A.is_terminal(abs_state) or abs_state in examined_state_set):
 
             # ##!!##logger.debug('decided to process abs_state')
@@ -147,7 +147,7 @@ def discover(A, system_params, budget=None):
                 # query if the reached state is a final state or not?
                 # If yes, tag it so
 
-                print('rchd:', rchd_abs_state)
+                #print('rchd:', rchd_abs_state)
                 if system_params.is_final(A, rchd_abs_state):
                     system_params.final_state_set.add(rchd_abs_state)
                     print('tagging as final')
